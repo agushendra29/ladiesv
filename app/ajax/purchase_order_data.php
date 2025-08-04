@@ -40,12 +40,15 @@ $records = $stmt->fetch();
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$stmt = $pdo->prepare(" SELECT 
-        po.*,
-        GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ',poi.quantity, ')') SEPARATOR ', ') AS items_summary
-    FROM purchase_orders po
-    LEFT JOIN purchase_order_items poi ON po.id = poi.purchase_order_id
-    LEFT JOIN products p ON poi.product_id = p.id WHERE 1 ".$searchQuery." ORDER BY ".$columnName." ".$columnSortOrder." LIMIT :limit,:offset");
+$stmt = $pdo->prepare("SELECT 
+    po.*,
+    GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ', quantity) SEPARATOR ', ') AS items_summary
+FROM purchase_orders po
+LEFT JOIN products p ON po.product_id = p.id
+WHERE 1 ".$searchQuery."
+GROUP BY po.id
+ORDER BY ".$columnName." ".$columnSortOrder."
+LIMIT :limit,:offset");
 
 // Bind values
 foreach($searchArray as $key=>$search){
@@ -60,27 +63,33 @@ $empRecords = $stmt->fetchAll();
 $data = array();
 
 foreach ($empRecords as $row) {
+    // Skip jika tidak ada item atau total_amount = 0
+    if (empty($row['items_summary']) || $row['total_amount'] == 0) {
+        continue;
+    }
+
     $rowData = array(
         "id" => $row['id'],
         "distributor_id" => $row['distributor_id'],
-        "total_amount" => $row['total_amount'],
+        "total_amount" => 'Rp ' . number_format($row['total_amount'], 0, ',', '.'),
         "status" => $row['status'],
         "items_summary" => $row['items_summary'],
         "created_at" => $row['created_at'],
-        "approved_at" => $row['approved_at'], // ✅ use actual data
+        "approved_at" => $row['approved_at'],
     );
 
     if ($isAdmin) {
         $rowData["action"] = '
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['id'].'"><i class="fas fa-check"></i> Approve</button>
+                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['id'].'" data-suppliar-id="'.$row['distributor_id'].'"><i class="fas fa-check"></i> Approve</button>
                 <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['id'].'"><i class="fas fa-times"></i> Reject</button>
             </div>
         ';
     }
 
-    $data[] = $rowData; // ✅ Only once
+    $data[] = $rowData;
 }
+
 
 ## Response
 $response = array(
@@ -90,4 +99,15 @@ $response = array(
    "aaData" => $data
 );
 
+
+
+header('Content-Type: application/json');
+
+if (json_last_error() !== JSON_ERROR_NONE) {
+    echo json_encode([
+        "error" => "JSON encode error: " . json_last_error_msg(),
+        "raw_data" => $response
+    ]);
+    exit;
+}
 echo json_encode($response);

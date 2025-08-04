@@ -162,7 +162,7 @@ $("#empTable").DataTable({
       success: function (res) {
         if ($.trim(res) == "yes") {
           $(".purchaseOrderError-area").show();
-          $("#purchaseOrderError").html("Purchase order berhasil dikirim");
+          $("#purchaseOrderError").html("Pemesanan berhasil ditambahkan");
           $("#purchaseOrderForm")[0].reset();
         } else {
           $(".purchaseOrderError-area").show();

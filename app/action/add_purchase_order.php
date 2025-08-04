@@ -1,61 +1,37 @@
 <?php 
 require_once '../init.php';
 
-if (isset($_POST)) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id     = $_POST['product_id'];
     $quantity       = intval($_POST['quantity']);
     $total_payment  = floatval($_POST['total_payment']);
-    $distributor_id = $_POST['distributor_id'];
-    $user_id        = $_SESSION['user_id'];
+    $target_distributor_id = $_POST['distributor_id']; // distributor yang dituju
+    $current_user_id = $_SESSION['distributor_id'];    // distributor yang memesan
 
-    if (!empty($product_id) && !empty($quantity) && !empty($total_payment) && !empty($distributor_id)) {
-        
+    if (!empty($product_id) && !empty($quantity) && !empty($total_payment) && !empty($target_distributor_id)) {
         try {
-            // Mulai transaksi
             $pdo->beginTransaction();
 
-            // 1. Simpan ke tabel purchase_orders
-            $poData = array(
-                'distributor_id'   => $distributor_id,
+            // Simpan purchase order
+            $poData = [
+                'distributor_id'   => $target_distributor_id,  // distributor yang dituju
+                'user_order_id'    => $current_user_id,        // distributor yang memesan
+                'product_id'       => $product_id,
+                'quantity'         => $quantity,
                 'total_amount'     => $total_payment,
-                'status'  => 'pending',
-                'user_order_id' => $user_id
-            );
+                'status'           => 'pending',
+                'created_at'       => date('Y-m-d H:i:s')
+            ];
+            $obj->create('purchase_orders', $poData);
 
-            $poRes = $obj->create('purchase_orders', $poData);
-
-            if ($poRes) {
-                $purchase_order_id = $pdo->lastInsertId();
-
-                // 2. Simpan ke tabel purchase_order_items
-                $itemData = array(
-                    'purchase_order_id' => $purchase_order_id,
-                    'product_id'        => $product_id,
-                    'quantity'          => $quantity
-                );
-
-                $itemRes = $obj->create('purchase_order_items', $itemData);
-
-                if ($itemRes) {
-                    $pdo->commit();
-                    echo "yes";
-                } else {
-                    $pdo->rollBack();
-                    echo "Gagal menyimpan item PO";
-                }
-
-            } else {
-                $pdo->rollBack();
-                echo "Gagal membuat purchase order";
-            }
-
+            $pdo->commit();
+            echo 'success';
         } catch (Exception $e) {
             $pdo->rollBack();
-            echo "Error: " . $e->getMessage();
+            echo "Gagal menyimpan data: " . $e->getMessage();
         }
-
     } else {
-        echo "Silakan lengkapi semua field yang wajib diisi";
+        echo "Silakan lengkapi semua field.";
     }
 }
 ?>

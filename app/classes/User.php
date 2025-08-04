@@ -21,6 +21,7 @@ class User extends Objects {
 			$_SESSION['user_id'] = $user->id;
 			$_SESSION['user_role'] = $user->username;
 			$_SESSION['role_id'] = $user->user_role;
+			$_SESSION['distributor_id'] = $user->suppliar_id;
 			redirect("index.php");
 		} else {
 			$_SESSION['login_error'] = "Invalid Username or Password";

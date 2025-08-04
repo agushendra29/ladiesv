@@ -40,19 +40,12 @@
               </p>
             </a>
           </li>
-           <li class="nav-item">
-            <a href="index.php?page=member" style="font-size:14px !important;" class="nav-link <?php echo $actual_link=='member'?'active':'';?>">
-              <i class="material-symbols-outlined">supervisor_account</i>
-              <p>
-                Agen
-              </p>
-            </a>
-          </li>
+          
            <li class="nav-item">
             <a href="index.php?page=suppliar" style="font-size:14px !important;" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>">
               <i class="material-symbols-outlined">group</i>
               <p>
-                Distributor
+                Member
               </p>
             </a>
           </li>
@@ -65,7 +58,7 @@
           }
             ?>">
               <i class="material-symbols-outlined">inventory</i><p>
-                Stock
+                Stok Barang
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -74,13 +67,13 @@
               <li class="nav-item">
                 <a href="index.php?page=product_list" style="font-size:14px !important;" class="nav-link <?php echo $actual_link=='product_list'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
-                  <p>Products list</p>
+                  <p>Produk</p>
                 </a>
               </li>
                <li class="nav-item">
                 <a href="index.php?page=stock_management" style="font-size:14px !important;" class="nav-link <?php echo $actual_link=='stock_management'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
-                  <p>Stock Management</p>
+                  <p>Atur Stok</p>
                 </a>
               </li>
              </ul>
@@ -103,7 +96,7 @@
               <li class="nav-item">
                 <a style="font-size:14px !important;" href="index.php?page=sell_list" class="nav-link <?php echo $actual_link=='sell_list'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
-                  <p>List Penjualan</p>
+                  <p>Penjualan</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -121,22 +114,22 @@
           <!-- buy sidebar  -->
            <li class="nav-item has-treeview">
             <a style="font-size:14px !important;" href="#" class="nav-link <?php 
-              if ($actual_link == 'buy_product' || $actual_link =='buy_list' || $actual_link == 'buy_refund_list') {echo "active";
+              if ($actual_link == 'purchase_order' || $actual_link =='purchase_order' || $actual_link == 'purchase_order') {echo "";
           }else{
             echo "";
           }
             ?>">
               <i  class="material-symbols-outlined">payments</i>
               <p>
-                Order
+                Pemesanan
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a style="font-size:14px !important;" href="index.php?page=buy_list" class="nav-link <?php echo $actual_link=='buy_list'?'active':'';?>">
+                <a style="font-size:14px !important;" href="index.php?page=purchase_order" class="nav-link <?php echo $actual_link=='purchase_order'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
-                  <p>List Order</p>
+                  <p>Daftar Transaksi</p>
                 </a>
               </li>
               <li class="nav-item">

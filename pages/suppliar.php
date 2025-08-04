@@ -16,7 +16,7 @@
                 <!-- *************  table start here *********** -->
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title"><b>Distributor List</b></h3>
+                    <h3 class="card-title"><b>Daftar Member</b></h3>
                     <button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target=".suppliarModal"><i class="fas fa-plus"></i> Add new</button>
                   </div>
                   <!-- /.card-header -->

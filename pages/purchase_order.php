@@ -5,10 +5,10 @@
       <div class="card mt-5">
         <div class="card-header">
           <div class="row">
-            <h4><b>List Order</b></h4>
+            <h4><b>Daftar Pemesanan</b></h4>
           </div>
             <a href="index.php?page=add_purchase_order" class="btn btn-success btn-sm float-right" style="margin:8px; border-radius:6px;">
-              <i class="fas fa-plus"></i> Tambah Pemesanan
+              <i class="fas fa-plus"></i>  Pesan
             </a>
           
         </div>

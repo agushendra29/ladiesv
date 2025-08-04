@@ -26,19 +26,19 @@ if($searchValue != ''){
 }
 
 ## Total number of records without filtering
-$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3");
+$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar");
 $stmt->execute();
 $records = $stmt->fetch();
 $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 OR role_id = 2 and 1 ".$searchQuery);
+$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar".$searchQuery);
 $stmt->execute($searchArray);
 $records = $stmt->fetch();
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$stmt = $pdo->prepare("SELECT * FROM suppliar WHERE role_id = 3 OR role_id = 2 and 1 ".$searchQuery." ORDER BY ".$columnName." ".$columnSortOrder." LIMIT :limit,:offset");
+$stmt = $pdo->prepare("SELECT * FROM suppliar ".$searchQuery." ORDER BY ".$columnName." ".$columnSortOrder." LIMIT :limit,:offset");
 
 // Bind values
 foreach($searchArray as $key=>$search){
