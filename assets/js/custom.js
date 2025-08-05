@@ -21,9 +21,7 @@ $("#empTable").DataTable({
     ajax: {
         url: "app/ajax/member_data.php"
     },
-    columns: [{
-        data: "suppliar_id"
-    }, {
+    columns: [ {
         data: "name"
     }, {
         data: "address"
@@ -40,13 +38,15 @@ $("#empTable").DataTable({
         url: "app/ajax/suppliar_data.php"
     },
     columns: [{
-        data: "suppliar_id"
-    }, {
+        data: "id"
+    },{
         data: "name"
     },  {
         data: "address"
     }, {
         data: "con_num"
+    },{
+        data: "role_id"
     }, {
         data: "action"
     }]
@@ -184,7 +184,7 @@ $("#empTable").DataTable({
     columns: [{
         data: "id"
     }, {
-        data: "distributor_id"
+        data: "suppliar_id"
     }, {
         data: "total_amount"
     }, {
@@ -209,13 +209,7 @@ $("#empTable").DataTable({
         data: "product_id"
     }, {
         data: "product_name"
-    }, {
-        data: "brand_name"
-    }, {
-        data: "catagory_name"
-    }, {
-        data: "product_source"
-    }, {
+    },{
         data: "sell_price"
     }, {
         data: "action"
@@ -229,12 +223,8 @@ $("#empTable").DataTable({
     },
     columns: [{
         data: "id"
-    }, {
-        data: "product_id"
-    }, {
+    },  {
         data: "product_name"
-    },{
-        data: "suppliar_id"
     },{
         data: "suppliar_name"
     }, {

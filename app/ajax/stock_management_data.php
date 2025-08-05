@@ -53,9 +53,10 @@ $empRecords = $stmt->fetchAll();
 
 $data = array();
 
+$counter = $row + 1;
 foreach($empRecords as $row){
    $data[] = array(
-      "id"=> $row['id'],
+      "id"=> $counter++,
       "product_id"=>$row['product_id'],
        "product_name"=>$row['product_name'],
       "suppliar_id"=>$row['suppliar_id'],

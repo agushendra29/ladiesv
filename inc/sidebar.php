@@ -58,7 +58,7 @@
           }
             ?>">
               <i class="material-symbols-outlined">inventory</i><p>
-                Stok Barang
+                Produk
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -67,13 +67,13 @@
               <li class="nav-item">
                 <a href="index.php?page=product_list" style="font-size:14px !important;" class="nav-link <?php echo $actual_link=='product_list'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
-                  <p>Produk</p>
+                  <p>Daftar Produk</p>
                 </a>
               </li>
                <li class="nav-item">
                 <a href="index.php?page=stock_management" style="font-size:14px !important;" class="nav-link <?php echo $actual_link=='stock_management'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
-                  <p>Atur Stok</p>
+                  <p>Stok Produk</p>
                 </a>
               </li>
              </ul>

@@ -8,12 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $orderId = $_POST['order_id'];
-$fromDistributorId = $_POST['suppliar_id']; // distributor yang meng-approve
+$fromDistributorId = 1; // distributor yang meng-approve
 
 try {
     $pdo->beginTransaction();
 
-    // Ambil data order langsung dari tabel purchase_orders
+    // Ambil data order
     $stmt = $pdo->prepare("SELECT * FROM purchase_orders WHERE id = ?");
     $stmt->execute([$orderId]);
     $order = $stmt->fetch();
@@ -26,26 +26,29 @@ try {
         throw new Exception('Order already processed.');
     }
 
-    $toDistributorId = $order['user_order_id'];  // distributor yang memesan
+    $toDistributorId = $order['suppliar_id'];
     $productId = $order['product_id'];
     $qty = $order['quantity'];
 
-    // 1. Kurangi stok distributor sumber
+    // Cek stok distributor sumber
     $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ?");
     $stmt->execute([$fromDistributorId, $productId]);
     $fromStock = $stmt->fetch();
 
     if (!$fromStock) {
-        throw new Exception("Stock distributor sumber tidak ditemukan.");
+        throw new Exception("Stok distributor sumber tidak ditemukan.");
     }
 
-    $newStockFrom = $fromStock['stock'] - $qty;
-    if ($newStockFrom < 0) $newStockFrom = 0;
+    if ($fromStock['stock'] < $qty) {
+        throw new Exception("Stok tidak cukup. Sisa stok: {$fromStock['stock']}, permintaan: {$qty}");
+    }
 
+    // Kurangi stok distributor sumber
+    $newStockFrom = $fromStock['stock'] - $qty;
     $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
     $stmt->execute([$newStockFrom, $fromStock['id']]);
 
-    // 2. Tambah stok ke distributor tujuan
+    // Tambahkan stok ke distributor tujuan
     $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ?");
     $stmt->execute([$toDistributorId, $productId]);
     $toStock = $stmt->fetch();
@@ -59,16 +62,15 @@ try {
         $stmt->execute([$toDistributorId, $productId, $qty]);
     }
 
-    $type = "out";
-    // 3. Catat histori dari sisi pengirim
-    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->execute([$fromDistributorId,"out", $productId, $qty]);
+    // Catat histori pengirim
+    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at) VALUES (?, 'out', ?, ?, NOW())");
+    $stmt->execute([$fromDistributorId, $productId, $qty]);
 
-    // 4. Catat histori dari sisi penerima
-    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->execute([$toDistributorId,"in",  $productId, $qty]);
+    // Catat histori penerima
+    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at) VALUES (?, 'in', ?, ?, NOW())");
+    $stmt->execute([$toDistributorId, $productId, $qty]);
 
-    // 5. Update status order jadi approved
+    // Update status order menjadi approved
     $stmt = $pdo->prepare("UPDATE purchase_orders SET status = 'approved', approved_at = NOW() WHERE id = ?");
     $stmt->execute([$orderId]);
 

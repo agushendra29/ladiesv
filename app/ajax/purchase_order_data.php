@@ -15,18 +15,19 @@ $searchArray = array();
 ## Search 
 $searchQuery = " ";
 if($searchValue != ''){
-   $searchQuery = " AND (distributor_id LIKE :distributor_id or 
-        total_amount LIKE :total_amount OR 
-        created_at LIKE :created_at OR 
-        approved_at LIKE :approved_at ) ";
+   $searchQuery = " AND (
+        u.name LIKE :suppliar_name OR 
+        po.total_amount LIKE :total_amount OR 
+        po.created_at LIKE :created_at OR 
+        po.approved_at LIKE :approved_at
+    ) ";
    $searchArray = array( 
-        'distributor_id'=>"%$searchValue%", 
+        'suppliar_name'=>"%$searchValue%", 
         'total_amount'=>"%$searchValue%",
         'created_at'=>"%$searchValue%",
         'approved_at'=>"%$searchValue%"
    );
 }
-
 ## Total number of records without filtering
 $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM purchase_orders ");
 $stmt->execute();
@@ -42,9 +43,11 @@ $totalRecordwithFilter = $records['allcount'];
 ## Fetch records
 $stmt = $pdo->prepare("SELECT 
     po.*,
+    u.name AS suppliar_name,
     GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ', quantity) SEPARATOR ', ') AS items_summary
 FROM purchase_orders po
 LEFT JOIN products p ON po.product_id = p.id
+LEFT JOIN suppliar u ON po.suppliar_id = u.id
 WHERE 1 ".$searchQuery."
 GROUP BY po.id
 ORDER BY ".$columnName." ".$columnSortOrder."
@@ -70,22 +73,18 @@ foreach ($empRecords as $row) {
 
     $rowData = array(
         "id" => $row['id'],
-        "distributor_id" => $row['distributor_id'],
+        "suppliar_id" => $row['suppliar_name'],
         "total_amount" => 'Rp ' . number_format($row['total_amount'], 0, ',', '.'),
         "status" => $row['status'],
         "items_summary" => $row['items_summary'],
         "created_at" => $row['created_at'],
         "approved_at" => $row['approved_at'],
-    );
-
-    if ($isAdmin) {
-        $rowData["action"] = '
+        "action" => $isAdmin && $row['status'] == "pending" ? '
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['id'].'" data-suppliar-id="'.$row['distributor_id'].'"><i class="fas fa-check"></i> Approve</button>
-                <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['id'].'"><i class="fas fa-times"></i> Reject</button>
-            </div>
-        ';
-    }
+                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['id'].'"><i class="fas fa-check"></i>Setuju</button>
+                <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['id'].'"><i class="fas fa-times"></i> Tolak</button>
+            </div>' : ''
+    );
 
     $data[] = $rowData;
 }

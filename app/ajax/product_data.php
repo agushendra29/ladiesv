@@ -55,16 +55,12 @@ $stmt->execute();
 $empRecords = $stmt->fetchAll();
 
 $data = array();
-
+$counter = $row + 1;
 foreach($empRecords as $row){
    $data[] = array(
-      "product_id"=>$row['product_id'],
+      "product_id"=>$counter++,
       "product_name"=>$row['product_name'],
-      "brand_name"=>$row['brand_name'],
-      "catagory_name"=>$row['catagory_name'],
-      "product_source"=>$row['product_source'],
-      "buy_price"=>$row['buy_price'],
-      "sell_price"=>$row['sell_price'],
+      "sell_price" => 'Rp ' . number_format($row['sell_price'], 0, ',', '.'),
       "action"=>'
           <div class="btn-group" role="group" aria-label="Basic example">
             <a href="index.php?page=product_edit&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" id="memberEdit_btn"><i class="fas fa-edit"></i></a>

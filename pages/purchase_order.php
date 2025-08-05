@@ -19,10 +19,10 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Distributor</th>
-                  <th>Total Amount</th>
+                  <th>Nama Pemesan</th>
+                  <th>Total Pembayaran</th>
                   <th>Status</th>
-                  <th>Item</th>
+                  <th>Produk</th>
                   <th>Created At</th>
                   <th>Approved At</th>
                   <th>Action</th>

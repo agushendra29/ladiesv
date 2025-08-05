@@ -20,7 +20,7 @@ class User extends Objects {
 		if ($count > 0) {
 			$_SESSION['user_id'] = $user->id;
 			$_SESSION['user_role'] = $user->username;
-			$_SESSION['role_id'] = $user->user_role;
+			$_SESSION['role_id'] = $user->role_id;
 			$_SESSION['distributor_id'] = $user->suppliar_id;
 			redirect("index.php");
 		} else {

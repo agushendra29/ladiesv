@@ -31,7 +31,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="product_id">Pilih Produk *:</label>
+                  <label for="product_id">Produk *:</label>
                   <select name="product_id" id="product_id" class="form-control select2" required>
                     <option disabled selected>Pilih produk</option>
                     <?php 
@@ -53,22 +53,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="product_id">Pilih Distributor *:</label>
-                  <select name="distributor_id" id="distributor_id" class="form-control select2" required>
-                    <option disabled selected>Pilih produk</option>
-                    <?php 
-                      $products = $obj->all('suppliar');
-                      foreach ($products as $product) {
-                        echo "<option value='{$product->suppliar_id}'>{$product->name}</option>";
-                      }
-                    ?>
-                  </select>
+                  <label for="product_id">Distributor *:</label>
+                   <input type="text" name="distributor" id="distributor" class="form-control" value="Head Officer" min="1" readonly>
                 </div>
               </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="total_payment">Jumlah Pembayaran</label>
-                    <input type="number" name="total_payment" id="total_payment" class="form-control" min="1" required>
+                    <label for="total_payment">Total Pembayaran</label>
+                    <input type="number" name="total_payment" id="total_payment" class="form-control" min="1" readonly>
                   </div>
                 </div>
             </div>

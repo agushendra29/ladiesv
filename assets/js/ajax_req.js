@@ -372,4 +372,25 @@ $("#editCatForm").submit(function (e) {
         },
       });
     }
-  });
+  }), 
+  $(document).on("click", ".btn-reject", function () {
+    const orderId = $(this).data('id');
+    if (confirm("Apakah Anda yakin ingin menolak pesanan ini?")) {
+        $.ajax({
+            url: 'app/action/reject_purchase_order.php',
+            type: 'POST',
+            data: { order_id: orderId },
+            success: function (response) {
+                if (response.status) {
+                    alert(response.message);
+                    $('#purchaseOrderTable').DataTable().ajax.reload();
+                } else {
+                    alert("Gagal menolak: " + response.message);
+                }
+            },
+            error: function () {
+                alert("Terjadi kesalahan jaringan.");
+            }
+        });
+    }
+});

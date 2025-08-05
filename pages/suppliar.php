@@ -16,8 +16,8 @@
                 <!-- *************  table start here *********** -->
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title"><b>Daftar Member</b></h3>
-                    <button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target=".suppliarModal"><i class="fas fa-plus"></i> Add new</button>
+                    <h3 class="card-title"><b>List Anggota</b></h3>
+                    <button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target=".suppliarModal"><i class="fas fa-plus"></i> Add Anggota</button>
                   </div>
                   <!-- /.card-header -->
                   <div class="card-body" style="font-size: 14px !important;">
@@ -25,11 +25,12 @@
                       <table id="suppliarTable" class="display dataTable text-center">
                         <thead style="font-size:14px !important">
                           <tr style="font-size:14px !important">
-                            <th>id</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Contact</th>
-                            <th>action</th>
+                            <th style="width:40px;">No</th>
+                            <th style="width:120px;">Nama</th>
+                            <th style="width:250px;">Alamat</th>
+                            <th style="width:120px;">Kontak</th>
+                             <th style="width:120px;">Role</th>
+                            <th>Aksi</th>
                           </tr>
                         </thead>
                           </table>

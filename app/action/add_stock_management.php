@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Prepare data to insert
         $query = array(				
-            'suppliar_id'   => $suppliar->suppliar_id,						
-            'product_id'    => $product->product_id,
+            'suppliar_id'   => $suppliar->id,						
+            'product_id'    => $product->id,
             'suppliar_name' => $suppliar->name,
             'product_name'  => $product->product_name,						
             'stock'         => $stock_quantity				

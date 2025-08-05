@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sup_role      = trim($_POST['sup_role'] ?? '');
     $sup_password  = trim($_POST['sup_password'] ?? '');
     $sup_address   = trim($_POST['supaddress'] ?? '');
-    $user_id = $_SESSION['user_id'] ?? null;
-    $suppliar_id = 3 . time(); // Suppliar ID unik
+    $user_id       = $_SESSION['user_id'] ?? null;
+    $serial_code   = 3 . time(); // Suppliar serial code (not primary key)
 
     // Validasi input
     if (
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Simpan ke tabel `suppliar`
             $sup_data = [
-                'suppliar_id' => $suppliar_id,
+                'serial_code' => $serial_code,
                 'name'        => $sup_name,
                 'address'     => $sup_address,
                 'con_num'     => $sup_contact,
@@ -37,21 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $res1 = $obj->create('suppliar', $sup_data);
 
-            // Simpan ke tabel `user` jika suppliar berhasil ditambahkan
+            // Dapatkan ID suppliar terakhir
             if ($res1) {
+                $suppliar_id = $res1; // DAPATKAN PRIMARY KEY SUPPLIAR
+                // Simpan user
                 $user_general_data = [
-                    'username'   => $sup_email,
-                    'password'   => md5($sup_password),
-                    'user_role'  => $sup_role,
-                    'suppliar_id'=> $suppliar_id
+                    'username'     => $sup_email,
+                    'password'     => md5($sup_password),
+                    'role_id'      => $sup_role,
+                    'suppliar_id'  => $suppliar_id,
+                    'is_active'    => 1
                 ];
                 $res2 = $obj->create('user', $user_general_data);
 
-                if ($res2) {
-                    echo "yes";
-                } else {
-                    echo "Gagal membuat user.";
-                }
+                echo $res2 ? "yes" : "Gagal membuat user.";
             } else {
                 echo "Gagal menambahkan suppliar.";
             }

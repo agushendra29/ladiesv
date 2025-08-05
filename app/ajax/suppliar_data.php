@@ -52,15 +52,16 @@ $empRecords = $stmt->fetchAll();
 
 $data = array();
 
+$counter = $row + 1;
 foreach($empRecords as $row){
    $data[] = array(
-      "suppliar_id"=>$row['suppliar_id'],
+      "id"=>$counter++,
       "name"=>$row['name'],
       "address"=>$row['address'],
       "con_num"=>$row['con_num'],
+      "role_id" => $row['role_id'],
       "action"=>'
        <div class="btn-group">
-      
           <a href="index.php?page=suppliar_edit&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" type="button"><i class="fas fa-edit"></i></a>
              <p id="suppliarDelete_btn" class="btn btn-danger btn-sm rounded-0 "  data-id="'.$row['id'].'"><i class="fas fa-trash-alt"></i></p>
           </div>

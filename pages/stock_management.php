@@ -22,8 +22,8 @@
             <div class="container-fluid">
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title"><b>Stok Produk Management</b></h3>
-                    <a href="index.php?page=add_stock_management" target="_blank" class="btn btn-primary btn-sm float-right rounded-0" style="margin:8px;"><i class="fas fa-plus"></i> Tambah Stock</a>
+                    <h3 class="card-title"><b>Stok Produk</b></h3>
+                    <a href="index.php?page=add_stock_management" target="_blank" class="btn btn-primary btn-sm float-right" style="margin:8px;"><i class="fas fa-plus"></i> Tambah stok</a>
                   </div>
                   
                   <!-- /.card-header -->
@@ -32,11 +32,9 @@
                       <table id="stockManagementTable" class="display dataTable text-center">
                         <thead>
                           <tr>
-                            <th>Id</th>
-                            <th>Product ID</th>
+                            <th>No</th>
                             <th>Product Name</th>
-                            <th>Supplier ID</th>
-                            <th>Supplier Name</th>
+                            <th>Distributor Name</th>
                             <th>Stock Quantity</th>
                             <th>Action</th>
                           </tr>

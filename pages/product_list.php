@@ -22,22 +22,19 @@
             <div class="container-fluid">
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title"><b>Total Product List</b></h3>
-                    <a href="index.php?page=add_product" target="_blank" class="btn btn-primary btn-sm float-right rounded-0" style="margin:8px;"><i class="fas fa-plus"></i> New Product</a>
+                    <h3 class="card-title"><b>List Produk</b></h3>
+                    <a href="index.php?page=add_product" target="_blank" class="btn btn-primary btn-sm float-right" style="margin:8px;">Tambah Produk</a>
                   </div>
                   
                   <!-- /.card-header -->
                   <div class="card-body">
                     <div class="table-responsive">
-                      <table id="productTable" class="display dataTable text-center">
+                      <table id="productTable" class="display dataTable text-center table-bordered table-hover table-striped">
                         <thead>
                           <tr>
-                            <th>Id</th>
-                            <th>Product name</th>
-                            <th>Brand</th>
-                            <th>Category</th>
-                            <th>Source</th>
-                            <th>Selling Price</th>
+                            <th style="width: 30px;">No</th>
+                            <th>Nama</th>
+                            <th>Harga</th>
                             <th>Action</th>
                           </tr>
                         </thead>
