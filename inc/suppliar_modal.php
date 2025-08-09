@@ -5,7 +5,7 @@
 
        <!-- Modal Header -->
        <div class="modal-header bg-primary">
-         <h4 class="modal-title">Tambah Distributor</h4>
+         <h4 class="modal-title">Tambah Anggota</h4>
          <button type="button" class="close" data-dismiss="modal">&times;</button>
        </div>
 
@@ -21,7 +21,7 @@
            <div class="row">
              <div class="col-md-6 col-lg-6">
                <div class="form-group">
-                 <label for="sup_name">Name *:</label>
+                 <label for="sup_name">Nama Lengkap *:</label>
                  <input type="text" class="form-control" id="sup_name" placeholder="Member name" name="sup_name">
                </div>
              </div>
@@ -48,9 +48,15 @@
              </div>
              <div class="col-md-6 col-lg-6">
                <div class="form-group">
-                 <label for="sup_contact">Contact number :</label>
+                 <label for="sup_contact">No Kontak :</label>
                  <input type="text" class="form-control" id="sup_contact" placeholder="Contact member"
                    name="sup_contact">
+               </div>
+             </div>
+               <div class="col-md-6 col-lg-6">
+               <div class="form-group">
+                 <label for="sup_contact">Tanggal Lahir :</label>
+                <input type="text" class="form-control datepicker" id="birth_date"  aria-describedby="addon-wrapping" name="birth_date" required>
                </div>
              </div>
              <div class="col-md-6 col-lg-6">
@@ -61,30 +67,32 @@
              </div>
               <div class="col-md-6">
               <div class="form-group">
-                <label for="sup_role">Role</label>
+                <label for="sup_role">Level Anggota</label>
                 <select class="form-control" id="sup_role" name="sup_role" required>
-                  <option value="">-- Select Role --</option>
+                  <option value="">-- Pilh Level Anggota --</option>
                   <option value="2">Head Distributor</option>
                   <option value="3">Distributor</option>
                   <option value="4">Agen</option>
+                  <option value="5">Reseller</option>
                 </select>
-              </div>
-            </div>
-              <div class="col-md-6">
-              <div class="form-group">
-                <label for="sup_password">Password</label>
-                <input type="password" class="form-control" id="sup_password" name="sup_password" required>
               </div>
             </div>
              <div class="col-md-12 col-lg-12">
                <div class="form-group">
-                 <label for="supaddress">Address:</label>
-                 <textarea rows="3" class="form-control" placeholder="Member complect Address" id="supaddress"
+                 <label for="supaddress">Alamat (Diisi Sesuai KTP):</label>
+                 <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai ktp" id="supaddressktp"
+                   name="supaddressktp"></textarea>
+               </div>
+             </div>
+              <div class="col-md-12 col-lg-12">
+               <div class="form-group">
+                 <label for="supaddress">Alamat Pengiriman:</label>
+                 <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai tempat domisili" id="supaddress"
                    name="supaddress"></textarea>
                </div>
              </div>
            </div>
-           <button type="submit" class="btn btn-primary btn-block rounded-0">Add member</button>
+           <button type="submit" class="btn btn-primary btn-block rounded-0">Tambah Anggota</button>
          </form>
          <!-- </div> -->
        </div>

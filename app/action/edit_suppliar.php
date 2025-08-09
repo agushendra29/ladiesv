@@ -45,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supRes = $obj->update('suppliar', 'id', $id, $supQuery);
 
     // Step 3: Update suppliar_user
-    $suppliar_id = $suppliar->suppliar_id;
-    $stmt = $pdo->prepare("SELECT * FROM suppliar_user WHERE suppliar_id = ?");
+    $suppliar_id = $suppliar->id;
+    $stmt = $pdo->prepare("SELECT * FROM user WHERE suppliar_id = ?");
     $stmt->execute([$suppliar_id]);
     $user = $stmt->fetch(PDO::FETCH_OBJ);
 
@@ -66,12 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Password is valid; update password and role
             $newPassHash = password_hash($password, PASSWORD_DEFAULT);
-            $updateUser = $pdo->prepare("UPDATE suppliar_user SET password = ?, role_id = ? WHERE suppliar_id = ?");
+            $updateUser = $pdo->prepare("UPDATE user SET password = ?, role_id = ? WHERE suppliar_id = ?");
             $updateUser->execute([$newPassHash, $role_id, $suppliar_id]);
 
         } else {
             // No password change; update only role
-            $updateUser = $pdo->prepare("UPDATE suppliar_user SET role_id = ? WHERE suppliar_id = ?");
+            $updateUser = $pdo->prepare("UPDATE user SET role_id = ? WHERE suppliar_id = ?");
             $updateUser->execute([$role_id, $suppliar_id]);
         }
     } else {

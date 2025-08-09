@@ -72,14 +72,14 @@ foreach ($empRecords as $row) {
     }
 
     $rowData = array(
-        "id" => $row['id'],
+        "id" => $row['invoice_number'],
         "suppliar_id" => $row['suppliar_name'],
         "total_amount" => 'Rp ' . number_format($row['total_amount'], 0, ',', '.'),
         "status" => $row['status'],
         "items_summary" => $row['items_summary'],
         "created_at" => $row['created_at'],
         "approved_at" => $row['approved_at'],
-        "action" => $isAdmin && $row['status'] == "pending" ? '
+        "action" => $isAdmin && $row['status'] == "pending"  ? '
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['id'].'"><i class="fas fa-check"></i>Setuju</button>
                 <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['id'].'"><i class="fas fa-times"></i> Tolak</button>

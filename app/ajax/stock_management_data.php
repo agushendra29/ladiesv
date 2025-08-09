@@ -62,12 +62,12 @@ foreach($empRecords as $row){
       "suppliar_id"=>$row['suppliar_id'],
       "suppliar_name"=>$row['suppliar_name'],
       "stock"=>$row['stock'],
-      "action"=>'
+      "action"=> $_SESSION['role_id'] == 1 ? '
           <div class="btn-group" role="group" aria-label="Basic example">
             <a href="index.php?page=stock_management_edit&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" id="memberEdit_btn"><i class="fas fa-edit"></i></a>
             <button type="button" id="stockManagementDelete_btn" class="btn btn-danger btn-sm rounded-0 ml-2" data-id="'.$row['id'].'"><i class="fas fa-trash-alt"></i></button>
           </div>
-      ',
+      ': "",
    );
 }
 

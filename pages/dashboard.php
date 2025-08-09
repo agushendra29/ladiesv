@@ -58,49 +58,9 @@
             <!-- /.info-box -->
           </div>
 
-          <div class="col-xl-3 col-xxl-6 col-sm-6">
-            <div class="info-box bg-info ">
-             
-              <div class="info-box-content">
-                <span class="info-box-text">Total sells</span>
-                <span class="info-box-number"> 
-                    
-                          <?php  
-                      $stmt = $pdo->prepare("SELECT SUM(`sub_total`) FROM `invoice`");
-                      $stmt->execute();
-                      $res = $stmt->fetch(PDO::FETCH_NUM);
-                      echo $total_sell_amount =  $res[0];
-                  ?>
-                  </span>
-              </div>
-               <span class="info-box-icon elevation-1"><i class="material-symbols-outlined">sell</i></span>
+         
 
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-
-
-          <div class="col-xl-3 col-xxl-6 col-sm-6">
-            <div class="info-box bg-secondary ">
-              
-              <div class="info-box-content">
-                <span class="info-box-text">Total purchase</span>
-                <span class="info-box-number"> 
-                         <?php  
-                      $stmt = $pdo->prepare("SELECT SUM(`purchase_subtotal`) FROM `purchase_products`");
-                      $stmt->execute();
-                      $res = $stmt->fetch(PDO::FETCH_NUM);
-                      echo $total_purchase =  $res[0];
-                  ?>
-                  </span>
-              </div>
-              <span class="info-box-icon elevation-1"><i class="material-symbols-outlined">payments</i></span>
-
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
+          
           <!-- /.col -->
 
           <!-- fix for small devices only -->

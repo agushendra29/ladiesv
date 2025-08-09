@@ -1,78 +1,81 @@
-<div class="content-wrapper">
+<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
   <!-- Header -->
-  <div class="content-header">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-6">
-          <h1 class="m-0 text-dark">Purchase Order</h1>
-        </div>
-        <div class="col-md-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Purchase Order</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main -->
   <section class="content">
-    <div class="container-fluid">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title"><b>Form Pemesanan</b></h3>
+    <div class="container-fluid" style="margin-top: 40px;">
+      <div style="
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+        padding: 24px;
+      ">
+        <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 600; color: #333;">📝 Form Pemesanan Produk</h2>
+        
+        <div class="alert alert-danger purchaseOrderError-area" style="display:none;">
+          <span id="purchaseOrderError"></span>
         </div>
-        <div class="card-body">
-          <div class="alert alert-danger purchaseOrderError-area" style="display:none;">
-            <span id="purchaseOrderError"></span>
+
+        <form id="purchaseOrderForm">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="product_id" style="font-weight: 500;">Produk *</label>
+              <select name="product_id" id="product_id" class="form-control select2" required style="border-radius: 8px;">
+                <option disabled selected>Pilih produk</option>
+                <?php 
+                  $products = $obj->all('products');
+                  foreach ($products as $product) {
+                    echo "<option value='{$product->id}' data-price='{$product->sell_price_hd}'>{$product->product_name}</option>";
+                  }
+                ?>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="quantity" style="font-weight: 500;">Kuantitas</label>
+              <input type="number" name="quantity" id="quantity" class="form-control" min="1" required style="border-radius: 8px;">
+            </div>
           </div>
-          <form id="purchaseOrderForm">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="product_id">Produk *:</label>
-                  <select name="product_id" id="product_id" class="form-control select2" required>
-                    <option disabled selected>Pilih produk</option>
-                    <?php 
-                      $products = $obj->all('products');
-                      foreach ($products as $product) {
-                        echo "<option value='{$product->id}' data-price='{$product->sell_price}'>{$product->product_name}</option>";
-                      }
-                    ?>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="quantity">Kuantitas</label>
-                  <input type="number" name="quantity" id="quantity" class="form-control" min="1" required>
-                </div>
-              </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="distributor" style="font-weight: 500;">Distributor *</label>
+              <input type="text" name="distributor" id="distributor" class="form-control" value="Head Officer" readonly style="border-radius: 8px;">
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="product_id">Distributor *:</label>
-                   <input type="text" name="distributor" id="distributor" class="form-control" value="Head Officer" min="1" readonly>
-                </div>
-              </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="total_payment">Total Pembayaran</label>
-                    <input type="number" name="total_payment" id="total_payment" class="form-control" min="1" readonly>
-                  </div>
-                </div>
+            <div class="col-md-6 mb-3">
+              <label for="total_payment" style="font-weight: 500;">Total Pembayaran</label>
+              <input type="number" name="total_payment" id="total_payment" class="form-control" min="1" readonly style="border-radius: 8px;">
             </div>
-            <!-- Submit -->
-            <div class="row text-center mt-4">
-              <div class="col-md-6 offset-md-3">
-                <button type="reset" class="btn btn-danger rounded-0 px-4">Reset</button>
-                <button type="submit" class="btn btn-primary rounded-0 px-4">Submit PO</button>
-              </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-6 offset-md-3 text-center">
+              <button type="reset" style="
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                margin-right: 10px;
+                transition: background-color 0.3s ease;"
+                onmouseover="this.style.backgroundColor='#d32f2f'"
+                onmouseout="this.style.backgroundColor='#f44336'"
+              >Reset</button>
+
+              <button type="submit" style="
+                background-color: #0073ea;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                transition: background-color 0.3s ease;"
+                onmouseover="this.style.backgroundColor='#005bb5'"
+                onmouseout="this.style.backgroundColor='#0073ea'"
+              >Submit PO</button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   </section>

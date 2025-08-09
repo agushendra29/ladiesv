@@ -4,11 +4,8 @@
 
     <!-- Brand Logo -->
     <a href="https://mayurik.com" class="brand-link">
-      <img src="assets/images/logo.png" alt="logo" class="brand-image ">
-     
+      <img src="assets/images/logo.png" alt="logo" class="brand-image">
     </a>
-
-    <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -81,7 +78,7 @@
 
           <li class="nav-item has-treeview">
             <a style="font-size:14px !important;" href="#" class="nav-link <?php 
-              if ($actual_link == 'quick_sell' || $actual_link =='sell_list' || $actual_link =='sell_return_list') {echo "active";
+              if ($actual_link == 'quick_sell' || $actual_link =='sell_order' || $actual_link =='sell_return_list') {echo "active";
           }else{
             echo "";
           }
@@ -94,7 +91,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a style="font-size:14px !important;" href="index.php?page=sell_list" class="nav-link <?php echo $actual_link=='sell_list'?'active':'';?>">
+                <a style="font-size:14px !important;" href="index.php?page=sell_order" class="nav-link <?php echo $actual_link=='sell_order'?'active':'';?>">
                   <!-- <i class="fas fa-align-justify nav-icon"></i> -->
                   <p>Penjualan</p>
                 </a>
@@ -121,7 +118,7 @@
             ?>">
               <i  class="material-symbols-outlined">payments</i>
               <p>
-                Pemesanan
+                Pembelian
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>

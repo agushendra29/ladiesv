@@ -8,8 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $orderId = $_POST['order_id'];
-$fromDistributorId = 1; // distributor yang meng-approve
-
+$fromDistributorId = $_SESSION['distributor_id']; // distributor yang meng-approve
 try {
     $pdo->beginTransaction();
 
@@ -31,7 +30,7 @@ try {
     $qty = $order['quantity'];
 
     // Cek stok distributor sumber
-    $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id= ? AND product_id = ?");
     $stmt->execute([$fromDistributorId, $productId]);
     $fromStock = $stmt->fetch();
 
@@ -58,21 +57,27 @@ try {
         $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
         $stmt->execute([$newStockTo, $toStock['id']]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO distributor_stocks (suppliar_id, product_id, stock) VALUES (?, ?, ?)");
-        $stmt->execute([$toDistributorId, $productId, $qty]);
+        $stmt = $pdo->prepare("SELECT * FROM suppliar WHERE id = ?");
+        $stmt->execute([$toDistributorId]);
+        $user = $stmt->fetch();
+        $stmt2 = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+        $stmt2->execute([$productId]);
+        $prod = $stmt2->fetch();
+        $stmt = $pdo->prepare("INSERT INTO distributor_stocks (suppliar_id, product_id, stock, suppliar_name, product_name) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$toDistributorId, $productId, $qty, $user['name'], $prod['product_name']]);
     }
 
+    $invoice_number = 'INV-' . strtoupper(uniqid());
+    $stmt = $pdo->prepare("SELECT * FROM suppliar WHERE id = ?");
+    $stmt->execute([$toDistributorId]);
+    $user = $stmt->fetch();
+    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?,  ?)");
+    $stmt->execute([$fromDistributorId, $productId, $qty, $toDistributorId, $user['name'], $invoice_number],);
     // Catat histori pengirim
-    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at) VALUES (?, 'out', ?, ?, NOW())");
-    $stmt->execute([$fromDistributorId, $productId, $qty]);
-
-    // Catat histori penerima
-    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at) VALUES (?, 'in', ?, ?, NOW())");
-    $stmt->execute([$toDistributorId, $productId, $qty]);
 
     // Update status order menjadi approved
-    $stmt = $pdo->prepare("UPDATE purchase_orders SET status = 'approved', approved_at = NOW() WHERE id = ?");
-    $stmt->execute([$orderId]);
+    $stmt = $pdo->prepare("UPDATE purchase_orders SET  invoice_number = ?,status = 'approved', approved_at = NOW() WHERE id = ?");
+    $stmt->execute([$invoice_number, $orderId]);
 
     $pdo->commit();
     echo json_encode(['status' => true, 'message' => 'Order approved and stock updated.']);

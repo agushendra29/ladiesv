@@ -1,120 +1,84 @@
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                    <h1 class="m-0 text-dark">
-                        <!-- Dashboard v2 -->
-                    </h1>
-                </div><!-- /.col -->
-                <div class="col-md-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2" style="margin-bottom: 16px;">
+        <div class="col-sm-6">
+          <h3 style="font-weight: bold;">Tambah Stok</h3>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right" style="background: none; padding: 0; margin: 0;">
+            <li class="breadcrumb-item"><a href="#" style="color: #007bff;">Home</a></li>
+            <li class="breadcrumb-item active" style="color: #6c757d;">Tambah Produk</li>
+          </ol>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <!-- .row -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><b>Tambah produk</b></h3>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-primary alert-dismissible fade show addStockManagementError-area" role="alert">
-                        <span id="addStockManagementError"></span>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="addStockManagement">
-                        
-                        <div class="row">
-                            <div class="col-md-6 ">
-                                <div class="form-group">
-                                    <label for="p_product">Produk * :</label>
+  </section>
 
-                                    <div class="form-group">
-                                        <select name="p_product" id="p_product" class="form-control select2">
-                                            <option disabled selected>Select product</option>
-                                            <?php 
-                                    $all_catgory = $obj->all('products');
-                                    foreach ($all_catgory as $catagory) {
-                                      ?>
-                                            <option value="<?=$catagory->id;?>"><?=$catagory->product_name;?>
-                                            </option>
-                                            <?php 
-                                    }
-                                   ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                             <div class="form-group">
-                            <label for="stock_quantity">Harga* :</label>
-                            <input type="number" class="form-control" id="stock_quantity" placeholder="Jumlah Stock" name="stock_quantity">
-                          </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="p_suppliar">Distributor/Agen * :</label>
-                                    <div class="form-group">
-                                        <select name="p_suppliar" id="p_suppliar" class="form-control select2">
-                                            <option disabled selected>Select Distributor</option>
-                                            <?php 
-            $all_catgory = $obj->all('suppliar');
-            foreach ($all_catgory as $catagory) {
-                // Konversi role_id menjadi teks
-                $roleName = '';
-                if ($catagory->role_id == 3) {
-                    $roleName = 'Distributor';
-                } elseif ($catagory->role_id == 4) {
-                    $roleName = 'Agen';
-                } elseif ($catagory->role_id == 2) {
-                    $roleName = 'Head Distributor';
-                }else {
-                    $roleName = 'HO';
-                }
-        ?>
-                                            <option value="<?= $catagory->id; ?>">
-                                                <?= $roleName; ?> - <?= $catagory->name; ?> 
-                                            </option>
-                                            <?php 
-            }
-        ?>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                       </div>
-
-                       
-                        
-                </div>
-            </div>
-            <div class="row text-center  buttons">
-                <div class="col-md-6 offset-md-3 col-lg-6 offset-lg-3">
-                    <input type="reset" title="Reset form" class="btn btn-danger pl-5 pr-5 rounded-0">
-                    <button type="submit" title="Save data" class="btn btn-primary pl-5 pr-5  rounded-0">Submit</button>
-                </div>
-            </div>
-            </form>
+  <section class="content">
+    <div class="container-fluid">
+      <div style="background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+        <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 24px; color: #1f2937;">Stok Manajemen</h2>
+        <!-- Alert -->
+        <div class="alert alert-primary alert-dismissible fade show addStockManagementError-area" role="alert" style="display: none; border-radius: 12px; padding: 16px;">
+          <span id="addStockManagementError"></span>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="background: none; border: none; font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
 
-</div>
+        <!-- Form -->
+        <form id="addStockManagement">
+          <div class="row">
+            <!-- Produk -->
+            <div class="col-md-6" style="margin-bottom: 24px;">
+              <label for="p_product" style="font-weight: 600; display: block; margin-bottom: 8px;">Produk *</label>
+              <select name="p_product" id="p_product" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;">
+                <option disabled selected>Pilih Produk</option>
+                <?php 
+                  $all_catgory = $obj->all('products');
+                  foreach ($all_catgory as $catagory) {
+                    echo "<option value='{$catagory->id}'>{$catagory->product_name}</option>";
+                  }
+                ?>
+              </select>
+            </div>
 
-<!-- /.row -->
+            <!-- Harga -->
+            <div class="col-md-6" style="margin-bottom: 24px;">
+              <label for="stock_quantity" style="font-weight: 600; display: block; margin-bottom: 8px;">Jumlah Stok *</label>
+              <input type="number" id="stock_quantity" name="stock_quantity" placeholder="Harga Produk" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;" />
+            </div>
+
+            <!-- Suppliar -->
+            <div class="col-md-12" style="margin-bottom: 24px;">
+              <label for="p_suppliar" style="font-weight: 600; display: block; margin-bottom: 8px;">Distributor / Agen *</label>
+              <select name="p_suppliar" id="p_suppliar" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;">
+                <option disabled selected>Pilih Distributor/Agen</option>
+                <?php 
+                  $all_sup = $obj->all('suppliar');
+                  foreach ($all_sup as $catagory) {
+                    $roleName = ($catagory->role_id == 3) ? 'Distributor' :
+                                (($catagory->role_id == 4) ? 'Agen' :
+                                (($catagory->role_id == 2) ? 'Head Distributor' : 'HO'));
+                    echo "<option value='{$catagory->id}' data-role-id='{$catagory->role_id}'>{$roleName} - {$catagory->name}</option>";
+                  }
+                ?>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tombol -->
+          <div class="row justify-content-center" style="margin-top: 32px;">
+            <button type="reset" style="background-color: #dc3545; color: #fff; border: none; border-radius: 10px; padding: 10px 40px; font-size: 16px; margin-right: 16px; cursor: pointer;">
+              Reset
+            </button>
+            <button type="submit" style="background-color: #007bff; color: #fff; border: none; border-radius: 10px; padding: 10px 40px; font-size: 16px; cursor: pointer;">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 </div>
-<!--/. container-fluid -->
-</section>
-<!-- /.content -->
-</div>
-<!-- /.content-wrapper

@@ -21,7 +21,7 @@ $("#empTable").DataTable({
     ajax: {
         url: "app/ajax/member_data.php"
     },
-    columns: [ {
+    columns: [{
         data: "name"
     }, {
         data: "address"
@@ -39,13 +39,13 @@ $("#empTable").DataTable({
     },
     columns: [{
         data: "id"
-    },{
+    }, {
         data: "name"
-    },  {
+    }, {
         data: "address"
     }, {
         data: "con_num"
-    },{
+    }, {
         data: "role_id"
     }, {
         data: "action"
@@ -115,23 +115,58 @@ $("#empTable").DataTable({
     }, {
         data: "action"
     }]
-}), $("#addProduct").submit((function (a) {
-    a.preventDefault();
-    var t = $("#product_name").val(),
-        e = $("#brand").val(),
-        d = $("#p_catagory").val();
-    if ("" != t && "" != e && null != d) {
-        var r = $("#addProduct").serialize();
+}), $("#addProduct").submit(function (e) {
+    e.preventDefault();
+
+    var productName = $("#product_name").val().trim(),
+        sell_price_hd = $("#sell_price_hd").val().trim(),
+        sell_price_d = $("#sell_price_d").val().trim();
+    sell_price_a = $("#sell_price_d").val().trim();
+    sell_price_r = $("#sell_price_d").val().trim();
+
+    if (productName && sell_price_hd && sell_price_d && sell_price_a && sell_price_r) {
+        var formData = $(this).serialize();
+
         $.ajax({
             type: "POST",
             url: "app/action/add_product.php",
-            data: r,
-            success: function (a) {
-                "yes" == $.trim(a) ? ($(".addProductError-area").show(), $("#addProductError").html("Product added successfull"), $("#addProduct")[0].reset()) : ($(".addProductError-area").show(), $("#addProductError").html(a))
+            data: formData,
+            success: function (response) {
+                $(".addProductError-area").show();
+
+                if ($.trim(response).toLowerCase() === "yes") {
+                    $("#addProductError").html("✅ Product added successfully");
+                    $("#addProductError").css({
+                        "background": "#d4edda",
+                        "color": "#155724"
+                    });
+                    $("#addProduct")[0].reset();
+                } else {
+                    $("#addProductError").html("❌ " + response);
+                    $("#addProductError").css({
+                        "background": "#f8d7da",
+                        "color": "#721c24"
+                    });
+                }
+            },
+            error: function () {
+                $(".addProductError-area").show();
+                $("#addProductError").html("⚠️ Server error, please try again");
+                $("#addProductError").css({
+                    "background": "#fff3cd",
+                    "color": "#856404"
+                });
             }
-        })
-    } else $(".addProductError-area").show(), $("#addProductError").html("pleasse filled out all required filled")
-})),$("#addStockManagement").submit((function (a) {
+        });
+    } else {
+        $(".addProductError-area").show();
+        $("#addProductError").html("⚠️ Please fill out all required fields");
+        $("#addProductError").css({
+            "background": "#fff3cd",
+            "color": "#856404"
+        });
+    }
+}), $("#addStockManagement").submit((function (a) {
     a.preventDefault();
     var t = $("#p_product").val(),
         e = $("#p_suppliar").val(),
@@ -148,32 +183,75 @@ $("#empTable").DataTable({
         })
     } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
 })), $("#purchaseOrderForm").submit(function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  var product = $("#product_id").val(),
-      qty = $("#quantity").val();
+    var product = $("#product_id").val(),
+        qty = $("#quantity").val();
 
-  if ("" != product && null != qty && qty > 0) {
-    var formData = $("#purchaseOrderForm").serialize();
+    if ("" != product && null != qty && qty > 0) {
+        var formData = $("#purchaseOrderForm").serialize();
+        $.ajax({
+            type: "POST",
+            url: "app/action/add_purchase_order.php",
+            data: formData,
+            success: function (res) {
+                if ($.trim(res) == "yes") {
+                    $(".purchaseOrderError-area").show();
+                    $("#purchaseOrderError").html("Pemesanan berhasil ditambahkan");
+                    $("#purchaseOrderForm")[0].reset();
+                } else {
+                    $(".purchaseOrderError-area").show();
+                    $("#purchaseOrderError").html(res);
+                }
+            }
+        });
+    } else {
+        $(".purchaseOrderError-area").show();
+        $("#purchaseOrderError").html("Silakan isi semua field yang diperlukan");
+    }
+}), $("#salesForm").submit(function (e) {
+    e.preventDefault();
+
+    let product = $("#product_id").val(),
+        qty = $("#quantity").val(),
+        buyerSelect = $("#customer_name").val(),
+        buyerInput = $("#buyer").val().trim();
+
+    if ((buyerSelect === "0" || buyerSelect === null) && buyerInput === "") {
+        $("#saleErrorArea").show().html("Silakan pilih pembeli dari daftar ATAU ketik nama pembeli secara manual.");
+        return;
+    }
+
+    if (!product || !qty || qty <= 0) {
+        $("#saleErrorArea").show().html("Produk dan jumlah wajib diisi.");
+        return;
+    }
+
+    let formData = {
+        product_id: product,
+        quantity: qty,
+        buyer: buyerSelect,
+        buyerName: buyerInput,
+        total_payment: $("#total_payment").val()
+    };
+
     $.ajax({
-      type: "POST",
-      url: "app/action/add_purchase_order.php",
-      data: formData,
-      success: function (res) {
-        if ($.trim(res) == "yes") {
-          $(".purchaseOrderError-area").show();
-          $("#purchaseOrderError").html("Pemesanan berhasil ditambahkan");
-          $("#purchaseOrderForm")[0].reset();
-        } else {
-          $(".purchaseOrderError-area").show();
-          $("#purchaseOrderError").html(res);
+        type: "POST",
+        url: "app/action/add_sell_order.php", // Ganti jika file PHP kamu berbeda
+        data: formData,
+        success: function (res) {
+            if ($.trim(res) === "yes") {
+                $("#saleErrorArea").css("color", "#16a34a").show().html("Penjualan berhasil ditambahkan.");
+                $("#salesForm")[0].reset();
+                $("#total_payment").val('');
+            } else {
+                $("#saleErrorArea").css("color", "#b91c1c").show().html(res);
+            }
+        },
+        error: function () {
+            $("#saleErrorArea").css("color", "#b91c1c").show().html("Terjadi kesalahan saat mengirim data.");
         }
-      }
     });
-  } else {
-    $(".purchaseOrderError-area").show();
-    $("#purchaseOrderError").html("Silakan isi semua field yang diperlukan");
-  }
 }), $("#purchaseOrderTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -189,16 +267,37 @@ $("#empTable").DataTable({
         data: "total_amount"
     }, {
         data: "status"
-    },{
+    }, {
         data: "items_summary"
     }, {
         data: "created_at"
     }, {
         data: "approved_at"
-    },{
+    }, {
         data: "action"
     }]
+}), $("#sellOrderTable").DataTable({
+    processing: !0,
+    serverSide: !0,
+    serverMethod: "post",
+    ajax: {
+        url: "app/ajax/sell_order_data.php"
+    },
+    columns: [{
+        data: "invoice_number"
+    }, {
+        data: "distributor_name"
+    }, {
+        data: "customer_name"
+    }, {
+        data: "net_total"
+    }, {
+        data: "order_date"
+    }, {
+        data: "items_summary"
+    }]
 }), $("#productTable").DataTable({
+
     processing: !0,
     serverSide: !0,
     serverMethod: "post",
@@ -209,12 +308,12 @@ $("#empTable").DataTable({
         data: "product_id"
     }, {
         data: "product_name"
-    },{
+    }, {
         data: "sell_price"
     }, {
         data: "action"
     }]
-}),$("#stockManagementTable").DataTable({
+}), $("#stockManagementTable").DataTable({
     processing: !0,
     serverSide: !0,
     serverMethod: "post",
@@ -223,15 +322,47 @@ $("#empTable").DataTable({
     },
     columns: [{
         data: "id"
-    },  {
+    }, {
         data: "product_name"
-    },{
+    }, {
         data: "suppliar_name"
     }, {
         data: "stock"
-    },   {
+    }, {
         data: "action"
     }]
+}), $("#stockLogsTable").DataTable({
+    processing: !0,
+    serverSide: !0,
+    serverMethod: "post",
+    ajax: {
+        url: "app/ajax/stock_log_data.php"
+    },
+    columns: [{
+            "data": "suppliar_name"
+        },
+        {
+            "data": "product_name"
+        },
+        {
+            "data": "action_type"
+        },
+        {
+            "data": "old_quantity"
+        },
+        {
+            "data": "new_quantity"
+        },
+        {
+            "data": "changed_by"
+        },
+        {
+            "data": "created_at"
+        },
+        {
+            "data": "note"
+        }
+    ]
 }), $("#otherProductTable").DataTable({
     processing: !0,
     serverSide: !0,

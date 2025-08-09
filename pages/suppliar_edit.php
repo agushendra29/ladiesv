@@ -17,7 +17,7 @@
            $stmt = $pdo->prepare("
     SELECT s.*, u.role_id
     FROM suppliar s
-    LEFT JOIN suppliar_user u ON s.suppliar_id = u.suppliar_id
+    LEFT JOIN user u ON s.id = u.suppliar_id
     WHERE s.id = ?
 ");
 $stmt->execute([$edit_id]);
@@ -26,7 +26,7 @@ $data = $stmt->fetch(PDO::FETCH_OBJ);
             if ($data) {
               ?>
             <div class="card-header">
-              <h6 class="float-left"><b>Distributor id</b> : #<?=$data->suppliar_id;?></h6>
+              <h6 class="float-left"><b>Distributor id</b> : #<?=$data->serial_code;?></h6>
             </div>
             <div class="card-body">
 
@@ -90,6 +90,7 @@ $data = $stmt->fetch(PDO::FETCH_OBJ);
                       <label for="role">Role *</label>
                       <select class="form-control" id="role" name="role" required>
                         <option value="">-- Select Role --</option>
+                        <option value="1" <?=$data->role_id == 1 ? 'selected' : ''?>>Head Officer</option>
                         <option value="2" <?=$data->role_id == 2 ? 'selected' : ''?>>Head Distributor</option>
                         <option value="3" <?=$data->role_id == 3 ? 'selected' : ''?>>Distributor</option>
                         <option value="4" <?=$data->role_id == 4 ? 'selected' : ''?>>Agen</option>
