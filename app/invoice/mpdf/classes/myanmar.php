@@ -120,7 +120,7 @@ public static function set_myanmar_properties(&$info) {
 	$pos = ($type >> 8);
 	/*
 	* Re-assign category
-	* http://www.microsoft.com/typography/OpenTypeDev/myanmar/intro.htm#analyze
+	* https://www.microsoft.com/typography/OpenTypeDev/myanmar/intro.htm#analyze
 	*/
 	if (self::in_range($u, 0xFE00, 0xFE0F))
 		$cat = self::OT_VS;

@@ -1,12 +1,7 @@
-<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
+<div style="margin-bottom:75px;">
   <section class="content">
-    <div class="container-fluid" style="margin-top: 40px;">
-      <div style="
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-        padding: 24px;
-      ">
+    <div class="container-fluid" style="margin-top: 50px;">
+      <div style="">
         <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 600; color: #333;">📦 Form Tambah Produk</h2>
 
         <!-- Success Message -->
@@ -28,9 +23,6 @@
               <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Product name"
                 style="border-radius: 8px;" required>
             </div>
-          </div>
-
-          <div class="row">
             <div class="col-md-6 mb-3">
               <label for="p_catagory" style="font-weight: 500;">Kategori Produk *</label>
               <select name="p_catagory" id="p_catagory" class="form-control select2" required
@@ -45,7 +37,6 @@
               </select>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="sell_price" style="font-weight: 500;">Harga Head Distributor*</label>

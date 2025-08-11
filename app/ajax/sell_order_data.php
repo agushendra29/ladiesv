@@ -4,12 +4,18 @@ require_once '../init.php';
 ## Read value from DataTables
 $draw = $_POST['draw'];
 $row = $_POST['start'];
-$rowperpage = $_POST['length']; // Rows per page
-$columnIndex = $_POST['order'][0]['column']; // Column index
-$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
-$columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
-$searchValue = $_POST['search']['value']; // Search value
+$rowperpage = $_POST['length'];
+$columnIndex = $_POST['order'][0]['column'];
+$columnName = $_POST['columns'][$columnIndex]['data'];
+$columnSortOrder = $_POST['order'][0]['dir'];
+$searchValue = $_POST['search']['value'];
 $searchArray = [];
+
+## Filter suppliar jika bukan role 1 (HO)
+$whereExtra = '';
+if ($_SESSION['role_id'] != 1) {
+    $whereExtra = " AND i.suppliar_id = :suppliar_id ";
+}
 
 ## Search query
 $searchQuery = " ";
@@ -17,47 +23,57 @@ if ($searchValue != '') {
     $searchQuery = " AND (
         i.invoice_number LIKE :invoice_number OR 
         i.net_total LIKE :net_total OR 
-        u1.name LIKE :customer_name OR 
         u2.name LIKE :distributor_name
     ) ";
-    $searchArray = array(
-        'invoice_number'    => "%$searchValue%",
-        'net_total'         => "%$searchValue%",
-        'customer_name'     => "%$searchValue%",
-        'distributor_name'  => "%$searchValue%"
-    );
+    $searchArray['invoice_number']   = "%$searchValue%";
+    $searchArray['net_total']        = "%$searchValue%";
+    $searchArray['distributor_name'] = "%$searchValue%";
 }
 
 ## Total records without filtering
-$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM invoice");
+$sqlTotal = "SELECT COUNT(*) AS allcount FROM invoice i WHERE 1 {$whereExtra}";
+$stmt = $pdo->prepare($sqlTotal);
+if ($_SESSION['role_id'] != 1) {
+    $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
+}
 $stmt->execute();
 $totalRecords = $stmt->fetch()['allcount'];
 
 ## Total records with filtering
-$stmt = $pdo->prepare("
+$sqlTotalFilter = "
     SELECT COUNT(DISTINCT i.id) AS allcount 
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
-    WHERE 1 {$searchQuery}
-");
-$stmt->execute($searchArray);
+    WHERE 1 {$whereExtra} {$searchQuery}
+";
+$stmt = $pdo->prepare($sqlTotalFilter);
+if ($_SESSION['role_id'] != 1) {
+    $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
+}
+foreach ($searchArray as $key => $search) {
+    $stmt->bindValue(':'.$key, $search, PDO::PARAM_STR);
+}
+$stmt->execute();
 $totalRecordwithFilter = $stmt->fetch()['allcount'];
 
 ## Fetch records with join
-$stmt = $pdo->prepare("SELECT i.*,
+$sqlFetch = "
+    SELECT i.*,
         u2.name AS distributor_name,
         GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ', d.quantity) SEPARATOR ', ') AS items_summary
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
     LEFT JOIN invoice_details d ON i.id = d.invoice_no
     LEFT JOIN products p ON d.pid = p.id
-    WHERE 1 {$searchQuery}
+    WHERE 1 {$whereExtra} {$searchQuery}
     GROUP BY i.id
     ORDER BY {$columnName} {$columnSortOrder}
     LIMIT :limit OFFSET :offset
-");
-
-## Bind search params
+";
+$stmt = $pdo->prepare($sqlFetch);
+if ($_SESSION['role_id'] != 1) {
+    $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
+}
 foreach ($searchArray as $key => $search) {
     $stmt->bindValue(':'.$key, $search, PDO::PARAM_STR);
 }
@@ -72,7 +88,6 @@ foreach ($records as $row) {
     if (empty($row['items_summary']) || $row['net_total'] == 0) {
         continue;
     }
-
     $data[] = [
         "invoice_number"   => $row['invoice_number'],
         "customer_name"    => $row['customer_name'],

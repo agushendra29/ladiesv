@@ -1,7 +1,7 @@
 <?php
 
 $orig_srcpath='../tests/tiger.png';						// as specified in your file (could be full URL)
-$file = 'http://127.0.0.1/MPDF1.com/common/mpdf/tests/tiger.png';	// Full URL
+$file = 'https://127.0.0.1/MPDF1.com/common/mpdf/tests/tiger.png';	// Full URL
 $fileIsLocal = true;									// is the file in the same domain?
 
 //======================================================================

@@ -11,7 +11,7 @@ Installation
 To test the installation, point your browser to the basic example file : [path_to_mpdf_folder]/mpdf/examples/example01_basic.php
 
 If you wish to define a different folder for temporary files rather than /tmp/ see the note on 'Folder for temporary files' in 
- the section on Installation & Setup in the manual (http://mpdf1.com/manual/).
+ the section on Installation & Setup in the manual (https://mpdf1.com/manual/).
 
 If you have problems, please read the section on troubleshooting in the manual.
 
@@ -117,7 +117,7 @@ For backwards compatibility, new mPDF('-s') and new mPDF('s') will force subsett
 
 Configuration variables changed
 ===============================
-Configuration variables are documented in the on-line manual (http://mpdf1.com/manual/).
+Configuration variables are documented in the on-line manual (https://mpdf1.com/manual/).
 
 
 Font folders

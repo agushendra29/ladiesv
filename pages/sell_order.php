@@ -1,54 +1,58 @@
-<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
-  <!-- Purchase Order Page -->
+<div style="padding-top:52px; background-color: #f6f7fb;">
+  <!-- Sell Order Page -->
   <section class="content">
-    <div class="container-fluid" style="margin-top: 40px;">
-      <div style="
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-        padding: 24px;
-      ">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-          <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #333;">📋 Daftar Penjualan</h2>
-          <a href="index.php?page=add_sell_order"
-             style="
+    <div class="container-fluid">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
+          <h2 style="margin: 0; font-size: 26px; font-weight: 600; color: #222; user-select:none;">
+            📋 DAFTAR PENJUALAN
+          </h2>
+          <a href="index.php?page=add_sell_order" style="
                background-color: #0073ea;
-               color: white;
-               border-radius: 10px;
-               padding: 10px 20px;
+               color: #fff;
+               border-radius: 12px;
+               padding: 8px 20px;
                font-weight: 600;
-               font-size: 14px;
+               font-size: 12px;
                text-decoration: none;
-               transition: background-color 0.3s ease;
-             "
-             onmouseover="this.style.backgroundColor='#005bb5'"
-             onmouseout="this.style.backgroundColor='#0073ea'"
-          >
-            <i class="fas fa-plus mr-1"></i> Tambah Penjualan
+               box-shadow: 0 4px 12px rgba(0,115,234,0.4);
+               transition: background-color 0.3s ease, box-shadow 0.3s ease;
+               display: flex;
+               align-items: center;
+               gap: 8px;
+               user-select:none;
+             " 
+             onmouseover="this.style.backgroundColor='#005bb5'; this.style.boxShadow='0 6px 18px rgba(0,91,181,0.5)'" 
+             onmouseout="this.style.backgroundColor='#0073ea'; this.style.boxShadow='0 4px 12px rgba(0,115,234,0.4)'">
+            <i class="fas fa-plus" style="font-size: 16px;"></i> Tambah Penjualan
           </a>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive" style="overflow-x:auto;">
           <table id="sellOrderTable" class="display dataTable text-center" style="
             width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
+            border-collapse: separate;
+            border-spacing: 0 10px;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+            background: #fff;
+            font-size: 12px !important;
+            min-width: 900px;
           ">
-            <thead style="background-color: #f0f3f6; color: #555;">
+            <thead style="background-color: #2563eb; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
               <tr>
-                <th style="padding: 12px;">Invoice No</th>
-                <th style="padding: 12px;">Nama Distributor</th>
-                <th style="padding: 12px;">Nama Customer</th>
-                <th style="padding: 12px;">Total Pembayaran</th>
-                <th style="padding: 12px;">Tanggal Penjualan</th>
-                <th style="padding: 12px;">Produk</th>
+                <th style="padding: 16px 20px; border-bottom: none; border-top-left-radius: 12px; font-size: 11px;">No Invoice</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Nama Distributor</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Nama Customer</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Total Bayar</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Penjualan</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Produk</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- DataTables will inject data here -->
+
+            <tbody style="color: #374151; font-weight: 500;">
+              <!-- DataTables will inject rows here -->
             </tbody>
           </table>
         </div>
@@ -56,3 +60,22 @@
     </div>
   </section>
 </div>
+
+<style>
+  #sellOrderTable tbody tr {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #sellOrderTable tbody tr:hover {
+    background-color: #eff6ff;
+    box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
+  }
+
+  #sellOrderTable tbody tr td {
+    padding: 14px 22px;
+    vertical-align: middle;
+  }
+</style>

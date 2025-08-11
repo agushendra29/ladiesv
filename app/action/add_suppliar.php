@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $birth_date = null; // atau biarkan kosong
 }
     $name_prefix = substr(preg_replace('/[^A-Za-z]/', '', $sup_name), 0, 3); // Hanya huruf
-    $dob_format  = date('d_m_Y', strtotime($birth_date));
-    $sup_password_plain = strtolower($name_prefix) . '_' . $dob_format;
+    $dob_format  = date('dmY', strtotime($birth_date));
+   $sup_password_plain = strtolower($name_prefix) . $dob_format;
     // Validasi input
     if (
         $sup_name && $sup_nik && $sup_rekening && $sup_bank && $birth_date &&
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'rekening'    => $sup_rekening,
                 'role_id'     => $sup_role,
                 'update_by'   => $user_id,
-                'address_ktp' =>$sup_address_ktp,
+                'address_ktp' => $sup_address_ktp,
                 'date_of_birth' =>$birth_date,
             ];
 
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Simpan user
                 $user_general_data = [
                     'username'     => $sup_email,
-                    'password'     => md5($sup_password_plain),
+                    'password'     => $sup_password_plain,
                     'role_id'      => $sup_role,
                     'suppliar_id'  => $suppliar_id,
                     'is_active'    => 1

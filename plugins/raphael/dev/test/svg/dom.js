@@ -1,7 +1,7 @@
 (function (assert) {
   
   let paper,
-    url = 'http://raphaeljs.com';
+    url = 'https://raphaeljs.com';
   
   QUnit.module('DOM', {
     beforeEach: function () {

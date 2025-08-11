@@ -13,7 +13,7 @@ class User extends Objects {
 	public function login($username, $pass) {
 		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE username = :username AND password = :pass ");
 		$stmt->bindValue(":username", $username, PDO::PARAM_STR);
-		$stmt->bindValue(":pass", md5($pass), PDO::PARAM_STR);
+		$stmt->bindValue(":pass", $pass, PDO::PARAM_STR);
 		$stmt->execute();
 		$user = $stmt->fetch(PDO::FETCH_OBJ);
 		$count = $stmt->rowCount();
@@ -28,9 +28,6 @@ class User extends Objects {
 			redirect("login.php");
 		}
 	}
-
-
-
 
 	public function is_admin(){
 		if ($_SESSION['user_role'] === 'admin') {

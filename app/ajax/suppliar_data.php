@@ -69,12 +69,22 @@ foreach ($empRecords as $row) {
         "address" => $row['address'],
         "con_num" => $row['con_num'],
         "role_id" => getRoleName($row['role_id']),
-        "action" => $_SESSION['role_id'] == 1 ? '
-            <div class="btn-group">
-                <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" class="btn btn-secondary btn-sm rounded-0" type="button"><i class="fas fa-edit"></i></a>
-                <p id="suppliarDelete_btn" class="btn btn-danger btn-sm rounded-0" data-id="' . $row['id'] . '"><i class="fas fa-trash-alt"></i></p>
-            </div> :
-        ': '',
+       "action" => $_SESSION['role_id'] == 1 ? '
+    <div class="btn-group" role="group" aria-label="Actions" style="gap:4px;">
+        <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
+           class="btn btn-primary btn-sm" 
+           style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;"
+           title="Edit">
+           <i class="fas fa-edit" style="font-size:14px;"></i>
+        </a>
+        <button id="suppliarDelete_btn" data-id="' . $row['id'] . '" 
+           class="btn btn-danger btn-sm" 
+           style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;" 
+           title="Hapus">
+           <i class="fas fa-trash-alt" style="font-size:14px;"></i>
+        </button>
+    </div>
+' : '',
     );
 }
 

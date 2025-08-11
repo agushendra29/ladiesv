@@ -2,7 +2,7 @@
 
 /* This script examines your font directory. 
    Point your browser to 
-   http://your.domain/your_path_to _mpdf/utils/font_names.php
+   https://your.domain/your_path_to _mpdf/utils/font_names.php
    By default this will examine the folder /ttfonts/ (or the default font
    directory defined by _MPDF_TTFONTPATH.
    You can optionally define an alternative folder to examine by setting 

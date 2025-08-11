@@ -83,7 +83,7 @@ Background gradients can be set on all block elements e.g. P, DIV, H1-H6, as wel
 
 <h4>Rounded Borders</h4>
 <div class="rounded">
-Rounded corners to borders can be added using border-radius as defined in the draft spec. of <a href="http://www.w3.org/TR/2008/WD-css3-background-20080910/#layering">CSS3</a>. <br />
+Rounded corners to borders can be added using border-radius as defined in the draft spec. of <a href="https://www.w3.org/TR/2008/WD-css3-background-20080910/#layering">CSS3</a>. <br />
 
 The two length values of the border-*-radius properties define the radii of a quarter ellipse that defines the shape of the corner of the outer border edge.
 The first value is the horizontal radius. <br />

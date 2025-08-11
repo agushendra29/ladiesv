@@ -1,13 +1,13 @@
 <?php
 	$msg = isset($_GET['msg']) ? $_GET['msg'] : '';
-	if (!$msg) $msg = "Le site du spipu\r\nhttp://spipu.net/";
+	if (!$msg) $msg = "Le site du spipu\r\nhttps://spipu.net/";
 
 	$err = isset($_GET['err']) ? $_GET['err'] : '';
 	if (!in_array($err, array('L', 'M', 'Q', 'H'))) $err = 'L';
 
 	require_once('qrcode.class.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
 		<title>Spipu Qrcode <?php echo __CLASS_QRCODE__; ?></title>
@@ -55,13 +55,13 @@ table.qr td.on
 				<input type="submit" value="Afficher">
 			</form>
 			<hr>
-			Génération d'un tableau HTML :<br> 
+			Gï¿½nï¿½ration d'un tableau HTML :<br> 
 <?php
 	$qrcode = new QRcode(utf8_encode($msg), $err);
 	$qrcode->displayHTML();
 ?>
 			<br>
-			Génération d'une image PNG : <br>
+			Gï¿½nï¿½ration d'une image PNG : <br>
 			<img src="./image.php?msg=<?php echo urlencode($msg); ?>&amp;err=<?php echo urlencode($err); ?>" alt="generation qr-code" style="border: solid 1px black;">
 		</center>
 	</body>

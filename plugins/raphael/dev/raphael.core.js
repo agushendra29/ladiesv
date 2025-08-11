@@ -175,7 +175,7 @@ define(["eve"], function(eve) {
             "font-weight": 400,
             gradient: 0,
             height: 0,
-            href: "http://raphaeljs.com/",
+            href: "https://raphaeljs.com/",
             "letter-spacing": 0,
             opacity: 1,
             path: "M0,0",
@@ -316,7 +316,7 @@ define(["eve"], function(eve) {
      **
      * Can be “SVG”, “VML” or empty, depending on browser support.
     \*/
-    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
+    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("https://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
     if (R.type == "VML") {
         var d = g.doc.createElement("div"),
             b;
@@ -521,7 +521,7 @@ define(["eve"], function(eve) {
     };
     var toHex = function (color) {
         if (R.vml) {
-            // http://dean.edwards.name/weblog/2009/10/convert-any-colour-value-to-hex-in-msie/
+            // https://dean.edwards.name/weblog/2009/10/convert-any-colour-value-to-hex-in-msie/
             var trim = /^\s+|\s+$/g;
             var bod;
             try {
@@ -1017,7 +1017,7 @@ define(["eve"], function(eve) {
         delete this.start;
     };
 
-    // http://schepers.cc/getting-to-the-point
+    // https://schepers.cc/getting-to-the-point
     function catmullRom2bezier(crp, z) {
         var d = [];
         for (var i = 0, iLen = crp.length; iLen - 2 * !z > i; i += 2) {
@@ -1829,7 +1829,7 @@ define(["eve"], function(eve) {
         },
         a2c = function (x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
             // for more information of where this math came from visit:
-            // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
+            // https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
             var _120 = PI * 120 / 180,
                 rad = PI / 180 * (+angle || 0),
                 res = [],
@@ -3347,7 +3347,7 @@ define(["eve"], function(eve) {
      | "M10,20L30,40"
      * Here we can see two commands: “M”, with arguments `(10, 20)` and “L” with arguments `(30, 40)`. Upper case letter mean command is absolute, lower case—relative.
      *
-     # <p>Here is short list of commands available, for more details see <a href="http://www.w3.org/TR/SVG/paths.html#PathData" title="Details of a path's data attribute's format are described in the SVG specification.">SVG path string format</a>.</p>
+     # <p>Here is short list of commands available, for more details see <a href="https://www.w3.org/TR/SVG/paths.html#PathData" title="Details of a path's data attribute's format are described in the SVG specification.">SVG path string format</a>.</p>
      # <table><thead><tr><th>Command</th><th>Name</th><th>Parameters</th></tr></thead><tbody>
      # <tr><td>M</td><td>moveto</td><td>(x y)+</td></tr>
      # <tr><td>Z</td><td>closepath</td><td>(none)</td></tr>
@@ -3359,14 +3359,14 @@ define(["eve"], function(eve) {
      # <tr><td>Q</td><td>quadratic Bézier curveto</td><td>(x1 y1 x y)+</td></tr>
      # <tr><td>T</td><td>smooth quadratic Bézier curveto</td><td>(x y)+</td></tr>
      # <tr><td>A</td><td>elliptical arc</td><td>(rx ry x-axis-rotation large-arc-flag sweep-flag x y)+</td></tr>
-     # <tr><td>R</td><td><a href="http://en.wikipedia.org/wiki/Catmull–Rom_spline#Catmull.E2.80.93Rom_spline">Catmull-Rom curveto</a>*</td><td>x1 y1 (x y)+</td></tr></tbody></table>
+     # <tr><td>R</td><td><a href="https://en.wikipedia.org/wiki/Catmull–Rom_spline#Catmull.E2.80.93Rom_spline">Catmull-Rom curveto</a>*</td><td>x1 y1 (x y)+</td></tr></tbody></table>
      * * “Catmull-Rom curveto” is a not standard SVG command and added in 2.0 to make life easier.
      * Note: there is a special case when path consist of just three commands: “M10,10R…z”. In this case path will smoothly connects to its beginning.
      > Usage
      | var c = paper.path("M10 10L90 90");
      | // draw a diagonal line:
      | // move to 10,10, line to 90,90
-     * For example of path strings, check out these icons: http://raphaeljs.com/icons/
+     * For example of path strings, check out these icons: https://raphaeljs.com/icons/
     \*/
     paperproto.path = function (pathString) {
         pathString && !R.is(pathString, string) && !R.is(pathString[0], array) && (pathString += E);
@@ -4026,7 +4026,7 @@ define(["eve"], function(eve) {
      #     <li>“elastic”</li>
      #     <li>“bounce”</li>
      # </ul>
-     # <p>See also <a href="http://raphaeljs.com/easing.html">Easing demo</a>.</p>
+     # <p>See also <a href="https://raphaeljs.com/easing.html">Easing demo</a>.</p>
     \*/
     var ef = R.easing_formulas = {
         linear: function (n) {
@@ -5078,7 +5078,7 @@ define(["eve"], function(eve) {
      **
      * Adds given font to the registered set of fonts for Raphaël. Should be used as an internal call from within Cufón’s font file.
      * Returns original parameter, so it could be used with chaining.
-     # <a href="http://wiki.github.com/sorccu/cufon/about">More about Cufón and how to convert your font form TTF, OTF, etc to JavaScript file.</a>
+     # <a href="https://wiki.github.com/sorccu/cufon/about">More about Cufón and how to convert your font form TTF, OTF, etc to JavaScript file.</a>
      **
      > Parameters
      **
@@ -5397,7 +5397,7 @@ define(["eve"], function(eve) {
         loaded = true;
     });
 
-    // Firefox <3.6 fix: http://webreflection.blogspot.com/2009/11/195-chars-to-help-lazy-loading.html
+    // Firefox <3.6 fix: https://webreflection.blogspot.com/2009/11/195-chars-to-help-lazy-loading.html
     (function (doc, loaded, f) {
         if (doc.readyState == null && doc.addEventListener){
             doc.addEventListener(loaded, f = function () {

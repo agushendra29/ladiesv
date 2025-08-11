@@ -58,7 +58,7 @@ Bug Fixes & Minor Additions
 - SVG text which contains a < sign, it will break the text - now processed as &lt; (despite the fact that this does not conform to XML spec)
 - SVG images - support automatic font selection and (minimal) use of CSS classes - cf. the defined constants at top of svg.php file
 - SVG images - text-anchor now supported as a CSS style, as well as an HTML attribute
-- CSS support for :nth-child() selector improved to fully support the draft CSS3 spec - http://www.w3.org/TR/selectors/#nth-child-pseudo
+- CSS support for :nth-child() selector improved to fully support the draft CSS3 spec - https://www.w3.org/TR/selectors/#nth-child-pseudo
 	[NB only works on table columns or rows]
 - text-indent when set as "em" - incorrectly calculated if last text in line in different font size than for block
 - CSS not applying cascaded styles on <A> elements - [changed MergeCSS() type to INLINE for 'A', LEGEND, METER and PROGRESS]
@@ -69,7 +69,7 @@ Bug Fixes & Minor Additions
 - bug fixed in Overwrite() when specifying replacement as a string
 - barcode C93 - updated C93 code from TCPDF because of bug - incorrect checksum character for "153-2-4"
 - Tables - bug when using colspan across columns which may have a cell width specified
-	cf. http://www.mpdf1.com/forum/discussion/2221/colspan-bug
+	cf. https://www.mpdf1.com/forum/discussion/2221/colspan-bug
 - Tables - cell height (when specified) is not resized when table is shrunk
 - Tables - if table width specified, but narrower than minimum cell wdith, and less than page width - table will expand to 
 	minimum cell width(s) as long as $keep_table_proportions = true
@@ -86,7 +86,7 @@ Bug Fixes & Minor Additions
 - Barcodes with bottom numerals e.g. EAN-13 - incorrect numeral size when using core fonts
 --------------------------------
 NB Spec. for embedded SVG images:
-as per http://www.w3.org/TR/2003/REC-SVG11-20030114/struct.html#ImageElement
+as per https://www.w3.org/TR/2003/REC-SVG11-20030114/struct.html#ImageElement
 Attributes supported:
 x
 y
@@ -107,7 +107,7 @@ Bug Fixes & Minor Additions
 - Tables - cellSpacing and cellPadding taking preference over CSS stylesheet
 - Tables - background images in table inside HTML Footer incorrectly positioned
 - Tables - cell in a nested table with a specified width, should determine width of parent table cell
-	(cf. http://www.mpdf1.com/forum/discussion/1648/nested-table-bug-)
+	(cf. https://www.mpdf1.com/forum/discussion/1648/nested-table-bug-)
 - Tables - colspan (on a row after first row) exceeds number of columns in table
 - Gradients in Imported documents (mPDFI) causing error in some browsers
 - Fatal error after page-break-after:always on root level block element
@@ -129,7 +129,7 @@ Bug Fixes & Minor Additions
 - tables - font size carrying over from one nested table to the next nested table
 - tables - border set as attribute on <TABLE> overrides border set as CSS on <TD>
 - tables - if table width set to 100% and one cell/column is empty with no padding/border, sizing incorrectly
-	(http://www.mpdf1.com/forum/discussion/1886/td-fontsize-in-nested-table-bug-#Item_5)
+	(https://www.mpdf1.com/forum/discussion/1886/td-fontsize-in-nested-table-bug-#Item_5)
 - <main> added as recognised tag 
 - CSS style transform supported on <img> element (only)
 	All transform functions are supported except matrix() i.e. translate(), translateX(), translateY(), skew(), skewX(), skewY(),
@@ -330,7 +330,7 @@ Bug fixes
 - Bookmarks will now work if jump more than one level e.g. 0,2,1  Inserts a new blank entry at level 1
 - Paths to img or stylesheets - incorrectly reading "//www.domain.com" i.e. when starting with two /
 - data:image as background url() - incorrectly adjusting path on server if MPDF_PATH not specified (included in release mPDF 5.6.1)
-- Image problem if spaces or commas in path using http:// URL (included in release mPDF 5.6.1)
+- Image problem if spaces or commas in path using https:// URL (included in release mPDF 5.6.1)
 - Image URL parsing rewritten to handle both urlencoded URLs and not urlencoded (included in release mPDF 5.6.1)
 - <dottab> fixed to allow color, font-size and font-family to be correctly used, avoid dots being moved to new page, and to work in RTL
 - Table {colsum} summed figures in table header
@@ -650,7 +650,7 @@ Nested inline elements will have repeat left|right borders on the nested content
 
 Tables - Zebra Stripes
 ----------------------
-TABLE - striped rows cf. http://dev.opera.com/articles/view/zebra-striping-tables-with-css3/
+TABLE - striped rows cf. https://dev.opera.com/articles/view/zebra-striping-tables-with-css3/
 tr:nth-child(odd) { background-color: #99ff99; }
 thead tr:nth-child(3n+2) { background-color: #FFBBFF; }
 td:nth-child(2n+1) { background-color: #BBBBFF; }
@@ -762,7 +762,7 @@ Column sums
 -----------
 (Also changed some preg_replace to str_replace to improve performance)
 To use: just add {colsum} to any cells of the table footer <tfoot>
-Add a number to specify a fixed number of decimal points e.g. <td>£{colsum2}</td>  will give you £123.40
+Add a number to specify a fixed number of decimal points e.g. <td>ï¿½{colsum2}</td>  will give you ï¿½123.40
 The width of the column will be calculated using the actual string {colsum} as a placeholder.
 If you need the column to be wider, use underscores "_" to pad it e.g. {colsum2_____}
 
@@ -1263,8 +1263,8 @@ For [ gradients ] syntax see:
 - Mozilla linear - https://developer.mozilla.org/en/CSS/-moz-linear-gradient
 - Mozilla radial - https://developer.mozilla.org/en/CSS/-moz-radial-gradient
 - Mozilla gradients use - https://developer.mozilla.org/en/Using_gradients
-- CSS3 linear gradients - http://dev.w3.org/csswg/css3-images/#linear-gradients
-- CSS3 radial gradients - http://dev.w3.org/csswg/css3-images/#radial-gradients
+- CSS3 linear gradients - https://dev.w3.org/csswg/css3-images/#linear-gradients
+- CSS3 radial gradients - https://dev.w3.org/csswg/css3-images/#radial-gradients
 
 
 Almost all elements - block and in-line
@@ -1501,7 +1501,7 @@ TrueTypeUnicode fonts width array inserted as shortened form array (smaller file
 
 4.5.012
 Bug fix: Incorrect handling orphan characters in table
-(cf. http://mpdf.bpm1.com/forum/comments.php?DiscussionID=193 fixed in 4.2 - but going back to it still problems)
+(cf. https://mpdf.bpm1.com/forum/comments.php?DiscussionID=193 fixed in 4.2 - but going back to it still problems)
 If xxxxx. fits but xxxxx.. doesn't: WriteFlowingBlock wraps it to next line, TableWordWrap sqeezed it onto one line
 TableWordWrap fixed to only allow one orphan char. even if it fits with that one.
 
@@ -1583,7 +1583,7 @@ If keepColumns = true (i.e. disable readjustment of column length), mPDF will no
 table header/footer rows in each column [4.4.015]
 
 A number of changes to improve processing time [4.4.012]
-[Thanks to carlholmberg http://mpdf.bpm1.com/forum/comments.php?DiscussionID=274&page=1#Item_3]
+[Thanks to carlholmberg https://mpdf.bpm1.com/forum/comments.php?DiscussionID=274&page=1#Item_3]
 
 JPG files with header marked as "progressive DCT-based JPEG" are now supported [4.4.004]
 
@@ -1846,10 +1846,10 @@ mPDF v4.3   (28/02/2010)
 
 NEW FEATURES
 ------------
-- Page (sheet) size can be reset within document (http://mpdf1.com/manual/index.php?tid=436) [4.2.024, 4.2.025]
-- PDF/A1-b compliant files (http://mpdf1.com/manual/index.php?tid=420)
-- Improve performance using simpleTables (http://mpdf1.com/manual/index.php?tid=430)
-- mPDFI incorporated into main mPDF class (http://mpdf1.com/manual/index.php?tid=432)
+- Page (sheet) size can be reset within document (https://mpdf1.com/manual/index.php?tid=436) [4.2.024, 4.2.025]
+- PDF/A1-b compliant files (https://mpdf1.com/manual/index.php?tid=420)
+- Improve performance using simpleTables (https://mpdf1.com/manual/index.php?tid=430)
+- mPDFI incorporated into main mPDF class (https://mpdf1.com/manual/index.php?tid=432)
 - <dottab> added as custom HTML tag: inserts dots to the following text, which is right-aligned [4.2.031]
 
 See Example files 38 and 39 for PDFA compliant file and <dottab>
@@ -1857,7 +1857,7 @@ See Example files 38 and 39 for PDFA compliant file and <dottab>
 BACKWARD COMPATIBILITY
 ----------------------
 All changes are backwards compatible except the use of mPDFI. You will need to make minor changes to your scripts.
-See the manual http://mpdf1.com/manual/index.php?tid=432 for details.
+See the manual https://mpdf1.com/manual/index.php?tid=432 for details.
 
 BUG FIXES
 ---------
@@ -2046,7 +2046,7 @@ Major additions
 - Multiple Barcode types supported
 
 **********************************************************************************************
-*  For more details see the documentation manual: http://mpdf1.com/manual/index.php?tid=410  *
+*  For more details see the documentation manual: https://mpdf1.com/manual/index.php?tid=410  *
 **********************************************************************************************
 
 Bug fixes (parsing CSS)
@@ -2092,8 +2092,8 @@ mPDF v3.2  (25/10/2009)
 Bug fixes
 ---------
 - Table cell widths in %: if width of table cells set to >=100%, and not all columns are set -> froze, because tries to produce a column of no width
-- Ouput download file changed to allow compatability with IE6 (http://mpdf.bpm1.com/forum/comments.php?DiscussionID=120&page=1#Item_4)
-- Image error if relative path used on domain root (e.g. img src="image.png" and basepath is http://www.yourdomain.com) [attempted fix in 3.1 not working]
+- Ouput download file changed to allow compatability with IE6 (https://mpdf.bpm1.com/forum/comments.php?DiscussionID=120&page=1#Item_4)
+- Image error if relative path used on domain root (e.g. img src="image.png" and basepath is https://www.yourdomain.com) [attempted fix in 3.1 not working]
 - Table: if font changed in cell, font was not retoring properly afterwards causing errors (restoreInlineProperties())
 - Lists: list items containing <br />, font not restoring after bullet
 - Graceful support for block elements inside list items e.g. <li><p>... (not supported, but tolerated)
@@ -2118,7 +2118,7 @@ Bug fixes
 
 Developers
 ----------
-Some more undefined indexes and variables declared (courtesy of DSmart http://mpdf.bpm1.com/forum/comments.php?DiscussionID=117&page=1#Item_0 )
+Some more undefined indexes and variables declared (courtesy of DSmart https://mpdf.bpm1.com/forum/comments.php?DiscussionID=117&page=1#Item_0 )
 Comment lines removed for < v3.0 to tidy up code
 
 
@@ -2150,8 +2150,8 @@ mPDF v3.1  (30/08/2009)
 
 Bug fixes
 ---------
-- Image error if relative path used on domain root (e.g. img src="image.png" and basepath is http://www.yourdomain.com
-was giving http://www.yourdomain.com//image.png) [3.1]
+- Image error if relative path used on domain root (e.g. img src="image.png" and basepath is https://www.yourdomain.com
+was giving https://www.yourdomain.com//image.png) [3.1]
 - Errors in parsing background CSS (background-repeat, background-position etc) [3.1]
 - Textarea did not corectly convert width or height in units relating to font e.g. em [3.0beta_01]
 - If page margin-bottom set to zero, SetHTMLfooter() crashes with "Division by zero" error [3.0beta_01]
@@ -2161,7 +2161,7 @@ was giving http://www.yourdomain.com//image.png) [3.1]
 - TocBookMarkText needs to be htmlspecialchar-ed - decoded when entered inside <tocpagebreak>
 - <img src="" /> caused crash
 - DisplayPreferences used as a variable name and a function: function renamed to SetDisplayPreferences()
-- Image with src file not including a "." incorrectly parsed (e.g. http://www.domain.com/imagegenerator?params=23)
+- Image with src file not including a "." incorrectly parsed (e.g. https://www.domain.com/imagegenerator?params=23)
 
 New Features
 ------------
@@ -2175,7 +2175,7 @@ New Features
 
 Documentation
 -------------
-See Manual at http://mpdf.bpm1.com/manual/ for more information - especially:
+See Manual at https://mpdf.bpm1.com/manual/ for more information - especially:
 - User's Guide>>What Else Can I Do?>>Backgrounds & Borders
 - User's Guide>>What Else Can I Do?>>Floating blocks
 
@@ -2564,7 +2564,7 @@ Bug fixes
 - Table borders in columns not being correctly handled (bug since 2.0 introduced a buffer to save the borders and print at the end of the table - fixed so does not use buffer if in columns - potentially does not deal with conflicting borders as well, but works in columns)
 - Table cell width if set as a percent was being downsized when autosizing table
 - Table CSS was buggy - improved
-- SetBasePath (when fetching remote website) - now handles string with query string on it e.g. http://www.domain.com/index.php?tid=42
+- SetBasePath (when fetching remote website) - now handles string with query string on it e.g. https://www.domain.com/index.php?tid=42
 - Table cells with Rotated text - text not positioned correctly
 - Page number totals not working in utf-8 mode
 
@@ -2735,7 +2735,7 @@ Read linked CSS stylesheet OR @import stylesheet - now includes both.
 CSS line-height as % - interpreted 120% as 120 (x the font-size) - Fixed so it now accepts % and numbers
 
 Setting the basepath (used for relative links/external stylesheets etc) with $mpdf->setBasePath() was generally buggy!
-Now allows a domain e.g. $mpdf->setBasePath("http://www.domain.com"); (previously needed slash on end)
+Now allows a domain e.g. $mpdf->setBasePath("https://www.domain.com"); (previously needed slash on end)
 (Fixed - hopefully!)
 
 If you were repeatedly calling mPDF in a loop to produce more than one PDF file, it would crash with error: "You have restricted the number of available fonts to 0". Fixed by editing line 751 require(_MPDF_PATH.'mpdf_config.php'); to require(...
@@ -2750,7 +2750,7 @@ Changed so images are now replaced by the NOIMG image.
 Footer margin (HTML and normal footers) now determines the lowest point that is printed (rather than the place to start printing the footer)
 NB IMPORTANT CHANGE - not backwards comaptible
 
-Tabs in <pre> or <textarea> are now replaced by 8 spaces rather than 6 (consistent with http://www.w3.org/TR/1998/REC-html40-19980424/struct/text.html#edef-PRE)  [fn. AdjustHTML() in htmltoolkit.php]
+Tabs in <pre> or <textarea> are now replaced by 8 spaces rather than 6 (consistent with https://www.w3.org/TR/1998/REC-html40-19980424/struct/text.html#edef-PRE)  [fn. AdjustHTML() in htmltoolkit.php]
 
 To insert the total number of pages in the document anywhere in the doc, just use '{nb}'
 The line: 	$mpdf->AliasNbPages();
@@ -2859,7 +2859,7 @@ It accepts 12 or 13 digits with or without - hyphens as $code e.g.
 $mpdf->writeBarcode('978-1234-567-890', 1, $mpdf->x, $mpdf->y); 
 NB - IMPORTANT***
 A new font - OCR-B font/unifont is required, and needs to be added to the config.php file
-cf. http://www.gs1uk.org/downloads/bar_code/Bar coding getting it right.pdf
+cf. https://www.gs1uk.org/downloads/bar_code/Bar coding getting it right.pdf
 Barcode size must be between 0.8 and 2.0 (80% to 200%)
 
 CMYK Colors
@@ -2920,14 +2920,14 @@ function AddExtGState() edited to check if graphics state already exists before 
 
 ASCII-proof code
 ================
-"»¤¬" used as a special identifier in the program changed to "\xbb\xa4\xac" to make the mpdf.php script file immune from someone saving it as a utf-8 encoded file
+"ï¿½ï¿½ï¿½" used as a special identifier in the program changed to "\xbb\xa4\xac" to make the mpdf.php script file immune from someone saving it as a utf-8 encoded file
 
 Images
 ======
 1) When copying remote images locally - incorrectly used "unset" now changed to "unlink"
-2) When parsing image files - was using CURL for any image src="http://... - even if this was on the local server - edited so it only uses CURL if necessary/appropriate.
+2) When parsing image files - was using CURL for any image src="https://... - even if this was on the local server - edited so it only uses CURL if necessary/appropriate.
 NB Handling images was updated in v1.3 because my ISP changed allow_url_fopen to false
-Fixed so mPDF tests if the file is available as a local call e.g. getimage('images/test.jpg') even if it is defined as a full URI e.g. http://www.mydomain.com/images/test.jpg as this is quicker(?), and permitted even if allow_url_fopen is false.
+Fixed so mPDF tests if the file is available as a local call e.g. getimage('images/test.jpg') even if it is defined as a full URI e.g. https://www.mydomain.com/images/test.jpg as this is quicker(?), and permitted even if allow_url_fopen is false.
 If not available as a local file (and allow_url_fopen is set) mPDF tries to use fopen/file_get_contents using an http wrapper;
 Else, if CURL is available and allow_url_fopen is false: then tries using CURL.
 (Clear as mud???!!)

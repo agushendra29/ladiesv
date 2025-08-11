@@ -11,7 +11,7 @@
        
        $htmlContent = ' 
 <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html xmlns="https://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>
@@ -155,7 +155,7 @@
                         <tbody>
                           <tr>
                             <td style="width:110px;">
-                              <img alt="" height="auto" src="http://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
+                              <img alt="" height="auto" src="https://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
                             </td>
                           </tr>
                         </tbody>
@@ -263,7 +263,7 @@
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -279,7 +279,7 @@
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -295,7 +295,7 @@
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -349,7 +349,7 @@
        $htmlContent = ' 
           
           <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html xmlns="https://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <title>
@@ -486,7 +486,7 @@
                         <tbody>
                           <tr>
                             <td style="width:110px;">
-                              <img alt="" height="auto" src="http://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
+                              <img alt="" height="auto" src="https://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
                             </td>
                           </tr>
                         </tbody>
@@ -516,7 +516,7 @@
                         <tbody>
                           <tr>
                             <td style="width:300px;">
-                              <img alt="" height="auto" src="http://9pl9.mjt.lu/tplimg/9pl9/b/ygjj/t65lu.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="300" />
+                              <img alt="" height="auto" src="https://9pl9.mjt.lu/tplimg/9pl9/b/ygjj/t65lu.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="300" />
                             </td>
                           </tr>
                         </tbody>
@@ -558,7 +558,7 @@
                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                         <tr>
                           <td align="center" bgcolor="#54119F" role="presentation" style="border:none;border-radius:100px;cursor:auto;padding:15px 25px 15px 25px;background:#54119F;" valign="middle">
-                            <a href="http://linkingcc.com/testing_project/uaviissa/user_verify.php?vkey='.$v_key.'" style="background:#54119F;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
+                            <a href="https://linkingcc.com/testing_project/uaviissa/user_verify.php?vkey='.$v_key.'" style="background:#54119F;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
                               <b style="font-weight:700"><b style="font-weight:700">Activate My Account</b></b>
                             </a>
                           </td>
@@ -597,7 +597,7 @@
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -612,7 +612,7 @@
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -627,7 +627,7 @@
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -676,7 +676,7 @@ public function reg_mail($email,$c_password,$v_key) {
        
        $htmlContent = ' 
 <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html xmlns="https://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <title>Verify Your account</title>
@@ -812,7 +812,7 @@ public function reg_mail($email,$c_password,$v_key) {
                         <tbody>
                           <tr>
                             <td style="width:110px;">
-                              <img alt="" height="auto" src="http://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
+                              <img alt="" height="auto" src="https://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
                             </td>
                           </tr>
                         </tbody>
@@ -842,7 +842,7 @@ public function reg_mail($email,$c_password,$v_key) {
                         <tbody>
                           <tr>
                             <td style="width:300px;">
-                              <img alt="" height="auto" src="http://9pl9.mjt.lu/tplimg/9pl9/b/ygjj/t65lu.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="300" />
+                              <img alt="" height="auto" src="https://9pl9.mjt.lu/tplimg/9pl9/b/ygjj/t65lu.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="300" />
                             </td>
                           </tr>
                         </tbody>
@@ -883,7 +883,7 @@ public function reg_mail($email,$c_password,$v_key) {
                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                         <tr>
                           <td align="center" bgcolor="#54119F" role="presentation" style="border:none;border-radius:100px;cursor:auto;padding:15px 25px 15px 25px;background:#54119F;" valign="middle">
-                            <a href="http://linkingcc.com/testing_project/uaviissa/user_verify.php?vkey='.$v_key.'" style="background:#54119F;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
+                            <a href="https://linkingcc.com/testing_project/uaviissa/user_verify.php?vkey='.$v_key.'" style="background:#54119F;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
                               <b style="font-weight:700"><b style="font-weight:700">Activate My Account</b></b>
                             </a>
                           </td>
@@ -894,7 +894,7 @@ public function reg_mail($email,$c_password,$v_key) {
                   <tr>
                     <td align="left" style="font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px;word-break:break-word;">
                       <div style="font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;color:#797e82;">
-                        <p style="margin: 10px 0; text-align: center;">If the link doesn&rsquo;t work, copy this URL into your browser: <a target="_blank" rel="noopener noreferrer" href="#" style="color:#54119F">http://linkingcc.com/testing_project/uaviissa/user_verify.php?vkey='.$v_key.'</a></p>
+                        <p style="margin: 10px 0; text-align: center;">If the link doesn&rsquo;t work, copy this URL into your browser: <a target="_blank" rel="noopener noreferrer" href="#" style="color:#54119F">https://linkingcc.com/testing_project/uaviissa/user_verify.php?vkey='.$v_key.'</a></p>
                         <p style="margin: 10px 0; text-align: center;"><i style="font-style:normal"><b style="font-weight:700">Welcome!</b></i></p>
                       </div>
                     </td>
@@ -922,7 +922,7 @@ public function reg_mail($email,$c_password,$v_key) {
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -937,7 +937,7 @@ public function reg_mail($email,$c_password,$v_key) {
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -952,7 +952,7 @@ public function reg_mail($email,$c_password,$v_key) {
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -1000,7 +1000,7 @@ public function reg_mail($email,$c_password,$v_key) {
        
        $htmlContent = ' 
          <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html xmlns="https://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <title>Reset your password</title>
@@ -1136,7 +1136,7 @@ public function reg_mail($email,$c_password,$v_key) {
                         <tbody>
                           <tr>
                             <td style="width:110px;">
-                              <img alt="" height="auto" src="http://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
+                              <img alt="" height="auto" src="https://uavisa.eu/assets/img/UA%20Visa%20LOGO.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="110" />
                             </td>
                           </tr>
                         </tbody>
@@ -1163,7 +1163,7 @@ public function reg_mail($email,$c_password,$v_key) {
                         <tbody>
                           <tr>
                             <td style="width:300px;">
-                              <img alt="" height="auto" src="http://9pl9.mjt.lu/tplimg/9pl9/b/yg0q/t65sy.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="300" />
+                              <img alt="" height="auto" src="https://9pl9.mjt.lu/tplimg/9pl9/b/yg0q/t65sy.png" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;" title="" width="300" />
                             </td>
                           </tr>
                         </tbody>
@@ -1201,7 +1201,7 @@ public function reg_mail($email,$c_password,$v_key) {
                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                         <tr>
                           <td align="center" bgcolor="#54119F" role="presentation" style="border:none;border-radius:100px;cursor:auto;padding:15px 25px 15px 25px;background:#54119F;" valign="middle">
-                            <a href="http://linkingcc.com/testing_project/uaviissa/forget_password.php?forget_pass_key='.$forget_key.'" style="background:#54119F;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
+                            <a href="https://linkingcc.com/testing_project/uaviissa/forget_password.php?forget_pass_key='.$forget_key.'" style="background:#54119F;color:#ffffff;font-family:Open Sans, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;" target="_blank">
                               <b style="font-weight:700"><b style="font-weight:700">Reset Password</b></b>
                             </a>
                           </td>
@@ -1240,7 +1240,7 @@ public function reg_mail($email,$c_password,$v_key) {
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/facebook_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -1255,7 +1255,7 @@ public function reg_mail($email,$c_password,$v_key) {
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/twitter_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>
@@ -1270,7 +1270,7 @@ public function reg_mail($email,$c_password,$v_key) {
                               <tr>
                                 <td style="font-size:0;height:30;vertical-align:middle;width:30;">
                                   <a href="[[SHORT_PERMALINK]]" target="_blank">
-                                    <img height="30" src="http://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
+                                    <img height="30" src="https://www.mailjet.com/saas-templates-creator/static/img/linkedin_white.png" style="border-radius:6px;" width="30" />
                                   </a>
                                 </td>
                               </tr>

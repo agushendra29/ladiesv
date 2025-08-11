@@ -40,7 +40,7 @@ This paragraph shows Gothic text. These characters lie in the Unicode Supplement
 </div>
 </div>
 <div>
-Font: MPH2BDamase (damase_v.2.ttf) available from: http://www.wazu.jp/gallery/views/View_MPH2BDamase.html 
+Font: MPH2BDamase (damase_v.2.ttf) available from: https://www.wazu.jp/gallery/views/View_MPH2BDamase.html 
 </div>
 
 <h5>Egyptian Hieroglyphics</h5>
@@ -53,10 +53,10 @@ This paragraph shows Egyptian Hieroglyphics. These characters lie in the Unicode
 </div>
 </div>
 <div>
-Font: Aegyptus.otf available from: http://users.teilar.gr/~g1951d/
+Font: Aegyptus.otf available from: https://users.teilar.gr/~g1951d/
 </div>
 
-<p>SMP contains mainly ancient scripts - see <a href="http://mpdf1.com/manual/index.php?tid=451">http://mpdf1.com/manual/index.php?tid=451</a> for full list.</p>
+<p>SMP contains mainly ancient scripts - see <a href="https://mpdf1.com/manual/index.php?tid=451">https://mpdf1.com/manual/index.php?tid=451</a> for full list.</p>
 
 <p>mPDF uses a different method to embed fonts in the PDF file if they include characters from SMP or SIP, because the characters cannot be represented by a 4 character hex code 0000-FFFF. This method is less eficient than the default method, and it can be suppressed by adding the font name to the array \'BMPonly\' in the config_fonts.php configuration file. </p>
 
@@ -132,7 +132,7 @@ Font: Aegyptus.otf available from: http://users.teilar.gr/~g1951d/
 
 <p>mPDF allows you to embed subsets of CJK fonts keeping file size down, although there is increased memory usage to generate these files.</p>
 
-<p>Some CJK fonts are broken up into 2 files because of the size of the files. One freely available font with almost complete coverage of all CJK characters (in both BMP and SIP) is \'Sun\' available from Alan Wood\'s excellent website: <a href="http://www.alanwood.net/unicode/fonts-east-asian.html">http://www.alanwood.net/unicode/fonts-east-asian.html</a>. This comes as 2 files, Sun-ExtA and Sun-ExtB (both about 20MB in size) containing the characters from BMP and SIP respectively.
+<p>Some CJK fonts are broken up into 2 files because of the size of the files. One freely available font with almost complete coverage of all CJK characters (in both BMP and SIP) is \'Sun\' available from Alan Wood\'s excellent website: <a href="https://www.alanwood.net/unicode/fonts-east-asian.html">https://www.alanwood.net/unicode/fonts-east-asian.html</a>. This comes as 2 files, Sun-ExtA and Sun-ExtB (both about 20MB in size) containing the characters from BMP and SIP respectively.
 </p>
 
 <p>mPDF allows you to treat these as one font by defining the second file as an SIP-extension of the first in the config_fonts.php configuration file. The following text includes random characters from the BMP and SIP mixed together:</p>

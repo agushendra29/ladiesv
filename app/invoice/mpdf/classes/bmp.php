@@ -12,7 +12,7 @@ function bmp(&$mpdf) {
 function _getBMPimage($data, $file) {
 	$info = array();
 		// Adapted from script by Valentin Schmidt
-		// http://staff.dasdeck.de/valentin/fpdf/fpdf_bmp/
+		// https://staff.dasdeck.de/valentin/fpdf/fpdf_bmp/
 		$bfOffBits=$this->_fourbytes2int_le(substr($data,10,4));
 		$width=$this->_fourbytes2int_le(substr($data,18,4));
 		$height=$this->_fourbytes2int_le(substr($data,22,4));
@@ -154,7 +154,7 @@ function _twobytes2int_le($s) {
 
 
 # Decoder for RLE8 compression in windows bitmaps
-# see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/bitmaps_6x0u.asp
+# see https://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/bitmaps_6x0u.asp
 function rle8_decode ($str, $width){
     $lineWidth = $width + (3 - ($width-1) % 4);
     $out = '';
@@ -191,7 +191,7 @@ function rle8_decode ($str, $width){
 }
 
 # Decoder for RLE4 compression in windows bitmaps
-# see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/bitmaps_6x0u.asp
+# see https://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/bitmaps_6x0u.asp
 function rle4_decode ($str, $width){
     $w = floor($width/2) + ($width % 2);
     $lineWidth = $w + (3 - ( ($width-1) / 2) % 4);    

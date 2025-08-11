@@ -209,6 +209,88 @@ $("#empTable").DataTable({
         $(".purchaseOrderError-area").show();
         $("#purchaseOrderError").html("Silakan isi semua field yang diperlukan");
     }
+}),$("#refundForm").submit(function (e) {
+    e.preventDefault();
+
+    var invoiceNumber = $("#invoice_number").val();
+
+    if (invoiceNumber && invoiceNumber.trim() !== "") {
+        var formData = $("#refundForm").serialize();
+        $.ajax({
+            type: "POST",
+            url: "app/action/process_refund.php",
+            data: formData,
+            success: function (res) {
+                try {
+                    var response = JSON.parse(res);
+                    if (response.status === "success") {
+                        $(".refundError-area").show().css("color", "green");
+                        $("#refundError").html(response.message);
+                        $("#refundForm")[0].reset();
+                    } else {
+                        $(".refundError-area").show().css("color", "white");
+                        $("#refundError").html(response.message);
+                    }
+                } catch (err) {
+                    $(".refundError-area").show().css("color", "white");
+                    $("#refundError").html("Response tidak valid: " + res);
+                }
+            },
+            error: function () {
+                $(".refundError-area").show().css("color", "red");
+                $("#refundError").html("Terjadi kesalahan saat proses refund.");
+            }
+        });
+    } else {
+        $(".refundError-area").show().css("color", "red");
+        $("#refundError").html("Invoice number harus diisi.");
+    }
+}), $("#adsuppliarForm").submit(function (e) {
+    e.preventDefault();
+    var t = $("#adsuppliarForm").serialize();
+    $.ajax({
+      type: "POST",
+      url: "app/action/add_suppliar.php",
+      data: t,
+      success: function (e) {
+        "yes" == $.trim(e) ?
+          (alert("suppliar added successfully."), location.reload()) :
+          alert(e);
+      },
+    });
+  }),$("#addNews").submit(function (e) {
+    e.preventDefault();
+
+    var title = $("#title").val(),
+        category = $("#category").val(),
+        publishDate = $("#publish_date").val(),
+        content = $("#content").val();
+
+    if (title !== "" && category !== "" && publishDate !== "" && content !== "") {
+        var formData = $("#addNews").serialize();
+        $.ajax({
+            type: "POST",
+            url: "app/action/add_news.php",
+            data: formData,
+            success: function (res) {
+                if ($.trim(res) === "Berita berhasil disimpan.") {
+                    $("#newsErrorArea").css("border-color", "green").show();
+                    $("#newsErrorMessage").html(res).css("color", "green");
+                    $("#addNews")[0].reset();
+                } else {
+                    $("#newsErrorArea").css("border-color", "red").show();
+                    $("#newsErrorMessage").html(res).css("color", "red");
+                }
+            },
+            error: function () {
+                $("#newsErrorArea").css("border-color", "red").show();
+                $("#newsErrorMessage").html("Terjadi kesalahan pada server.").css("color", "red");
+            }
+        });
+    } else {
+        $("#newsErrorArea").css("border-color", "red").show();
+        $("#newsErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
+    }
 }), $("#salesForm").submit(function (e) {
     e.preventDefault();
 
@@ -362,6 +444,20 @@ $("#empTable").DataTable({
         {
             "data": "note"
         }
+    ]
+}),$("#newsTable").DataTable({
+    processing: !0,
+    serverSide: !0,
+    serverMethod: "post",
+    ajax: {
+        url: "app/ajax/news_data.php"  // adjust the path to your PHP backend
+    },
+    columns: [
+        { data: "id" },            // news id
+        { data: "title" },         // news title
+        {data: "content"},
+        { data: "publish_date" },  // formatted publish date
+        { data: "created_at" },    // created datetime
     ]
 }), $("#otherProductTable").DataTable({
     processing: !0,
@@ -689,3 +785,4 @@ $("#empTable").DataTable({
 })), $("#EditaddNewRowBtn").on("click", (function (a) {
     a.preventDefault(), editAddNewRow()
 }));
+

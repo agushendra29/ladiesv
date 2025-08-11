@@ -539,7 +539,7 @@ convert.hsv.hsl = function (hsv) {
 	return [h, sl * 100, l * 100];
 };
 
-// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+// https://dev.w3.org/csswg/css-color/#hwb-to-rgb
 convert.hwb.rgb = function (hwb) {
 	var h = hwb[0] / 360;
 	var wh = hwb[1] / 100;
@@ -1075,7 +1075,7 @@ function buildGraph() {
 
 	for (var len = models.length, i = 0; i < len; i++) {
 		graph[models[i]] = {
-			// http://jsperf.com/1-vs-infinity
+			// https://jsperf.com/1-vs-infinity
 			// micro-opt, but this is simple.
 			distance: -1,
 			parent: null
@@ -1799,7 +1799,7 @@ Color.prototype = {
 	},
 
 	luminosity: function () {
-		// http://www.w3.org/TR/WCAG20/#relativeluminancedef
+		// https://www.w3.org/TR/WCAG20/#relativeluminancedef
 		var rgb = this.values.rgb;
 		var lum = [];
 		for (var i = 0; i < rgb.length; i++) {
@@ -1810,7 +1810,7 @@ Color.prototype = {
 	},
 
 	contrast: function (color2) {
-		// http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+		// https://www.w3.org/TR/WCAG20/#contrast-ratiodef
 		var lum1 = this.luminosity();
 		var lum2 = color2.luminosity();
 		if (lum1 > lum2) {
@@ -1829,7 +1829,7 @@ Color.prototype = {
 	},
 
 	dark: function () {
-		// YIQ equation from http://24ways.org/2010/calculating-color-contrast
+		// YIQ equation from https://24ways.org/2010/calculating-color-contrast
 		var rgb = this.values.rgb;
 		var yiq = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
 		return yiq < 128;
@@ -1892,7 +1892,7 @@ Color.prototype = {
 
 	greyscale: function () {
 		var rgb = this.values.rgb;
-		// http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+		// https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
 		var val = rgb[0] * 0.3 + rgb[1] * 0.59 + rgb[2] * 0.11;
 		this.setValues('rgb', [val, val, val]);
 		return this;
@@ -2465,7 +2465,7 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 /**
  * Easing functions adapted from Robert Penner's easing equations.
  * @namespace Chart.helpers.easingEffects
- * @see http://www.robertpenner.com/easing/
+ * @see https://www.robertpenner.com/easing/
  */
 var effects = {
 	linear: function(t) {
@@ -10448,7 +10448,7 @@ var core_helpers = function() {
 
 	helpers$1.splineCurve = function(firstPoint, middlePoint, afterPoint, t) {
 		// Props to Rob Spencer at scaled innovation for his post on splining between points
-		// http://scaledinnovation.com/analytics/splines/aboutSplines.html
+		// https://scaledinnovation.com/analytics/splines/aboutSplines.html
 
 		// This function must also respect "skipped" points
 

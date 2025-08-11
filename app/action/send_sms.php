@@ -12,7 +12,7 @@ if (isset($_POST)) {
     // $params = array('u'=>$username, 'h'=>$hash, 'op'=>'pv', 'to'=>$numbers, 'msg'=>$message);
 
     // $ch = curl_init();
-    // curl_setopt($ch, CURLOPT_URL, "http://alphasms.biz/index.php?app=ws");
+    // curl_setopt($ch, CURLOPT_URL, "https://alphasms.biz/index.php?app=ws");
     // curl_setopt($ch, CURLOPT_POST, 1);
     // curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
     // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);

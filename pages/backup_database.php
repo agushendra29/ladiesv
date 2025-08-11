@@ -123,7 +123,7 @@ if (isset($_POST['submit'])) {
                   <!-- /.card-body -->
                 </div>
           </section>
-<!-- <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
           <script>
             $(document).ready(function() {
               $('#submit').click(function(event) {

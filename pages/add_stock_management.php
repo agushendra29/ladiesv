@@ -1,24 +1,8 @@
-<div class="content-wrapper">
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2" style="margin-bottom: 16px;">
-        <div class="col-sm-6">
-          <h3 style="font-weight: bold;">Tambah Stok</h3>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right" style="background: none; padding: 0; margin: 0;">
-            <li class="breadcrumb-item"><a href="#" style="color: #007bff;">Home</a></li>
-            <li class="breadcrumb-item active" style="color: #6c757d;">Tambah Produk</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </section>
-
+<div class="mt-5">
   <section class="content">
     <div class="container-fluid">
-      <div style="background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-        <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 24px; color: #1f2937;">Stok Manajemen</h2>
+      <div>
+         <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 600; color: #333;">📦 Form Tambah Stok</h2>
         <!-- Alert -->
         <div class="alert alert-primary alert-dismissible fade show addStockManagementError-area" role="alert" style="display: none; border-radius: 12px; padding: 16px;">
           <span id="addStockManagementError"></span>
@@ -47,7 +31,7 @@
             <!-- Harga -->
             <div class="col-md-6" style="margin-bottom: 24px;">
               <label for="stock_quantity" style="font-weight: 600; display: block; margin-bottom: 8px;">Jumlah Stok *</label>
-              <input type="number" id="stock_quantity" name="stock_quantity" placeholder="Harga Produk" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;" />
+              <input type="number" id="stock_quantity" name="stock_quantity" placeholder="Jumlah Stok" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;" />
             </div>
 
             <!-- Suppliar -->

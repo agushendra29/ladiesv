@@ -1409,7 +1409,7 @@ private static $ucd_records = array(
     array(26, 0, 0, 0, 2, 0, 32),
 );
 
-/* Mirror unicode characters. Bidirectional Algorithm, at http://www.unicode.org/unicode/reports/tr9/  */
+/* Mirror unicode characters. Bidirectional Algorithm, at https://www.unicode.org/unicode/reports/tr9/  */
 public static $mirror_pairs = array(
 	40 => 41,
 	41 => 40,

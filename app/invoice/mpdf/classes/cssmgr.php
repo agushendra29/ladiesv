@@ -217,7 +217,7 @@ function ReadCSS($html) {
 			$stylearr = explode(';',$stylestr);
 			foreach($stylearr AS $sta) {
 				if (trim($sta)) { 
-					// Changed to allow style="background: url('http://www.bpm1.com/bg.jpg')"
+					// Changed to allow style="background: url('https://www.bpm1.com/bg.jpg')"
 					$tmp = explode(':',$sta,2);
 					$property = $tmp[0];
 					if (isset($tmp[1])) { $value = $tmp[1]; }

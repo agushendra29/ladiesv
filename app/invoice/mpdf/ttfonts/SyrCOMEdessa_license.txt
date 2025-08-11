@@ -1,5 +1,5 @@
 This license is derived from the Bigelow & Holmes Font License
-found at http://www.xfree86.org/current/LICENSE2.html
+found at https://www.xfree86.org/current/LICENSE2.html
 
 The following reasonable modifications have been made to the
 Bigelow & Holmes Font License:

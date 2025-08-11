@@ -741,7 +741,7 @@ for($sch=0;$sch<=$subchunk;$sch++) {
 		// Decomposition for THAI or LAO
 		/* This function implements the shaping logic documented here:
 		 *
-		 *   http://linux.thai.net/~thep/th-otf/shaping.html
+		 *   https://linux.thai.net/~thep/th-otf/shaping.html
 		 *
 		 * The first shaping rule listed there is needed even if the font has Thai
 		 * OpenType tables. 
@@ -832,8 +832,8 @@ for($sch=0;$sch<=$subchunk;$sch++) {
 			// so we will do one minor change here:
            		// From ICU: If the present character is a number, and the next character is a pre-number combining mark
            		 // then the two characters are reordered
-			// From MS OTL spec the following are Digit modifiers (Md): 0F18–0F19, 0F3E–0F3F
-			// Digits: 0F20–0F33
+			// From MS OTL spec the following are Digit modifiers (Md): 0F18ï¿½0F19, 0F3Eï¿½0F3F
+			// Digits: 0F20ï¿½0F33
 			// On testing only 0x0F3F (pre-based mark) seems to need re-ordering
 			for($ptr=0; $ptr<count($this->OTLdata)-1; $ptr++) {
     				if (INDIC::in_range($this->OTLdata[$ptr]['uni'], 0x0F20, 0x0F33) && $this->OTLdata[$ptr+1]['uni'] == 0x0F3F ) {
@@ -2470,8 +2470,8 @@ function GSUBsubstitute($pos, $substitute, $Type, $GlyphPos=NULL ) {
 ////////////////////////////////////////////////////////////////
 
 function arabic_initialise() {
-		// cf. http://unicode.org/Public/UNIDATA/ArabicShaping.txt
-		// http://unicode.org/Public/UNIDATA/extracted/DerivedJoiningType.txt
+		// cf. https://unicode.org/Public/UNIDATA/ArabicShaping.txt
+		// https://unicode.org/Public/UNIDATA/extracted/DerivedJoiningType.txt
 		// JOIN TO FOLLOWING LETTER IN LOGICAL ORDER (i.e. AS INITIAL/MEDIAL FORM) = Unicode Left-Joining (+ Dual-Joining + Join_Causing 00640)
 		$this->arabLeftJoining = array(
 		0x0620=>1, 0x0626=>1, 0x0628=>1, 0x062A=>1, 0x062B=>1, 0x062C=>1, 0x062D=>1, 0x062E=>1, 
@@ -4789,7 +4789,7 @@ function _bidiPrepare(&$para, $dir) {
 					$match = array_pop($remember);
 				}
 			}
-			//	In all cases, set the PDI’s level to the embedding level of the last entry on the directional status stack left after the steps above.
+			//	In all cases, set the PDIï¿½s level to the embedding level of the last entry on the directional status stack left after the steps above.
 			//	NB The level assigned to an isolate initiator is always the same as that assigned to the matching PDI.
 			if ($dos != -1) { $chardir = $dos; } 
 			else { $chardir = $chunkOTLdata['char_data'][$i]['bidi_class']; }
@@ -5583,8 +5583,8 @@ function _getOTLscriptTag($ScriptLang, $scripttag, $scriptblock, $shaper, $useOT
 	// $scriptblock is the (number/code) for the script of the actual text string based on Unicode properties (UCDN::$uni_scriptblock)
 	// $scripttag is the default tag derived from $scriptblock
 /*
-	http://www.microsoft.com/typography/otspec/ttoreg.htm
-	http://www.microsoft.com/typography/otspec/scripttags.htm
+	https://www.microsoft.com/typography/otspec/ttoreg.htm
+	https://www.microsoft.com/typography/otspec/scripttags.htm
 
 Values for useOTL
 
@@ -5653,8 +5653,8 @@ NB If change for RTL - cf. function magic_reverse_dir in mpdf.php to update
 
 // LangSys tags
 function _getOTLLangTag($ietf, $available) {
-	// http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-	// http://www.microsoft.com/typography/otspec/languagetags.htm
+	// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	// https://www.microsoft.com/typography/otspec/languagetags.htm
 	// IETF tag = e.g. en-US, und-Arab, sr-Cyrl cf. config_lang2fonts.php
 	if ($available=='') { return ''; }
 	$tags = preg_split('/-/',$ietf);

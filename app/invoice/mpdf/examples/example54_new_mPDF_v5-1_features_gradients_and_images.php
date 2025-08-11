@@ -273,9 +273,9 @@ background: -moz-linear-gradient(top,  #cccccc,  #000000); /* for firefox 3.6+ *
 <li>Mozilla linear - <a href="https://developer.mozilla.org/en/CSS/-moz-linear-gradient">https://developer.mozilla.org/en/CSS/-moz-linear-gradient</a></li>
 <li>Mozilla radial - <a href="https://developer.mozilla.org/en/CSS/-moz-radial-gradient">https://developer.mozilla.org/en/CSS/-moz-radial-gradient</a></li>
 <li>Mozilla gradients use - <a href="https://developer.mozilla.org/en/Using_gradients">https://developer.mozilla.org/en/Using_gradients</a></li>
-<li>CSS3 linear gradients - <a href="http://dev.w3.org/csswg/css3-images/#linear-gradients">http://dev.w3.org/csswg/css3-images/#linear-gradients</a></li>
-<li>CSS3 radial gradients - <a href="http://dev.w3.org/csswg/css3-images/#radial-gradients">http://dev.w3.org/csswg/css3-images/#radial-gradients</a></li>
-<li>WebKit gradients - <a href="http://webkit.org/blog/175/introducing-css-gradients/">http://webkit.org/blog/175/introducing-css-gradients/</a></li>
+<li>CSS3 linear gradients - <a href="https://dev.w3.org/csswg/css3-images/#linear-gradients">https://dev.w3.org/csswg/css3-images/#linear-gradients</a></li>
+<li>CSS3 radial gradients - <a href="https://dev.w3.org/csswg/css3-images/#radial-gradients">https://dev.w3.org/csswg/css3-images/#radial-gradients</a></li>
+<li>WebKit gradients - <a href="https://webkit.org/blog/175/introducing-css-gradients/">https://webkit.org/blog/175/introducing-css-gradients/</a></li>
 </ul>
 </div>
 

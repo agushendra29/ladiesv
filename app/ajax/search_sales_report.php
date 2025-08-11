@@ -50,14 +50,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($res) {
         $i = 0;
         foreach ($res as $data) {
+            $quantityDisplay = $data->quantity;
+            if (strtolower($data->type) === 'refund') {
+              $quantityDisplay = "<span style='color:red;'>-" . $data->quantity . "</span>";
+            }
+             $dateFormatted = date('d-m', strtotime($data->created_at));
             $i++;
             echo "<tr>
-                <td>{$i}</td>
+            
+                <td>{$dateFormatted}</td>
                 <td>{$data->invoice_number}</td>
-                <td>{$data->created_at}</td>
-                <td>".($data->suppliar_name ?? '-')."</td>
+                <td>{$data->type}</td>
                 <td>".($data->customer_name ?? 'Penjualan Pribadi')."</td> 
-                <td>{$data->quantity}</td>
+                <td>{$quantityDisplay}</td>
+                <td>{$data->note}</td>
             </tr>";
         }
     } else {

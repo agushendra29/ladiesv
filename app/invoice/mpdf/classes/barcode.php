@@ -7,7 +7,7 @@
 // Begin       : 2008-06-09
 // Last Update : 2009-04-15
 // Version     : 1.0.008
-// License     : GNU LGPL (http://www.gnu.org/copyleft/lesser.html)
+// License     : GNU LGPL (https://www.gnu.org/copyleft/lesser.html)
 // 	----------------------------------------------------------------------------
 //  Copyright (C) 2008-2009 Nicola Asuni - Tecnick.com S.r.l.
 // 	
@@ -22,7 +22,7 @@
 // 	GNU Lesser General Public License for more details.
 // 	
 // 	You should have received a copy of the GNU Lesser General Public License
-// 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // 	
 // 	See LICENSE.TXT file for more information.
 //  ----------------------------------------------------------------------------
@@ -70,42 +70,42 @@ class PDFBarcode {
 			case 'ISSN':
 			case 'EAN13': { // EAN 13
 				$arrcode = $this->barcode_eanupc($code, 13);
-				$arrcode['lightmL'] = 11;	// LEFT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (http://www.gs1uk.org)
-				$arrcode['nom-H'] = 25.93;	// Nominal bar height in mm incl. numerals (http://www.gs1uk.org)
+				$arrcode['lightmL'] = 11;	// LEFT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (https://www.gs1uk.org)
+				$arrcode['nom-H'] = 25.93;	// Nominal bar height in mm incl. numerals (https://www.gs1uk.org)
 				break;
 			}
 			case 'UPCA': { // UPC-A
 				$arrcode = $this->barcode_eanupc($code, 12);
-				$arrcode['lightmL'] = 9;	// LEFT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['lightmR'] = 9;	// RIGHT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (http://www.gs1uk.org)
-				$arrcode['nom-H'] = 25.91;	// Nominal bar height in mm incl. numerals (http://www.gs1uk.org)
+				$arrcode['lightmL'] = 9;	// LEFT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['lightmR'] = 9;	// RIGHT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (https://www.gs1uk.org)
+				$arrcode['nom-H'] = 25.91;	// Nominal bar height in mm incl. numerals (https://www.gs1uk.org)
 				break;
 			}
 			case 'UPCE': { // UPC-E
 				$arrcode = $this->barcode_eanupc($code, 6);
-				$arrcode['lightmL'] = 9;	// LEFT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (http://www.gs1uk.org)
-				$arrcode['nom-H'] = 25.93;	// Nominal bar height in mm incl. numerals (http://www.gs1uk.org)
+				$arrcode['lightmL'] = 9;	// LEFT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (https://www.gs1uk.org)
+				$arrcode['nom-H'] = 25.93;	// Nominal bar height in mm incl. numerals (https://www.gs1uk.org)
 				break;
 			}
 			case 'EAN8': { // EAN 8
 				$arrcode = $this->barcode_eanupc($code, 8);
-				$arrcode['lightmL'] = 7;	// LEFT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (http://www.gs1uk.org)
-				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (http://www.gs1uk.org)
-				$arrcode['nom-H'] = 21.64;	// Nominal bar height in mm incl. numerals (http://www.gs1uk.org)
+				$arrcode['lightmL'] = 7;	// LEFT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (https://www.gs1uk.org)
+				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (https://www.gs1uk.org)
+				$arrcode['nom-H'] = 21.64;	// Nominal bar height in mm incl. numerals (https://www.gs1uk.org)
 				break;
 			}
 			case 'EAN2': { // 2-Digits UPC-Based Extention
 				$arrcode = $this->barcode_eanext($code, 2);
 				$arrcode['lightmL'] = 7;	// LEFT light margin =  x X-dim (estimated)
 				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (estimated)
-				$arrcode['sepM'] = 9;		// SEPARATION margin =  x X-dim (http://web.archive.org/web/19990501035133/http://www.uc-council.org/d36-d.htm)
-				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (http://www.gs1uk.org)
+				$arrcode['sepM'] = 9;		// SEPARATION margin =  x X-dim (https://web.archive.org/web/19990501035133/https://www.uc-council.org/d36-d.htm)
+				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (https://www.gs1uk.org)
 				$arrcode['nom-H'] = 20;	// Nominal bar height in mm incl. numerals (estimated) not used when combined
 				break;
 			}
@@ -113,8 +113,8 @@ class PDFBarcode {
 				$arrcode = $this->barcode_eanext($code, 5);
 				$arrcode['lightmL'] = 7;	// LEFT light margin =  x X-dim (estimated)
 				$arrcode['lightmR'] = 7;	// RIGHT light margin =  x X-dim (estimated)
-				$arrcode['sepM'] = 9;		// SEPARATION margin =  x X-dim (http://web.archive.org/web/19990501035133/http://www.uc-council.org/d36-d.htm)
-				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (http://www.gs1uk.org)
+				$arrcode['sepM'] = 9;		// SEPARATION margin =  x X-dim (https://web.archive.org/web/19990501035133/https://www.uc-council.org/d36-d.htm)
+				$arrcode['nom-X'] = 0.33;	// Nominal value for X-dim in mm (https://www.gs1uk.org)
 				$arrcode['nom-H'] = 20;	// Nominal bar height in mm incl. numerals (estimated) not used when combined
 				break;
 			}
@@ -429,7 +429,7 @@ class PDFBarcode {
 		$encode = array(
 			chr(0) => '%U', chr(1) => '$A', chr(2) => '$B', chr(3) => '$C',
 			chr(4) => '$D', chr(5) => '$E', chr(6) => '$F', chr(7) => '$G',
-			chr(8) => '$H', chr(9) => '$I', chr(10) => '$J', chr(11) => '£K',
+			chr(8) => '$H', chr(9) => '$I', chr(10) => '$J', chr(11) => 'ï¿½K',
 			chr(12) => '$L', chr(13) => '$M', chr(14) => '$N', chr(15) => '$O',
 			chr(16) => '$P', chr(17) => '$Q', chr(18) => '$R', chr(19) => '$S',
 			chr(20) => '$T', chr(21) => '$U', chr(22) => '$V', chr(23) => '$W',
@@ -546,7 +546,7 @@ class PDFBarcode {
 		$encode = array(
 			chr(0) => chr(131).'U', chr(1) => chr(128).'A', chr(2) => chr(128).'B', chr(3) => chr(128).'C',
 			chr(4) => chr(128).'D', chr(5) => chr(128).'E', chr(6) => chr(128).'F', chr(7) => chr(128).'G',
-			chr(8) => chr(128).'H', chr(9) => chr(128).'I', chr(10) => chr(128).'J', chr(11) => '£K',
+			chr(8) => chr(128).'H', chr(9) => chr(128).'I', chr(10) => chr(128).'J', chr(11) => 'ï¿½K',
 			chr(12) => chr(128).'L', chr(13) => chr(128).'M', chr(14) => chr(128).'N', chr(15) => chr(128).'O',
 			chr(16) => chr(128).'P', chr(17) => chr(128).'Q', chr(18) => chr(128).'R', chr(19) => chr(128).'S',
 			chr(20) => chr(128).'T', chr(21) => chr(128).'U', chr(22) => chr(128).'V', chr(23) => chr(128).'W',

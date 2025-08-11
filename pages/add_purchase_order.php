@@ -1,13 +1,8 @@
-<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
+<div>
   <!-- Header -->
   <section class="content">
-    <div class="container-fluid" style="margin-top: 40px;">
-      <div style="
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-        padding: 24px;
-      ">
+    <div class="container-fluid mt-5">
+      <div>
         <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 600; color: #333;">📝 Form Pemesanan Produk</h2>
         
         <div class="alert alert-danger purchaseOrderError-area" style="display:none;">

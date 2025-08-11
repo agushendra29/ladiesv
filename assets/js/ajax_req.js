@@ -1,31 +1,30 @@
 $("#editCatForm").submit(function (e) {
-  e.preventDefault();
-  var t = $("#editCatForm").serialize();
-  $.ajax({
-    type: "POST",
-    url: "app/action/edit_cat.php",
-    data: t,
-    success: function (e) {
-      alert(e);
-    },
-  });
-}),
+    e.preventDefault();
+    var t = $("#editCatForm").serialize();
+    $.ajax({
+      type: "POST",
+      url: "app/action/edit_cat.php",
+      data: t,
+      success: function (e) {
+        alert(e);
+      },
+    });
+  }),
   $(document).on("click", "#catagoryDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_cat.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == $.trim(e)
-              ? (alert("data deleted successfull"), location.reload())
-              : alert("faild to delete data");
-          }
-        );
+      $.post(
+        "app/action/delete_cat.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == $.trim(e) ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert("faild to delete data");
+        }
+      );
   }),
   $("#adMemberForm").submit(function (e) {
     e.preventDefault();
@@ -35,57 +34,44 @@ $("#editCatForm").submit(function (e) {
       url: "app/action/add_member.php",
       data: t,
       success: function (e) {
-        "yes" == $.trim(e)
-          ? (alert("member added successfully"), location.reload())
-          : alert(e);
+        "yes" == $.trim(e) ?
+          (alert("member added successfully"), location.reload()) :
+          alert(e);
       },
     });
   }),
   $("#editMemberForm").submit(function (e) {
     e.preventDefault();
     var t = $("#editMemberForm").serialize();
-    confirm("Are You sure want to edit data")
-      ? $.ajax({
-          type: "POST",
-          url: "app/action/edit_member.php",
-          data: t,
-          success: function (e) {
-            alert(e);
-          },
-        })
-      : alert("your data are save");
+    confirm("Are You sure want to edit data") ?
+      $.ajax({
+        type: "POST",
+        url: "app/action/edit_member.php",
+        data: t,
+        success: function (e) {
+          alert(e);
+        },
+      }) :
+      alert("your data are save");
   }),
   $(document).on("click", "#memberDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_member.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == e
-              ? (alert("data deleted successfull"), location.reload())
-              : alert(e);
-          }
-        );
+      $.post(
+        "app/action/delete_member.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
   }),
-  $("#adsuppliarForm").submit(function (e) {
-    e.preventDefault();
-    var t = $("#adsuppliarForm").serialize();
-    $.ajax({
-      type: "POST",
-      url: "app/action/add_suppliar.php",
-      data: t,
-      success: function (e) {
-        "yes" == $.trim(e)
-          ? (alert("suppliar added successfully."), location.reload())
-          : alert(e);
-      },
-    });
-  }),
+ 
   $("#editSuppliarForm").submit(function (e) {
     e.preventDefault();
     var t = $("#editSuppliarForm").serialize();
@@ -102,100 +88,100 @@ $("#editCatForm").submit(function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_suppliar.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == e
-              ? (alert("data deleted successfull"), location.reload())
-              : alert(e);
-          }
-        );
+      $.post(
+        "app/action/delete_suppliar.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
   }),
   $(document).on("click", "#productDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_product.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == e
-              ? (alert("data deleted successfull"), location.reload())
-              : alert(e);
-          }
-        );
+      $.post(
+        "app/action/delete_product.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
   }),
   $(document).on("click", "#stockManagementDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_stock_management.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == e
-              ? (alert("data deleted successfull"), location.reload())
-              : alert(e);
-          }
-        );
+      $.post(
+        "app/action/delete_stock_management.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
   }),
   $(document).on("click", "#ex_catagoryDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_exCaragroy.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == e
-              ? (alert("data deleted successfull"), location.reload())
-              : alert(e);
-          }
-        );
+      $.post(
+        "app/action/delete_exCaragroy.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
   }),
   $(document).on("click", "#expenseDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_expense.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == e
-              ? (alert("data deleted successfull"), location.reload())
-              : alert(e);
-          }
-        );
+      $.post(
+        "app/action/delete_expense.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
   }),
   $("#editProduct").submit(function (e) {
     e.preventDefault();
     var t = $("#editProduct").serialize();
-    confirm("Are You sure want to edit data")
-      ? $.ajax({
-          type: "POST",
-          url: "app/action/edit_product.php",
-          data: t,
-          success: function (e) {
-            alert(e);
-          },
-        })
-      : alert("your data are save");
+    confirm("Are You sure want to edit data") ?
+      $.ajax({
+        type: "POST",
+        url: "app/action/edit_product.php",
+        data: t,
+        success: function (e) {
+          alert(e);
+        },
+      }) :
+      alert("your data are save");
   }),
   $("#addexpenseCat").submit(function (e) {
     e.preventDefault();
@@ -205,9 +191,9 @@ $("#editCatForm").submit(function (e) {
       url: "app/action/addexpense_cat.php",
       data: t,
       success: function (e) {
-        "yes" == $.trim(e)
-          ? (alert("Expense catagory added successfylly"), location.reload())
-          : alert(e);
+        "yes" == $.trim(e) ?
+          (alert("Expense catagory added successfylly"), location.reload()) :
+          alert(e);
       },
     });
   }),
@@ -243,9 +229,9 @@ $("#editCatForm").submit(function (e) {
       url: "app/action/add_staff.php",
       data: t,
       success: function (e) {
-        "yes" == $.trim(e)
-          ? (alert("Staff added successfully"), $("#adstaffForm")[0].reset())
-          : alert(e);
+        "yes" == $.trim(e) ?
+          (alert("Staff added successfully"), $("#adstaffForm")[0].reset()) :
+          alert(e);
       },
     });
   }),
@@ -269,9 +255,9 @@ $("#editCatForm").submit(function (e) {
       url: "app/action/edit_update.php",
       data: t,
       success: function (e) {
-        "yes" == $.trim(e)
-          ? (window.location.href = "app/action/logout.php")
-          : alert(e);
+        "yes" == $.trim(e) ?
+          (window.location.href = "app/action/logout.php") :
+          alert(e);
       },
     });
   }),
@@ -279,34 +265,33 @@ $("#editCatForm").submit(function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_staff.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == $.trim(e)
-              ? (alert("data deleted successfull"), location.reload())
-              : alert("faild to delete data");
-          }
-        );
+      $.post(
+        "app/action/delete_staff.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == $.trim(e) ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert("faild to delete data");
+        }
+      );
   }),
   $("#sendSmsForm").submit(function (e) {
     e.preventDefault();
     var t = $("#sms_number").val(),
       a = $("#sms_message").val(),
       d = $("#sendSmsForm").serialize();
-    "" != t && "" != a
-      ? $.ajax({
-          type: "POST",
-          url: "app/action/send_sms.php",
-          data: d,
-          success: function (e) {
-            alert(e);
-          },
-        })
-      : alert("All field must be filled out");
+    "" != t && "" != a ?
+      $.ajax({
+        type: "POST",
+        url: "app/action/send_sms.php",
+        data: d,
+        success: function (e) {
+          alert(e);
+        },
+      }) :
+      alert("All field must be filled out");
   }),
   $("#addFactoryProduct").submit(function (e) {
     e.preventDefault();
@@ -323,33 +308,32 @@ $("#editCatForm").submit(function (e) {
   $("#editFactoryProduct").submit(function (e) {
     e.preventDefault();
     var t = $("#editFactoryProduct").serialize();
-    confirm("Are You sure want to edit data")
-      ? $.ajax({
-          type: "POST",
-          url: "app/action/edit_factoryProduct.php",
-          data: t,
-          success: function (e) {
-            alert(e);
-          },
-        })
-      : alert("your data are save");
+    confirm("Are You sure want to edit data") ?
+      $.ajax({
+        type: "POST",
+        url: "app/action/edit_factoryProduct.php",
+        data: t,
+        success: function (e) {
+          alert(e);
+        },
+      }) :
+      alert("your data are save");
   }),
   $(document).on("click", "#factoryProductDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
-        $.post(
-          "app/action/delete_factoryProduct.php",
-          {
-            delete_id: $delete_id,
-            delete_data: "delete_data",
-          },
-          function (e) {
-            "true" == $.trim(e)
-              ? (alert("data deleted successfull"), location.reload())
-              : alert("faild to delete data");
-          }
-        );
+      $.post(
+        "app/action/delete_factoryProduct.php", {
+          delete_id: $delete_id,
+          delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == $.trim(e) ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert("faild to delete data");
+        }
+      );
   }),
   $(document).on("click", ".btn-approve", function () {
     const orderId = $(this).data("id");
@@ -358,7 +342,10 @@ $("#editCatForm").submit(function (e) {
       $.ajax({
         type: "POST",
         url: "app/action/approve_purchase_order.php",
-        data: { order_id: orderId, suppliar_id: suppliarId },
+        data: {
+          order_id: orderId,
+          suppliar_id: suppliarId
+        },
         success: function (response) {
           if (response.status === true) {
             alert("Purchase Order berhasil di-approve.");
@@ -372,25 +359,83 @@ $("#editCatForm").submit(function (e) {
         },
       });
     }
-  }), 
+  }),
   $(document).on("click", ".btn-reject", function () {
     const orderId = $(this).data('id');
     if (confirm("Apakah Anda yakin ingin menolak pesanan ini?")) {
-        $.ajax({
-            url: 'app/action/reject_purchase_order.php',
-            type: 'POST',
-            data: { order_id: orderId },
-            success: function (response) {
-                if (response.status) {
-                    alert(response.message);
-                    $('#purchaseOrderTable').DataTable().ajax.reload();
-                } else {
-                    alert("Gagal menolak: " + response.message);
-                }
-            },
-            error: function () {
-                alert("Terjadi kesalahan jaringan.");
-            }
-        });
+      $.ajax({
+        url: 'app/action/reject_purchase_order.php',
+        type: 'POST',
+        data: {
+          order_id: orderId
+        },
+        success: function (response) {
+          if (response.status) {
+            alert(response.message);
+            $('#purchaseOrderTable').DataTable().ajax.reload();
+          } else {
+            alert("Gagal menolak: " + response.message);
+          }
+        },
+        error: function () {
+          alert("Terjadi kesalahan jaringan.");
+        }
+      });
     }
+  }), $(document).on('click', '.stock-apply-add', function() {
+    const id = $(this).data('id');
+    const input = $('.stock-input[data-id="' + id + '"]');
+    const val = parseInt(input.val()) || 0;
+
+    if (val <= 0) {
+        alert('Masukkan nilai lebih besar dari 0.');
+        return;
+    }
+
+    $.ajax({
+        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+        method: 'POST',
+        data: { id: id, change: val },
+        success: function(res) {
+      if (res.status) {
+        alert('Success: ' + res.message);
+        input.val(0);
+          $('#stockManagementTable').DataTable().ajax.reload();
+        // reload table or update UI here if needed
+      } else {
+        alert('Error: ' + res.message);
+      }
+    },
+    error: function() {
+      alert('Terjadi kesalahan pada server.');
+    }
+    });
+}), $(document).on('click', '.stock-apply-reduce', function() {
+    const id = $(this).data('id');
+    const input = $('.stock-input[data-id="' + id + '"]');
+    const val = parseInt(input.val()) || 0;
+
+    if (val <= 0) {
+        alert('Masukkan nilai lebih besar dari 0.');
+        return;
+    }
+
+    $.ajax({
+        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+        method: 'POST',
+        data: { id: id, change: -val },
+        success: function(res) {
+      if (res.status) {
+        alert('Success: ' + res.message);
+        input.val(0);
+          $('#stockManagementTable').DataTable().ajax.reload();
+        // reload table or update UI here if needed
+      } else {
+        alert('Error: ' + res.message);
+      }
+    },
+    error: function() {
+      alert('Terjadi kesalahan pada server.');
+    }
+    });
 });

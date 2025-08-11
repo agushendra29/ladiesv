@@ -1,6 +1,6 @@
 <?php
 	$msg = isset($_GET['msg']) ? $_GET['msg'] : '';
-	if (!$msg) $msg = "Le site du spipu\r\nhttp://spipu.net/";
+	if (!$msg) $msg = "Le site du spipu\r\nhttps://spipu.net/";
 
 
 	$err = isset($_GET['err']) ? $_GET['err'] : '';

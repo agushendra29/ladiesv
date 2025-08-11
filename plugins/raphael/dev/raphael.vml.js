@@ -910,7 +910,7 @@ define(["./raphael.core"], function(R) {
                 doc.createStyleSheet().addRule(".rvml", "behavior:url(#default#VML)");
             } else {
                 // no more room, add to the existing one
-                // http://msdn.microsoft.com/en-us/library/ms531194%28VS.85%29.aspx
+                // https://msdn.microsoft.com/en-us/library/ms531194%28VS.85%29.aspx
                 doc.styleSheets[0].addRule(".rvml", "behavior:url(#default#VML)");
             }
             try {

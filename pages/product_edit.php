@@ -1,120 +1,126 @@
-<!-- Content Wrapper. Contains page content --> -->
-<div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <div class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0 text-dark"><!-- Dashboard v2 --></h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6 mt-4">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="index.php?page=dashboard">Home</a></li>
-              <li class="breadcrumb-item active">Edit Products</li>
-            </ol>
-            </div><!-- /.col -->
-            </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-          </div>
-          <!-- /.content-header -->
-          <!-- Main content -->
-          <section class="content">
-            <div class="container-fluid">
-              <!-- /.card-header -->
-              <hr>
-               <div class="row">
-                 <div class="col-md-12 col-lg-12 mt-3">
-                   <div class="card">
-                     <div class="card-body">
-      <?php 
-        if (isset($_GET['edit_id'])) {
-           $edit_id = $_GET['edit_id'];
-           $data = $obj->find('products' , 'id' , $edit_id);
+<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
+  <section class="content">
+    <div class="container-fluid" style="margin-top: 40px;">
+      <div style="
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+        padding: 24px;
+      ">
+        <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 600; color: #333;">✏️ Form Edit Produk</h2>
 
-            if ($data) {
-              ?>
-      <form id="editProduct">
-        <div class="row">
-        <div class="col-md-6 col-lg-6">
-          <div class="form-group">
-          <label for="product_name">Product name * :</label>
-          <input type="text" class="form-control" id="product_name" name="product_name" value="<?=$data->product_name;?>">
-          <input type="text" hidden name="id" value="<?=$edit_id;?>">
+        <!-- Error Message -->
+        <div id="productErrorArea" style="
+          display: none;
+          padding: 10px 15px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          font-weight: 500;
+          border: 1px solid transparent;
+        ">
+          <span id="productErrorMessage"></span>
         </div>
-       </div>
-        <div class="col-md-6 col-lg-6">
-           <div class="form-group">
-          <label for="brand">Brand Name * :</label>
-          <input type="text" class="form-control" id="brand" value="<?=$data->brand_name;?>" name="brand">
-        </div>
-       </div>
-       <div class="col-md-6 col-lg-6">
-           <div class="form-group">
-              <label for="p_catagory">Product catagory * :</label>
-              <select name="p_catagory" id="p_catagory" class="form-control select2">
-                <option disabled selected>Select a catagory</option>
+
+        <?php 
+          if (isset($_GET['edit_id'])):
+            $edit_id = $_GET['edit_id'];
+            $data = $obj->find('products', 'id', $edit_id);
+            if ($data):
+        ?>
+        <form id="editProduct" method="POST" action="edit_product.php">
+          <input type="hidden" name="id" value="<?= htmlspecialchars($edit_id) ?>">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="product_name" style="font-weight: 500;">Nama Produk *</label>
+              <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Product name"
+                style="border-radius: 8px;" required value="<?= htmlspecialchars($data->product_name) ?>">
+            </div>
+          
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="p_catagory" style="font-weight: 500;">Kategori Produk *</label>
+              <select name="p_catagory" id="p_catagory" class="form-control select2" required style="border-radius: 8px;">
+                <option disabled>Pilih kategori</option>
                 <?php 
                   $all_catgory = $obj->all('catagory');
-                  $select_val = $data->catagory_id;
-
-                    foreach ($all_catgory as $catagory) {
-                    if ($select_val == $catagory->id) {
-                      $selected = 'selected';
-                    }else{
-                       $selected = '';
-                    }
-                    ?>  
-                      <option <?php echo $selected;?> value="<?=$catagory->id;?>"><?=$catagory->name;?></option>
-                    <?php 
+                  foreach ($all_catgory as $catagory) {
+                    $selected = ($data->catagory_id == $catagory->id) ? 'selected' : '';
+                    echo "<option value='{$catagory->id}' {$selected}>{$catagory->name}</option>";
                   }
-                
-                 ?>
+                ?>
               </select>
-           </div>
-         </div>
-       <div class="col-md-6 col-lg-6">
-           <div class="form-group">
-          <label for="product_source">Product source * :</label>
-          <select name="product_source" id="product_source" class="form-control select2">
-            <option <?php if ($data->product_source == 'factory'){echo "selected";}else{echo "";} ?> value="factory">Factory</option>
-            <option <?php if ($data->product_source == 'buy'){echo "selected";}else{echo "";} ?> value="buy">Buying</option>s
-          </select>
-         </div>
-       </div>
-       </div>
-
-       <div class="col-md-6 col-lg-6">
-         <div class="form-group">
-          <label for="selling_price">Harga * :</label>
-          <input type="number" class="form-control" id="selling_price" value="<?=$data->sell_price;?>" name="selling_price">
-        </div>
-       </div>
-        
-       </div>
-       </div>
-         <div class="row text-center mt-5">
-          <div class="col-md-6 offset-md-3 col-lg-6 offset-lg-3">
-            <button type="submit" title="update data" class="btn btn-primary pl-5 pr-5  rounded-0">update</button>
-          </div>
-        </div>
-      </form>
-
-              <?php 
-            }else{
-          header("location:index.php?page=error_page");
-        }
-
-        }
-       ?>
-         </div>
-                  </div>
-                 </div>
-               </div>
             </div>
-            <!-- /.card-body -->
-            <!-- /.row -->
-            </div><!--/. container-fluid -->
-          </section>
-          <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper
+            <div class="col-md-6 mb-3 d-flex align-items-end">
+              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".catagoryModal"
+                style="border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-plus"></i> Tambah Kategori
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="sell_price_hd" style="font-weight: 500;">Harga Head Distributor *</label>
+              <input type="number" class="form-control" id="sell_price_hd" name="sell_price_hd" placeholder="Harga jual"
+                style="border-radius: 8px;" required value="<?= htmlspecialchars($data->sell_price_hd) ?>">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sell_price_d" style="font-weight: 500;">Harga Distributor *</label>
+              <input type="number" class="form-control" id="sell_price_d" name="sell_price_d" placeholder="Harga jual"
+                style="border-radius: 8px;" required value="<?= htmlspecialchars($data->sell_price_d) ?>">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sell_price_a" style="font-weight: 500;">Harga Agen *</label>
+              <input type="number" class="form-control" id="sell_price_a" name="sell_price_a" placeholder="Harga jual"
+                style="border-radius: 8px;" required value="<?= htmlspecialchars($data->sell_price_a) ?>">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sell_price_r" style="font-weight: 500;">Harga Reseller *</label>
+              <input type="number" class="form-control" id="sell_price_r" name="sell_price_r" placeholder="Harga jual"
+                style="border-radius: 8px;" required value="<?= htmlspecialchars($data->sell_price_r) ?>">
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-6 offset-md-3 text-center">
+              <button type="reset" style="
+                background-color: #f44336;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                margin-right: 10px;
+                transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#d32f2f'"
+                onmouseout="this.style.backgroundColor='#f44336'">Reset</button>
+
+              <button type="submit" style="
+                background-color: #0073ea;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#005bb5'"
+                onmouseout="this.style.backgroundColor='#0073ea'">Update Produk</button>
+            </div>
+          </div>
+        </form>
+        <?php 
+            else:
+              header("Location: index.php?page=error_page");
+              exit;
+            endif;
+          else:
+            header("Location: index.php?page=error_page");
+            exit;
+          endif;
+        ?>
+      </div>
+    </div>
+  </section>
+</div>

@@ -19,19 +19,19 @@
 
 CREDITS From HTML2FPDF:
 
--Olivier Plathey for the fpdf.php class [http://www.fpdf.org]
+-Olivier Plathey for the fpdf.php class [https://www.fpdf.org]
 -Damon Kohler for the Flowing Block script [mailto:damonkohler@yahoo.com]
--Clément Lavoillotte for HTML-oriented FPDF idea
--Yamasoft for the gif.php class [http://www.yamasoft.com/]
--Jérôme Fenal for the _parsegif() function
--"VIETCOM" for the PDFTable code [http://www.freepgs.com/vietcom/tool/pdftable/] [mailto:vncommando@yahoo.com]
+-Clï¿½ment Lavoillotte for HTML-oriented FPDF idea
+-Yamasoft for the gif.php class [https://www.yamasoft.com/]
+-Jï¿½rï¿½me Fenal for the _parsegif() function
+-"VIETCOM" for the PDFTable code [https://www.freepgs.com/vietcom/tool/pdftable/] [mailto:vncommando@yahoo.com]
 -Yukihiro O. for the SetDash() function [mailto:yukihiro_o@infoseek.jp]
 -Ron Korving for the WordWrap() function
 -Michel Poulain for the DisplayPreferences() function
 -Patrick Benny for the MultiCellBlt() function idea [no longer in use]
 -Seb for the _SetTextRendering() and SetTextOutline() functions [mailto:captainseb@wanadoo.fr]
 -MorphSoft for the colornames list idea
--W3SCHOOLS for HTML-related reference info [http://www.w3schools.com/]
+-W3SCHOOLS for HTML-related reference info [https://www.w3schools.com/]
 
 
 
@@ -55,7 +55,7 @@ CREDITS From HTML2FPDF:
 //  you may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//      https://www.apache.org/licenses/LICENSE-2.0
 //
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an "AS IS" BASIS,
@@ -66,7 +66,7 @@ CREDITS From HTML2FPDF:
 
 /****************************************************************************
    * @copyright Khaled Al-Shamaa 2008
-   * @link http://www.ar-php.org
+   * @link https://www.ar-php.org
    * @author Khaled Al-Shamaa <khaled@ar-php.org>
    * @desc   Set of PHP5 / UTF-8 Classes developed to enhance Arabic web
    *         applications by providing set of tools includes stem-based searching, 
@@ -88,5 +88,5 @@ This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
-[http://www.opensource.org/licenses/lgpl-license.php]
+[https://www.opensource.org/licenses/lgpl-license.php]
 

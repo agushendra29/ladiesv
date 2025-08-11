@@ -3,7 +3,7 @@
 /* 
    This script prints out all characters in a TrueType font file
    to a PDF document. Point your browser to 
-   http://your.domain/your_path_to _mpdf/utils/font_dump.php
+   https://your.domain/your_path_to _mpdf/utils/font_dump.php
    The font file must be located in /ttfonts/ (or the default font
    directory defined by _MPDF_TTFONTPATH.
    By default this will examine the font dejavusanscondensed.
