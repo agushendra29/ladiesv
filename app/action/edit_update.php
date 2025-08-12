@@ -7,7 +7,7 @@
 
 		if (!empty($password)) {
 			 if ($password == $c_password) {
-		 		$password = md5($password);
+		 		$password = $password;
 
 		 		$query = array(
 		 			'password' => $password

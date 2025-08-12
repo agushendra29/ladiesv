@@ -44,6 +44,8 @@ foreach ($searchArray as $key => $search) {
     $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
 }
 
+
+
 // Bind pagination params
 $stmt->bindValue(':limit', (int)$rowperpage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
@@ -51,15 +53,29 @@ $stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
 $stmt->execute();
 $newsRecords = $stmt->fetchAll();
 
+function limitContent($text, $maxChars = 100) {
+    // Hilangkan HTML tag
+    $text = strip_tags($text);
+    // Potong string
+    if (strlen($text) > $maxChars) {
+        $text = substr($text, 0, $maxChars) . '...';
+    }
+    // Batasi hanya 2 baris
+    $lines = explode("\n", wordwrap($text, 50)); // wrap tiap 50 karakter
+    $lines = array_slice($lines, 0, 2);
+    return implode("<br>", $lines);
+}
+
 $data = array();
 foreach ($newsRecords as $row) {
-    $data[] = array(
-        "id" => $row['id'],
-        "title" => $row['title'],
-        "content"=> $row['content'],
-        "publish_date" => date('d M Y', strtotime($row['publish_date'])),
-        "created_at" => date('d M Y H:i', strtotime($row['created_at'])),
-    );
+   $data[] = array(
+    "id" => $row['id'],
+    "title" => htmlspecialchars($row['title']),
+    "content" => '<div class="content-cell">' . htmlspecialchars($row['content']) . '</div>',
+    "publish_date" => date('d M Y', strtotime($row['publish_date'])),
+    "created_at" => date('d M Y H:i', strtotime($row['created_at'])),
+);
+
 }
 
 // Prepare response for DataTables
@@ -71,3 +87,5 @@ $response = array(
 );
 
 echo json_encode($response);
+
+

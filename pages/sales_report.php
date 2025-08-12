@@ -15,6 +15,7 @@
     background-size: 16px;
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   }
+
   .custom-select-lg:focus {
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
@@ -28,11 +29,12 @@
     border-spacing: 0 10px;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
     background: #fff;
     font-size: 13px !important;
     min-width: 900px;
   }
+
   table thead {
     background-color: #2563eb;
     color: #fff;
@@ -41,32 +43,39 @@
     letter-spacing: 0.05em;
     font-size: 11px;
   }
+
   table thead th {
     padding: 16px 20px;
     border-bottom: none;
   }
+
   table thead th:first-child {
     border-top-left-radius: 12px;
   }
+
   table thead th:last-child {
     border-top-right-radius: 12px;
   }
+
   table tbody tr {
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
+
   table tbody tr:hover {
     background-color: #eff6ff;
-    box-shadow: 0 6px 20px rgba(0,115,234,0.15);
+    box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
   }
+
   table tbody tr td {
     padding: 14px 22px;
     vertical-align: middle;
     font-weight: 500;
     color: #374151;
   }
+
   .no-data {
     text-align: center;
     color: #9ca3af;
@@ -131,7 +140,8 @@
             <?php endif; ?>
 
             <div class="col-md-2">
-              <button id="search_sales_report" class="btn btn-primary" style="font-size:12px;height:38px;padding: 0px 20px;">
+              <button id="search_sales_report" class="btn btn-primary"
+                style="font-size:12px;height:38px;padding: 0px 20px;">
                 <i class="fas fa-search"></i> Search
               </button>
             </div>
@@ -156,9 +166,7 @@
               </thead>
               <tbody id="search_sales_report_res">
                 <tr>
-                  <td colspan="6" class="no-data">
-                    No data available. Please use filter above.
-                  </td>
+                  <td colspan="6" class="no-data">No data available. Please use filter above.</td>
                 </tr>
               </tbody>
             </table>
@@ -167,7 +175,7 @@
       </div>
 
       <!-- Stock Monitoring Table -->
-     
+
 
     </div>
   </section>
@@ -182,6 +190,7 @@
   // Date range picker
   var start = moment().subtract(29, 'days');
   var end = moment();
+
   function cb(start, end) {
     $('#reportrange span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
     $('#search_date').text(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
@@ -204,22 +213,59 @@
   function loadStockMonitoring(suppliar_id) {
     $.post('app/ajax/search_sales_report.php', {
       suppliar_id: suppliar_id
-    }, function(data) {
+    }, function (data) {
       $("#stock_monitoring_res").html(data);
     });
   }
 
   // Search sales report + stock monitoring
-  $(document).on('click', '#search_sales_report', function(event) {
+  $(document).on('click', '#search_sales_report', function (event) {
     event.preventDefault();
     let issuedate = $.trim($("#search_date").text());
     let customer = $("#customer").val();
     $.post('app/ajax/search_sales_report.php', {
       suppliar_id: customer,
       issuedate: issuedate
-    }, function(data) {
+    }, function (data) {
       $("#search_sales_report_res").html(data);
     });
     loadStockMonitoring(customer);
   });
+
+  $(function() {
+  let currentPage = 1;
+
+  function loadSalesReport(page = 1) {
+    currentPage = page;
+    let issuedate = $.trim($("#search_date").text());
+    let customer = $("#customer").val();
+
+    $.post('app/ajax/search_sales_report.php', {
+      suppliar_id: customer,
+      issuedate: issuedate,
+      page: page
+    }, function(data) {
+      $("#search_sales_report_res").html(data);
+    });
+  }
+
+  // Search button click
+  $(document).on('click', '#search_sales_report', function(e) {
+    e.preventDefault();
+    loadSalesReport(1);
+  });
+
+  // Pagination link click
+  $(document).on('click', '.pagination .page-link', function(e) {
+    e.preventDefault();
+    const page = $(this).data('page');
+    if (page && page !== currentPage) {
+      loadSalesReport(page);
+    }
+  });
+
+  // Optional: load default page on first load
+  loadSalesReport(1);
+});
+
 </script>

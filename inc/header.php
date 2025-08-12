@@ -31,6 +31,26 @@ $roleNames = [
 $roleName = $roleNames[$roleId] ?? 'User';
 ?>
 
+<?php
+function makeBreadcrumb($actual_link) {
+    // Ubah underscore jadi spasi & kapital tiap kata
+    $formatLabel = function($txt) {
+        return ucwords(str_replace('_', ' ', $txt));
+    };
+
+    if (strpos($actual_link, '_add') !== false) {
+        // contoh: purchase_order_add → Purchase Order > Add
+        $base = str_replace('_add', '', $actual_link);
+        return $formatLabel($base) . ' > Add';
+    }
+
+    // default
+    return $formatLabel($actual_link);
+}
+
+$breadcrumbText = makeBreadcrumb($actual_link);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
