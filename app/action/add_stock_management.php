@@ -56,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'note'         => 'Initial stock added'
             );
             $obj->create('stock_logs', $logData);
+            $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
+            $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $suppliar->name, "-"]);
 
             echo "yes";
         } else {

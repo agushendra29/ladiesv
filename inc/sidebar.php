@@ -42,7 +42,7 @@
       </li>
 
       <!-- Member -->
-      <?php if ($roleId <= 1): ?>
+      <?php if ($roleId <= 1 || $roleId == 4 || $roleId == 5): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -135,6 +135,8 @@
       </li>
 
       <!-- Pemesanan -->
+       
+      <?php if ($roleId <= 3): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=purchase_order" class="nav-link <?php echo $actual_link=='purchase_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -149,8 +151,11 @@
           <span>Pemesanan</span>
         </a>
       </li>
+      <?php endif; ?>
 
       <!-- Proses Refund -->
+       
+      <?php if ($roleId <=1): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=refund_process" class="nav-link <?php echo $actual_link=='refund_process'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -165,6 +170,8 @@
           <span>Proses Refund</span>
         </a>
       </li>
+      
+      <?php endif; ?>
 
       <!-- Reports -->
       <li style="margin-bottom: 6px; position: relative;">

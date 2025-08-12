@@ -1,12 +1,7 @@
-<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
+<div style="margin-bottom:75px;">
   <section class="content">
-    <div class="container-fluid" style="margin-top: 40px;">
-      <div style="
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-        padding: 24px;
-      ">
+    <div class="container-fluid" style="margin-top: 50px;">
+      <div>
         <h2 style="margin-bottom: 24px; font-size: 20px; font-weight: 600; color: #333;">✏️ Form Edit Produk</h2>
 
         <!-- Error Message -->
@@ -29,16 +24,14 @@
         ?>
         <form id="editProduct" method="POST" action="edit_product.php">
           <input type="hidden" name="id" value="<?= htmlspecialchars($edit_id) ?>">
+          
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="product_name" style="font-weight: 500;">Nama Produk *</label>
               <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Product name"
                 style="border-radius: 8px;" required value="<?= htmlspecialchars($data->product_name) ?>">
             </div>
-          
-          </div>
 
-          <div class="row">
             <div class="col-md-6 mb-3">
               <label for="p_catagory" style="font-weight: 500;">Kategori Produk *</label>
               <select name="p_catagory" id="p_catagory" class="form-control select2" required style="border-radius: 8px;">
@@ -52,14 +45,8 @@
                 ?>
               </select>
             </div>
-            <div class="col-md-6 mb-3 d-flex align-items-end">
-              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".catagoryModal"
-                style="border-radius: 8px; font-weight: 600;">
-                <i class="fas fa-plus"></i> Tambah Kategori
-              </button>
-            </div>
           </div>
-
+          
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="sell_price_hd" style="font-weight: 500;">Harga Head Distributor *</label>
@@ -82,6 +69,12 @@
                 style="border-radius: 8px;" required value="<?= htmlspecialchars($data->sell_price_r) ?>">
             </div>
           </div>
+           <div class="col-md-6 mb-3 d-flex align-items-end">
+              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".catagoryModal"
+                style="border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-plus"></i> Tambah Kategori
+              </button>
+            </div>
 
           <div class="row mt-4">
             <div class="col-md-6 offset-md-3 text-center">
@@ -110,6 +103,7 @@
             </div>
           </div>
         </form>
+
         <?php 
             else:
               header("Location: index.php?page=error_page");

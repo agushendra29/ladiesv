@@ -53,6 +53,12 @@ $stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
 $stmt->execute();
 $newsRecords = $stmt->fetchAll();
 
+function deleteNews($pdo, $id) {
+    $stmt = $pdo->prepare("DELETE FROM news WHERE id = :id");
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    return $stmt->execute();
+}
+
 function limitContent($text, $maxChars = 100) {
     // Hilangkan HTML tag
     $text = strip_tags($text);

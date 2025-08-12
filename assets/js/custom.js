@@ -291,6 +291,40 @@ $("#empTable").DataTable({
         $("#newsErrorArea").css("border-color", "red").show();
         $("#newsErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
     }
+}),$("#addReward").submit(function (e) {
+    e.preventDefault();
+
+    var nama_reward = $("#nama_reward").val(),
+        periode_hadiah_dari = $("#periode_hadiah_dari").val(),
+        periode_hadiah_sampai = $("#periode_hadiah_sampai").val(),
+        role_id = $("#role_id").val(),
+        jumlah_point = $("#jumlah_point").val();
+
+    if (nama_reward !== "" && periode_hadiah_dari !== "" && periode_hadiah_sampai !== "" && role_id !== "" && jumlah_point !== "") {
+        var formData = $("#addReward").serialize();
+        $.ajax({
+            type: "POST",
+            url: "app/action/add_reward.php",
+            data: formData,
+            success: function (res) {
+                if ($.trim(res) === "Reward berhasil disimpan.") {
+                    $("#rewardErrorArea").css("border-color", "green").show();
+                    $("#rewardErrorMessage").html(res).css("color", "green");
+                    $("#addReward")[0].reset();
+                } else {
+                    $("#rewardErrorArea").css("border-color", "red").show();
+                    $("#rewardErrorMessage").html(res).css("color", "red");
+                }
+            },
+            error: function () {
+                $("#rewardErrorArea").css("border-color", "red").show();
+                $("#rewardErrorMessage").html("Terjadi kesalahan pada server.").css("color", "red");
+            }
+        });
+    } else {
+        $("#rewardErrorArea").css("border-color", "red").show();
+        $("#rewardErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
+    }
 }), $("#salesForm").submit(function (e) {
     e.preventDefault();
 
@@ -458,6 +492,21 @@ $("#empTable").DataTable({
         {data: "content"},
         { data: "publish_date" },  // formatted publish date
         { data: "created_at" },    // created datetime
+    ]
+}),$("#rewardListTable").DataTable({
+    processing: !0,
+    serverSide: !0,
+    serverMethod: "post",
+    ajax: {
+        url: "app/ajax/reward_list_data.php"  // adjust the path to your PHP backend
+    },
+    columns: [
+        { data: "no" },            // news id
+        { data: "nama_reward" },         // news title
+        {data: "periode_hadiah"},
+        { data: "role_id" },  // formatted publish date
+        { data: "jumlah_point" },    // created datetime
+        {data: 'aksi'}
     ]
 }), $("#otherProductTable").DataTable({
     processing: !0,

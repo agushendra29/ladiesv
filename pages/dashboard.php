@@ -270,46 +270,7 @@
       </div>
 
       <!-- Factory Product Stock Alert -->
-      <div class="card-custom">
-        <div class="card-header" style="font-weight:600; font-size:1.125rem; border-bottom:none; padding-bottom:1rem;">
-          Factory Product Stock Alert
-        </div>
-        <div style="overflow-x:auto;">
-          <table role="table" aria-label="Factory product stock alert" style="min-width: 100%;">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Quantity</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php 
-                $stmt = $pdo->prepare("SELECT * FROM `factory_products` WHERE `quantity` <= `alert_quantity` ORDER BY quantity ASC");
-                $stmt->execute();
-                $res = $stmt->fetchAll(PDO::FETCH_OBJ);
-                $count = 1;
-                if ($res):
-                  foreach ($res as $product):
-              ?>
-              <tr>
-                <td><?= $count++; ?></td>
-                <td><?= htmlspecialchars($product->product_id); ?></td>
-                <td><?= htmlspecialchars($product->product_name); ?></td>
-                <td><?= htmlspecialchars($product->quantity); ?></td>
-              </tr>
-              <?php 
-                  endforeach;
-                else: ?>
-              <tr>
-                <td colspan="4" style="text-align:center; padding: 1rem;">No products with low stock</td>
-              </tr>
-              <?php endif; ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      
 
     </div>
   </section>

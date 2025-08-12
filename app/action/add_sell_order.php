@@ -113,7 +113,28 @@ switch ($role_id_seller) {
                 SET total_point = total_point + :qty 
                 WHERE id = :suppliar_id
             ");
+
+
+            
             $stmt->execute([':qty' => $quantity,':suppliar_id' => $current_user_id]);
+            $stmtRole = $pdo->prepare("SELECT role_id FROM suppliar WHERE id = ?");
+$stmtRole->execute([$customer_id]);
+$customerRole = $stmtRole->fetchColumn();
+if ($customerRole == 5) {
+    $stmt = $pdo->prepare("
+        UPDATE suppliar 
+        SET total_point = total_point + :qty 
+        WHERE id = :customer_id
+    ");
+    $stmt->execute([':qty' => $quantity, ':customer_id' => $customer_id]);
+}
+
+if (in_array($customerRole, [4, 5])) {
+    // Insert transaksi pembelian yang merepresentasikan pembelian customer dari suppliar
+    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
+    // suppliar_id = customer_id, customer_id = current_user_id (distributor)
+    $stmt->execute([$current_user_id, $product_id, $quantity, $customer_id, $customer_name, $invoice_number]);
+}
 
             $pdo->commit();
             echo "✅ Penjualan berhasil disimpan.";
