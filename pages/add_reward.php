@@ -16,7 +16,7 @@
           <span id="rewardErrorMessage"></span>
         </div>
 
-        <form id="addReward" method="POST" action="add_reward.php">
+        <form id="addReward">
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="nama_reward" style="font-weight: 500;">Nama Reward *</label>

@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside style="
   width: 260px;
-  background-color: #ffffff;
+  background-color: #d2eeff;
   color: #374151;
   height: 100vh;
   position: fixed;
@@ -29,7 +29,7 @@
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=dashboard" class="nav-link <?php echo $actual_link=='dashboard'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'dashboard') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
@@ -46,7 +46,7 @@
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'suppliar') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
@@ -64,7 +64,7 @@
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=news" class="nav-link <?php echo $actual_link=='news'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'news') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
@@ -82,7 +82,7 @@
         <input type="checkbox" id="produk-menu-toggle" style="display:none;">
         <label for="produk-menu-toggle" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'add_product' || $actual_link == 'product_list' || $actual_link == 'stock_management') ? '#2563eb' : '#374151' ?>;
           padding: 14px 18px; border-radius: 12px; cursor: pointer;
           user-select:none; transition: background-color 0.25s ease, color 0.25s ease;
@@ -122,7 +122,7 @@
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=sell_order" class="nav-link <?php echo $actual_link=='sell_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'sell_order') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
@@ -140,7 +140,7 @@
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=purchase_order" class="nav-link <?php echo $actual_link=='purchase_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'purchase_order') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
@@ -159,7 +159,7 @@
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=refund_process" class="nav-link <?php echo $actual_link=='refund_process'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'refund_process') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
@@ -172,13 +172,30 @@
       </li>
       
       <?php endif; ?>
+      <?php if ($roleId <=1): ?>
+      <li style="margin-bottom: 6px;">
+        <a href="index.php?page=reward_list" class="nav-link <?php echo $actual_link=='reward_list'?'active':'';?>" style="
+          display: flex; align-items: center; gap: 14px;
+          font-size: 14px !important; font-weight: 400;
+          color: <?= ($actual_link == 'reward_list') ? '#2563eb' : '#374151' ?>;
+          text-decoration: none; padding: 14px 18px; border-radius: 12px;
+          transition: background-color 0.25s ease, color 0.25s ease;
+          user-select:none;
+        " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
+          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'reward_list') ? '#2563eb' : '#374151' ?>'">
+          <i class="material-symbols-outlined" style="font-size:22px;">star</i>
+          <span>Daftar Hadiah</span>
+        </a>
+      </li>
+      
+      <?php endif; ?>
 
       <!-- Reports -->
       <li style="margin-bottom: 6px; position: relative;">
         <input type="checkbox" id="reports-menu-toggle" style="display:none;">
         <label for="reports-menu-toggle" style="
           display: flex; align-items: center; gap: 14px;
-          font-size: 15px !important; font-weight: 600;
+          font-size: 14px !important; font-weight: 400;
           color: <?= ($actual_link == 'sales_report' || $actual_link == 'purchase_report') ? '#2563eb' : '#374151' ?>;
           padding: 14px 18px; border-radius: 12px; cursor: pointer;
           user-select:none; transition: background-color 0.25s ease, color 0.25s ease;
@@ -237,4 +254,3 @@
   <?php require_once 'inc/member_add_modal.php'; ?>
     <?php require_once 'inc/catagory_modal.php'; ?>
     <?php require_once 'inc/suppliar_modal.php'; ?>
-    <?php require_once 'inc/expense_catagory_modal.php'; ?>

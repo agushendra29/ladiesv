@@ -325,41 +325,65 @@ $("#empTable").DataTable({
         $("#rewardErrorArea").css("border-color", "red").show();
         $("#rewardErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
     }
-}), $("#salesForm").submit(function (e) {
+}),$("#salesForm").submit(function (e) {
     e.preventDefault();
 
-    let product = $("#product_id").val(),
-        qty = $("#quantity").val(),
-        buyerSelect = $("#customer_name").val(),
+    let buyerSelect = $("#customer_name").val(),
         buyerInput = $("#buyer").val().trim();
 
+    // Validasi pembeli
     if ((buyerSelect === "0" || buyerSelect === null) && buyerInput === "") {
-        $("#saleErrorArea").show().html("Silakan pilih pembeli dari daftar ATAU ketik nama pembeli secara manual.");
+        $("#saleErrorArea").css("color", "#b91c1c").show()
+            .html("Silakan pilih pembeli dari daftar ATAU ketik nama pembeli secara manual.");
         return;
     }
 
-    if (!product || !qty || qty <= 0) {
-        $("#saleErrorArea").show().html("Produk dan jumlah wajib diisi.");
+    let products = [];
+    let errorMsg = "";
+
+    // Pastikan selector sesuai name / class di HTML kamu
+    $(".product-row").each(function () {
+        let productId = $(this).find("[name='product_id[]']").val(),
+            qty = parseInt($(this).find("[name='quantity[]']").val()) || 0;
+
+        if (!productId || productId === "0") {
+            errorMsg = "Produk wajib dipilih.";
+            return false; // stop loop
+        }
+        if (qty <= 0) {
+            errorMsg = "Jumlah wajib lebih dari 0.";
+            return false; // stop loop
+        }
+
+        products.push({
+            product_id: productId,
+            quantity: qty
+        });
+    });
+
+    if (errorMsg) {
+        $("#saleErrorArea").css("color", "#b91c1c").show().html(errorMsg);
         return;
     }
 
     let formData = {
-        product_id: product,
-        quantity: qty,
         buyer: buyerSelect,
         buyerName: buyerInput,
+        products: products,
         total_payment: $("#total_payment").val()
     };
 
     $.ajax({
         type: "POST",
-        url: "app/action/add_sell_order.php", // Ganti jika file PHP kamu berbeda
-        data: formData,
+        url: "app/action/add_sell_order.php",
+        data: { data: JSON.stringify(formData) },
         success: function (res) {
             if ($.trim(res) === "yes") {
                 $("#saleErrorArea").css("color", "#16a34a").show().html("Penjualan berhasil ditambahkan.");
                 $("#salesForm")[0].reset();
                 $("#total_payment").val('');
+                $(".product-rows").empty();
+                createProductRow();
             } else {
                 $("#saleErrorArea").css("color", "#b91c1c").show().html(res);
             }
@@ -494,8 +518,8 @@ $("#empTable").DataTable({
         { data: "created_at" },    // created datetime
     ]
 }),$("#rewardListTable").DataTable({
-    processing: !0,
-    serverSide: !0,
+    processing: false,
+    serverSide: false,
     serverMethod: "post",
     ajax: {
         url: "app/ajax/reward_list_data.php"  // adjust the path to your PHP backend
@@ -505,8 +529,7 @@ $("#empTable").DataTable({
         { data: "nama_reward" },         // news title
         {data: "periode_hadiah"},
         { data: "role_id" },  // formatted publish date
-        { data: "jumlah_point" },    // created datetime
-        {data: 'aksi'}
+        { data: "jumlah_point" },    
     ]
 }), $("#otherProductTable").DataTable({
     processing: !0,

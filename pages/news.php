@@ -5,7 +5,7 @@
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
           <h2 style="margin: 0; font-size: 26px; font-weight: 600; color: #222; user-select:none;">
-            📰 LIST BERITA
+            📰 DAFTAR BERITA
           </h2>
           <a href="index.php?page=add_news" 
             style="

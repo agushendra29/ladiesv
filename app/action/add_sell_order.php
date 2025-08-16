@@ -1,148 +1,210 @@
-<?php 
+<?php
 require_once '../init.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id     = $_POST['product_id'] ?? null;
-    $quantity       = intval($_POST['quantity'] ?? 0);
-    $total_payment  = floatval($_POST['total_payment']);
-    $customer_id    = intval($_POST['buyer'] ?? 0);
-    $customer_name  = trim($_POST['buyerName'] ?? '');
-    $order_date     = date('Y-m-d'); // default: hari ini
-    $current_user_id = $_SESSION['distributor_id']; 
-
-    if (!empty($product_id) && $quantity > 0 && $total_payment > 0 && !empty($customer_name)) {
-        try {
-            $pdo->beginTransaction();
-
-            // Ambil informasi produk
-            $product = $obj->find('products', 'id', $product_id);
-            if (!$product) {
-                throw new Exception("Produk tidak ditemukan.");
-            }
-$role_id_seller = $_SESSION['role_id'] ?? 0;
-
-switch ($role_id_seller) {
-    case 1: // HO
-        $price = floatval($product->sell_price_hd);
-        break;
-    case 2: // HD
-        $price = floatval($product->sell_price_hd);
-        break;
-    case 3: // D
-        $price = floatval($product->sell_price_d);
-        break;
-    case 4: // A
-        $price = floatval($product->sell_price_a);
-        break;
-    case 5: // R
-        $price = floatval($product->sell_price_r); // atau kalau ada harga khusus, ganti
-        break;
-    default:
-        throw new Exception("Role ID penjual tidak dikenali.");
-}
-            $product_name = $product->product_name;
-            $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ?");
-            $stmt->execute([$current_user_id, $product_id]);
-            $fromStock = $stmt->fetch();
-
-             if (!$fromStock) {
-                 throw new Exception("Stok distributor sumber tidak ditemukan. {$current_user_id} ");
-             }
-         
-             if ($fromStock['stock'] < $quantity) {
-                 throw new Exception("Stok tidak cukup. Sisa stok: {$fromStock['stock']}, permintaan: {$quantity}");
-             }
-
-            $newStockFrom = $fromStock['stock'] - $quantity;
-            // Buat nomor invoice unik
-            $invoice_number = 'INV-' . strtoupper(uniqid());
-
-            // Simpan ke tabel invoice
-            $invoiceData = [
-                'invoice_number' => $invoice_number,
-                'customer_id'    => $customer_id,
-                'customer_name'  => $customer_name,
-                'order_date'     => $order_date,
-                'net_total'      => $total_payment, // ← langsung dari total_payment
-                'return_status'  => 0,
-                'last_update'    => $order_date,
-                'suppliar_id' => $current_user_id
-            ];
-            $invoice_id = $obj->create('invoice', $invoiceData);
-            // Simpan ke tabel invoice_details
-            $detailData = [
-                'invoice_no'    => $invoice_id,
-                'pid'           => $product_id,
-                'product_name'  => $product_name,
-                'price'         => $price,
-                'quantity'      => $quantity
-            ];
-            $obj->create('invoice_details', $detailData);
-
-
-            $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
-            $stmt->execute([$newStockFrom, $fromStock['id']]);
-
-             $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ?");
-             $stmt->execute([$customer_id, $product_id]);
-             $toStock = $stmt->fetch();
-
-             if ($toStock) {
-                 $newStockTo = $toStock['stock'] + $quantity;
-                 $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
-                 $stmt->execute([$newStockTo, $toStock['id']]);
-             } else {
-                 $stmt = $pdo->prepare("SELECT * FROM suppliar WHERE id = ?");
-                 $stmt->execute([$customer_id]);
-                 $user = $stmt->fetch();
-                 $stmt2 = $pdo->prepare("SELECT * FROM products WHERE id = ?");
-                 $stmt2->execute([$product_id]);
-                 $prod = $stmt2->fetch();
-                 if($customer_id != 0) {
-                    $stmt = $pdo->prepare("INSERT INTO distributor_stocks (suppliar_id, product_id, stock, suppliar_name, product_name) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$customer_id, $product_id, $quantity, $user['name'], $prod['product_name']]);
-                 }
-        
-             }
-
-             $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'penjualan', ?, ?, NOW(), ?, ?,?)");
-             $stmt->execute([$current_user_id, $product_id, $quantity, $customer_id, $customer_name, $invoice_number]);
-
-             $stmt = $pdo->prepare("
-                UPDATE suppliar 
-                SET total_point = total_point + :qty 
-                WHERE id = :suppliar_id
-            ");
-
-
-            
-            $stmt->execute([':qty' => $quantity,':suppliar_id' => $current_user_id]);
-            $stmtRole = $pdo->prepare("SELECT role_id FROM suppliar WHERE id = ?");
-$stmtRole->execute([$customer_id]);
-$customerRole = $stmtRole->fetchColumn();
-if ($customerRole == 5) {
-    $stmt = $pdo->prepare("
-        UPDATE suppliar 
-        SET total_point = total_point + :qty 
-        WHERE id = :customer_id
-    ");
-    $stmt->execute([':qty' => $quantity, ':customer_id' => $customer_id]);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit('Method Not Allowed');
 }
 
-if (in_array($customerRole, [4, 5])) {
-    // Insert transaksi pembelian yang merepresentasikan pembelian customer dari suppliar
-    $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
-    // suppliar_id = customer_id, customer_id = current_user_id (distributor)
-    $stmt->execute([$current_user_id, $product_id, $quantity, $customer_id, $customer_name, $invoice_number]);
-}
-
-            $pdo->commit();
-            echo "✅ Penjualan berhasil disimpan.";
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            echo "❌ Gagal menyimpan data: " . $e->getMessage();
+try {
+    // =========================
+    // 1) Terima payload (JSON atau Form Array)
+    // =========================
+    $payload = null;
+    if (isset($_POST['data'])) {
+        // Format AJAX: data: JSON.stringify(formData)
+        $payload = json_decode($_POST['data'], true);
+        if (!is_array($payload)) {
+            throw new Exception('Payload JSON tidak valid.');
         }
+
+        // Ambil nilai dari JSON
+        $customer_id  = isset($payload['buyer']) && $payload['buyer'] !== '' ? (int)$payload['buyer'] : 0;
+        $buyer_manual = isset($payload['buyerName']) ? trim($payload['buyerName']) : '';
+        $products     = isset($payload['products']) && is_array($payload['products']) ? $payload['products'] : [];
     } else {
-        echo "⚠️ Silakan lengkapi semua data pembeli, produk, dan total pembayaran.";
+        // Format form standar: product_id[] & quantity[]
+        $product_ids = $_POST['product_id'] ?? [];
+        $quantities  = $_POST['quantity'] ?? [];
+        $customer_id = isset($_POST['customer_name']) && $_POST['customer_name'] !== '' ? (int)$_POST['customer_name'] : 0;
+        $buyer_manual = isset($_POST['buyer']) ? trim($_POST['buyer']) : '';
+
+        // Satukan ke array products = [{product_id, quantity}, ...]
+        $products = [];
+        foreach ($product_ids as $i => $pid) {
+            $qty = isset($quantities[$i]) ? (int)$quantities[$i] : 0;
+            $products[] = [
+                'product_id' => $pid,
+                'quantity'   => $qty
+            ];
+        }
     }
+
+    // =========================
+    // 2) Validasi & Normalisasi
+    // =========================
+    if (!isset($_SESSION['distributor_id'])) {
+        throw new Exception('Session distributor tidak ditemukan.');
+    }
+    $current_user_id = (int)$_SESSION['distributor_id'];
+    $order_date = date('Y-m-d');
+
+    // Tentukan nama customer
+    $customer_name = '';
+    if ($customer_id > 0) {
+        $cust = $obj->find('suppliar', 'id', $customer_id);
+        if (!$cust) {
+            throw new Exception('Data customer tidak ditemukan.');
+        }
+        $customer_name = $cust->name;
+        $buyer_role_id = (int)$cust->role_id;   // PENTING: harga dari role pembeli
+    } else {
+        // Penjualan pribadi / input manual
+        $customer_name = $buyer_manual ?: 'Penjualan Pribadi';
+        $buyer_role_id = 5; // anggap R untuk pribadi
+    }
+
+    // Ambil item valid (pid > 0 & qty > 0)
+    $items = [];
+    foreach ($products as $p) {
+        $pid = isset($p['product_id']) ? (int)$p['product_id'] : 0;
+        $qty = isset($p['quantity'])   ? (int)$p['quantity']   : 0;
+        if ($pid > 0 && $qty > 0) {
+            $items[] = ['pid' => $pid, 'qty' => $qty];
+        }
+    }
+
+    if (empty($items)) {
+        throw new Exception('Produk dan jumlah wajib diisi.');
+    }
+
+    // =========================
+    // 3) Proses Transaksi
+    // =========================
+    $pdo->beginTransaction();
+
+    // Siapkan invoice (sementara net_total = 0, nanti diupdate)
+    $invoice_number = 'INV-' . strtoupper(uniqid());
+    $invoiceData = [
+        'invoice_number' => $invoice_number,
+        'customer_id'    => $customer_id,
+        'customer_name'  => $customer_name,
+        'order_date'     => $order_date,
+        'net_total'      => 0,
+        'return_status'  => 0,
+        'last_update'    => $order_date,
+        'suppliar_id'    => $current_user_id
+    ];
+    $invoice_id = $obj->create('invoice', $invoiceData);
+
+    $grand_total  = 0;   // total rupiah semua item
+    $total_qty_seller_points = 0; // total poin penjual = total qty semua item
+
+    foreach ($items as $it) {
+        $pid = $it['pid'];
+        $qty = $it['qty'];
+
+        // Ambil produk
+        $product = $obj->find('products', 'id', $pid);
+        if (!$product) {
+            throw new Exception("Produk ID {$pid} tidak ditemukan.");
+        }
+
+        // Harga berdasarkan ROLE PEMBELI
+        switch ($buyer_role_id) {
+            case 0: $price = 0; break;
+            case 1: 
+            case 2: $price = (float)$product->sell_price_hd; break;
+            case 3: $price = (float)$product->sell_price_d;  break;
+            case 4: $price = (float)$product->sell_price_a;  break;
+            case 5: default: $price = (float)$product->sell_price_r;  break;
+        }
+
+        // Cek stok penjual
+        $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ? FOR UPDATE");
+        $stmt->execute([$current_user_id, $pid]);
+        $fromStock = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$fromStock) {
+            throw new Exception("Stok produk {$product->product_name} tidak ditemukan pada suppliar pengirim.");
+        }
+        if ((int)$fromStock['stock'] < $qty) {
+            throw new Exception("Stok {$product->product_name} kurang. Sisa {$fromStock['stock']}, diminta {$qty}.");
+        }
+
+        // Kurangi stok penjual
+        $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
+        $stmt->execute([(int)$fromStock['stock'] - $qty, (int)$fromStock['id']]);
+
+        // Tambah stok pembeli (jika bukan penjualan pribadi)
+        if ($customer_id !== 0) {
+            $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ? FOR UPDATE");
+            $stmt->execute([$customer_id, $pid]);
+            $toStock = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($toStock) {
+                $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
+                $stmt->execute([(int)$toStock['stock'] + $qty, (int)$toStock['id']]);
+            } else {
+                // Insert stok baru untuk pembeli
+                $stmt = $pdo->prepare("
+                    INSERT INTO distributor_stocks (suppliar_id, product_id, stock, suppliar_name, product_name)
+                    VALUES (?, ?, ?, ?, ?)
+                ");
+                $stmt->execute([$customer_id, $pid, $qty, $customer_name, $product->product_name]);
+            }
+        }
+
+        // Simpan detail invoice
+        $obj->create('invoice_details', [
+            'invoice_no'   => $invoice_id,
+            'pid'          => $pid,
+            'product_name' => $product->product_name,
+            'price'        => $price,
+            'quantity'     => $qty
+        ]);
+
+        // Hitung total per item & akumulasi grand total
+        $grand_total += ($price * $qty);
+
+        // Insert transaction_histories untuk item ini (penjualan)
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories
+                (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)
+            VALUES (?, 'penjualan', ?, ?, NOW(), ?, ?, ?)
+        ");
+        $stmt->execute([$current_user_id, $pid, $qty, $customer_id, $customer_name, $invoice_number]);
+
+        // Jika kamu punya kolom price/net_total di transaction_histories, gunakan ini:
+        /*
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories
+                (suppliar_id, type, product_id, quantity, price, net_total, created_at, customer_id, customer_name, invoice_number)
+            VALUES (?, 'penjualan', ?, ?, ?, ?, NOW(), ?, ?, ?)
+        ");
+        $stmt->execute([$current_user_id, $pid, $qty, $price, $price*$qty, $customer_id, $customer_name, $invoice_number]);
+        */
+
+        // Akumulasi poin penjual
+        $total_qty_seller_points += $qty;
+    }
+
+    // Update net_total invoice
+    $stmt = $pdo->prepare("UPDATE invoice SET net_total = ?, last_update = ? WHERE id = ?");
+    $stmt->execute([$grand_total, $order_date, $invoice_id]);
+
+    // Update poin penjual
+    $stmt = $pdo->prepare("UPDATE suppliar SET total_point = total_point + :qty WHERE id = :sid");
+    $stmt->execute([':qty' => $total_qty_seller_points, ':sid' => $current_user_id]);
+
+    $pdo->commit();
+
+    // Cocok dengan AJAX yang mengecek res === "yes"
+    echo "yes";
+
+} catch (Exception $e) {
+    if ($pdo && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    // Pesan error untuk ditampilkan di #saleErrorArea
+    echo "❌ " . $e->getMessage();
 }
