@@ -11,6 +11,7 @@ try {
     // 1) Terima payload (JSON atau Form Array)
     // =========================
     $payload = null;
+    $current_role_id = (int)$_SESSION['role_id'];
     if (isset($_POST['data'])) {
         // Format AJAX: data: JSON.stringify(formData)
         $payload = json_decode($_POST['data'], true);
@@ -18,18 +19,14 @@ try {
             throw new Exception('Payload JSON tidak valid.');
         }
 
-        // Ambil nilai dari JSON
         $customer_id  = isset($payload['buyer']) && $payload['buyer'] !== '' ? (int)$payload['buyer'] : 0;
         $buyer_manual = isset($payload['buyerName']) ? trim($payload['buyerName']) : '';
         $products     = isset($payload['products']) && is_array($payload['products']) ? $payload['products'] : [];
     } else {
-        // Format form standar: product_id[] & quantity[]
         $product_ids = $_POST['product_id'] ?? [];
         $quantities  = $_POST['quantity'] ?? [];
         $customer_id = isset($_POST['customer_name']) && $_POST['customer_name'] !== '' ? (int)$_POST['customer_name'] : 0;
         $buyer_manual = isset($_POST['buyer']) ? trim($_POST['buyer']) : '';
-
-        // Satukan ke array products = [{product_id, quantity}, ...]
         $products = [];
         foreach ($product_ids as $i => $pid) {
             $qty = isset($quantities[$i]) ? (int)$quantities[$i] : 0;
@@ -40,16 +37,12 @@ try {
         }
     }
 
-    // =========================
-    // 2) Validasi & Normalisasi
-    // =========================
     if (!isset($_SESSION['distributor_id'])) {
         throw new Exception('Session distributor tidak ditemukan.');
     }
     $current_user_id = (int)$_SESSION['distributor_id'];
     $order_date = date('Y-m-d');
 
-    // Tentukan nama customer
     $customer_name = '';
     if ($customer_id > 0) {
         $cust = $obj->find('suppliar', 'id', $customer_id);
@@ -120,9 +113,10 @@ try {
             case 5: default: $price = (float)$product->sell_price_r;  break;
         }
 
+        $stock_suppliar_id = ($current_role_id === 1) ? 1 : $current_user_id;
         // Cek stok penjual
         $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ? FOR UPDATE");
-        $stmt->execute([$current_user_id, $pid]);
+        $stmt->execute([$stock_suppliar_id, $pid]);
         $fromStock = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$fromStock) {
             throw new Exception("Stok produk {$product->product_name} tidak ditemukan pada suppliar pengirim.");

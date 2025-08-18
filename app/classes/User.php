@@ -11,7 +11,7 @@ class User extends Objects {
 
 	// user login method to dashboard
 	public function login($username, $pass) {
-		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE username = :username AND password = :pass ");
+		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE suppliar_code = :username AND password = :pass ");
 		$stmt->bindValue(":username", $username, PDO::PARAM_STR);
 		$stmt->bindValue(":pass", $pass, PDO::PARAM_STR);
 		$stmt->execute();

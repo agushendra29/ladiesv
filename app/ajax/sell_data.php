@@ -68,7 +68,7 @@ foreach($empRecords as $row){
       "net_total"=>$row['net_total'],
       "paid_amount"=>$row['paid_amount'],
       "due_amount"=>$row['due_amount'],
-      "return_status"=>$row['return_status'],
+      "return_status"=>$row['return_status'],   
       "payment_type"=>$row['payment_type'],
        "action"=>'
          <div class="btns-group">

@@ -327,7 +327,7 @@ $("#empTable").DataTable({
     }
 }),$("#salesForm").submit(function (e) {
     e.preventDefault();
-
+    
     let buyerSelect = $("#customer_name").val(),
         buyerInput = $("#buyer").val().trim();
 
@@ -341,7 +341,6 @@ $("#empTable").DataTable({
     let products = [];
     let errorMsg = "";
 
-    // Pastikan selector sesuai name / class di HTML kamu
     $(".product-row").each(function () {
         let productId = $(this).find("[name='product_id[]']").val(),
             qty = parseInt($(this).find("[name='quantity[]']").val()) || 0;
@@ -373,17 +372,20 @@ $("#empTable").DataTable({
         total_payment: $("#total_payment").val()
     };
 
+    // 🔔 Konfirmasi sebelum submit
+    if (!confirm(`Yakin ingin submit penjualan dengan total Rp ${formData.total_payment} kepada ${formData.buyerName} ?`)) {
+        return;
+    }
+
     $.ajax({
         type: "POST",
         url: "app/action/add_sell_order.php",
         data: { data: JSON.stringify(formData) },
         success: function (res) {
             if ($.trim(res) === "yes") {
-                $("#saleErrorArea").css("color", "#16a34a").show().html("Penjualan berhasil ditambahkan.");
-                $("#salesForm")[0].reset();
-                $("#total_payment").val('');
-                $(".product-rows").empty();
-                createProductRow();
+                alert("✅ Penjualan berhasil disubmit!");
+                // 👉 Redirect ke halaman sell_order
+                window.location.href = "index.php?page=sell_order";
             } else {
                 $("#saleErrorArea").css("color", "#b91c1c").show().html(res);
             }

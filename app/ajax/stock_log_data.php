@@ -9,7 +9,19 @@ $start  = isset($_POST['start']) ? intval($_POST['start']) : 0;
 $length = isset($_POST['length']) ? intval($_POST['length']) : 10;
 $searchValue = isset($_POST['search']['value']) ? $_POST['search']['value'] : '';
 
-// Base query
+function getSuppliarName($pdo, $id) {
+    if (empty($id)) return null;
+    $stmt = $pdo->prepare("SELECT suppliar_code FROM user WHERE id = :id LIMIT 1");
+    $stmt->execute([':id' => $id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stm = $pdo->prepare("SELECT name FROM suppliar WHERE suppliar_code = :suppliar_code LIMIT 1");
+    $stm->execute([':suppliar_code' => $row['suppliar_code']]);
+    $rowNew = $stm->fetch(PDO::FETCH_ASSOC);
+    return $rowNew ? $rowNew['name'] : null;
+}
+
+// Base query   
 $baseQuery = "
     FROM stock_logs sl
     LEFT JOIN suppliar s ON sl.suppliar_id = s.id
@@ -44,6 +56,7 @@ $totalFiltered = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 // Query untuk ambil data dengan pagination
 $sql = "
     SELECT 
+        changed_by,
         sl.*, 
         s.name AS suppliar_name, 
         p.product_name, 
@@ -70,13 +83,14 @@ $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Format data untuk DataTables
 $data = [];
 foreach ($logs as $log) {
+    $changedByName = getSuppliarName($pdo, $log['changed_by']);
     $data[] = [
         "suppliar_name" => $log['suppliar_name'],
         "product_name" => $log['product_name'],
         "action_type" => ucfirst($log['action_type']),
         "old_quantity" => $log['old_quantity'],
         "new_quantity" => $log['new_quantity'],
-        "changed_by" => $log['changed_by_name'],
+        "changed_by" => $changedByName ?? '-',
         "created_at" => $log['created_at'],
         "note" => $log['note']
     ];

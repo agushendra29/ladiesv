@@ -64,7 +64,7 @@ function getRoleName($role_id) {
 $data = array();
 foreach ($empRecords as $row) {
     $data[] = array(
-        "id" => $row['suppliar_code'],
+        "id" => getRoleName($row['role_id']) .'-'.  $row['suppliar_code'],
         "name" => $row['name'],
         "address" => $row['address'],
         "con_num" => $row['con_num'],

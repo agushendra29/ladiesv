@@ -13,25 +13,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sup_address   = trim($_POST['supaddress'] ?? '');
     $sup_address_ktp   = trim($_POST['supaddressktp'] ?? '');
     $user_id       = $_SESSION['user_id'] ?? null;
-    $serial_code = $sup_role . time();
 
-  if (!empty($_POST['birth_date'])) {
-    $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
-} else {
-    $birth_date = null; // atau biarkan kosong
-}
+    if (!empty($_POST['birth_date'])) {
+        $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
+    } else {
+        $birth_date = null;
+    }
+
     $name_prefix = substr(preg_replace('/[^A-Za-z]/', '', $sup_name), 0, 3); // Hanya huruf
-    $dob_format  = date('dmY', strtotime($birth_date));
-   $sup_password_plain = strtolower($name_prefix) . $dob_format;
-    // Validasi input
+    $dob_format  = $birth_date ? date('dmY', strtotime($birth_date)) : '';
+    $sup_password_plain = strtolower($name_prefix) . $dob_format;
+
+    // Validasi NIK (harus angka 16 digit)
+    if (!preg_match('/^[0-9]{16}$/', $sup_nik)) {
+        echo "NIK harus berupa 16 digit angka.";
+        exit;
+    }
+
+    // Validasi input wajib
     if (
         $sup_name && $sup_nik && $sup_rekening && $sup_bank && $birth_date &&
         $sup_contact && $sup_email && $sup_role && $sup_password_plain && $sup_address
     ) {
         try {
-            // Simpan ke tabel `suppliar`
+            // Pertama simpan suppliar (tanpa suppliar_code dulu)
             $sup_data = [
-                'suppliar_code' => $serial_code,
                 'name'        => $sup_name,
                 'address'     => $sup_address,
                 'con_num'     => $sup_contact,
@@ -45,18 +51,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'date_of_birth' =>$birth_date,
             ];
 
-            $res1 = $obj->create('suppliar', $sup_data);
+            $suppliar_id = $obj->create('suppliar', $sup_data);
 
-            // Dapatkan ID suppliar terakhir
-            if ($res1) {
-                $suppliar_id = $res1; // DAPATKAN PRIMARY KEY SUPPLIAR
+            if ($suppliar_id) {
+                // Buat suppliar_code dengan padding nol (contoh: 000001)
+                $suppliar_code = str_pad($suppliar_id, 6, "0", STR_PAD_LEFT);
+
+                // Update row suppliar dengan suppliar_code
+$obj->update('suppliar', 'id', $suppliar_id, [
+        'suppliar_code' => $suppliar_code
+    ]);
                 // Simpan user
                 $user_general_data = [
                     'username'     => $sup_email,
                     'password'     => $sup_password_plain,
                     'role_id'      => $sup_role,
                     'suppliar_id'  => $suppliar_id,
-                    'is_active'    => 1
+                    'is_active'    => 1,
+                    'suppliar_code' => $suppliar_code
                 ];
                 $res2 = $obj->create('user', $user_general_data);
 

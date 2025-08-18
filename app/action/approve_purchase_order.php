@@ -31,7 +31,7 @@ try {
 
     // Cek stok distributor sumber
     $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id= ? AND product_id = ?");
-    $stmt->execute([$fromDistributorId, $productId]);
+    $stmt->execute(["1", $productId]);
     $fromStock = $stmt->fetch();
 
     if (!$fromStock) {

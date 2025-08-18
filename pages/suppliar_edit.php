@@ -1,5 +1,5 @@
 <!-- Content Wrapper. Contains page content  -->
-<div class="content-wrapper">
+<div class="">
   <section class="content">
     <div style="padding:75px; max-width: 900px; margin:auto;">
       <?php 
@@ -54,9 +54,16 @@
         <div>
           <label for="bank" style="font-weight: 600; color: #334155;">Nama Bank <span
               style="color:#ef4444;">*</span></label>
-          <input type="text" id="bank" name="bank" value="<?= htmlspecialchars($data->bank); ?>" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+          <select id="sup_bank" name="bank" required
+            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background:white; cursor:pointer;">
+            <option value="">-- Pilih Bank --</option>
+            <option value="BCA" <?= $data->bank == 'BCA' ? 'selected' : '' ?>>BCA</option>
+            <option value="BRI" <?= $data->bank == 'BRI' ? 'selected' : '' ?>>BRI</option>
+            <option value="BNI" <?= $data->bank == 'BNI' ? 'selected' : '' ?>>BNI</option>
+            <option value="MANDIRI" <?= $data->bank == 'MANDIRI' ? 'selected' : '' ?>>MANDIRI</option>
+          </select>
         </div>
+
 
         <div>
           <label for="contact" style="font-weight: 600; color: #334155;">No Kontak <span
@@ -81,15 +88,21 @@
         <div>
           <label for="role" style="font-weight: 600; color: #334155;">Level Anggota <span
               style="color:#ef4444;">*</span></label>
-          <select id="role" name="role" required
+
+          <select id="role" name="role" <?= ($data->role_id != 7) ? 'disabled' : 'required' ?>
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
-            <option value="" disabled>-- Pilih Level Anggota --</option>
+            <option value="" disabled <?= empty($data->role_id) ? 'selected' : '' ?>>-- Pilih Level Anggota --</option>
             <option value="1" <?= $data->role_id == 1 ? 'selected' : '' ?>>Head Officer</option>
             <option value="2" <?= $data->role_id == 2 ? 'selected' : '' ?>>Head Distributor</option>
             <option value="3" <?= $data->role_id == 3 ? 'selected' : '' ?>>Distributor</option>
             <option value="4" <?= $data->role_id == 4 ? 'selected' : '' ?>>Agen</option>
             <option value="5" <?= $data->role_id == 5 ? 'selected' : '' ?>>Reseller</option>
           </select>
+
+          <?php if ($data->role_id != 7): ?>
+          <!-- Supaya value tetap terkirim ke server meski select disabled -->
+          <input type="hidden" name="role" value="<?= $data->role_id ?>">
+          <?php endif; ?>
         </div>
 
         <div style="grid-column: 1 / -1;">

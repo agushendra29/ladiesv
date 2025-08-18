@@ -34,14 +34,25 @@ if ($Ouser->is_login() != false) {
 
       <form action="app/action/login.php" method="post">
         <div class="mb-3">
-          <label for="username" class="form-label" style="font-weight:600; font-size:14px; color:#333;">Username</label>
+          <label for="username" class="form-label" style="font-weight:600; font-size:14px; color:#333;">ID Member</label>
           <input type="text" name="username" class="form-control" id="username" required style="height:44px; border-radius:10px; font-size:14px; border:1px solid #d0d7de;">
         </div>
 
-        <div class="mb-3">
-          <label for="password" class="form-label" style="font-weight:600; font-size:14px; color:#333;">Password</label>
-          <input type="password" name="password" class="form-control" id="password" required style="height:44px; border-radius:10px; font-size:14px; border:1px solid #d0d7de;">
-        </div>
+        <div class="mb-3 position-relative">
+  <label for="password" class="form-label" style="font-weight:600; font-size:14px; color:#333;">Password</label>
+  <input type="password" name="password" class="form-control" id="password" required
+         style="height:44px; border-radius:10px; font-size:14px; border:1px solid #d0d7de; padding-right:40px;">
+  
+  <!-- Tombol view password -->
+  <span id="togglePassword" style="
+        position:absolute;
+        top:70%;
+        right:12px;
+        transform:translateY(-50%);
+        cursor:pointer;
+        font-size:14px;
+        color:#555;">👁️</span>
+</div>
 
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="remember" style="border-radius:4px;">
@@ -56,3 +67,13 @@ if ($Ouser->is_login() != false) {
 
 </body>
 </html>
+<script>
+  const passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+
+  togglePassword.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+  });
+</script>

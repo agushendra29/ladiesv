@@ -4,7 +4,7 @@
           <section class="content mt-5">
             <div class="container-fluid">
              <div class="card-header">
-                <h3 class="card-title mt-3">Update passowrd</h3>
+                <h3 class="card-title mt-3">Profile</h3>
               </div>
               <!-- /.card-header -->
                <div class="row">
@@ -18,7 +18,6 @@
                           if ($user_info) {
                             ?>
                             <form id="update_userForm">
-                              
                                <input type="text" hidden name="user_id" value="<?=$login_user?>">
                              <div class="form-group">
                                 <label for="password">new password</label>
