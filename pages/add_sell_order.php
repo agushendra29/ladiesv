@@ -42,8 +42,7 @@ $products = $obj->all('products');
           </div>
 
           <div class="col-md-6">
-            <label for="buyer" style="font-weight: 500; display: block; margin-bottom: 8px;">Nama Customer</label>
-            <input type="text" id="buyer" name="buyer" placeholder="Nama Customer" readonly
+            <input type="hidden" id="buyer" name="buyer" placeholder="Nama Customer" readonly
               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px;">
           </div>
         </div>
@@ -96,6 +95,9 @@ $products = $obj->all('products');
   </section>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
   const productsData = <?php echo json_encode($products); ?>;
 

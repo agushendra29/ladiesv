@@ -82,7 +82,7 @@ foreach ($empRecords as $row) {
         "suppliar_id" => $row['suppliar_id'],
         "suppliar_name" => $row['suppliar_name'],
         "stock" => $row['stock'],
-        "action" => $_SESSION['role_id'] == 1 ? '
+        "action" => $_SESSION['role_id'] == 10 ? '
             <div class="d-flex align-items-center" style="gap: 6px; max-width: 200px;">
                 <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input" style="width: 60px;" data-id="' . $row['id'] . '">
                 <button type="button" id="stock-apply-add" class="btn btn-success btn-sm stock-apply-add" data-id="' . $row['id'] . '"><i class="fas fa-plus"></i></button>

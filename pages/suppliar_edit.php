@@ -119,17 +119,25 @@
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address); ?></textarea>
         </div>
 
-        <div>
-          <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>
-          <input type="password" id="password" name="password"
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-        </div>
+      <div style="position: relative; margin-bottom: 16px;">
+  <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>
+  <input type="password" id="password" name="password"
+    style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+  <span onclick="togglePassword('password', this)" 
+    style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
+    👁
+  </span>
+</div>
 
-        <div>
-          <label for="old_password" style="font-weight: 600; color: #334155;">Password Lama</label>
-          <input type="password" id="old_password" name="old_password"
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-        </div>
+<div style="position: relative; margin-bottom: 16px;">
+  <label for="old_password" style="font-weight: 600; color: #334155;">Password Lama</label>
+  <input type="password" id="old_password" name="old_password"
+    style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+  <span onclick="togglePassword('old_password', this)" 
+    style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
+    👁
+  </span>
+</div>
 
         <div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
           <button type="reset" style="
@@ -175,3 +183,16 @@
     </div>
   </section>
 </div>
+
+<script>
+function togglePassword(fieldId, el) {
+  const input = document.getElementById(fieldId);
+  if (input.type === "password") {
+    input.type = "text";
+    el.textContent = "🙈"; // ganti icon kalau sedang tampil
+  } else {
+    input.type = "password";
+    el.textContent = "👁"; // ganti icon kalau disembunyikan
+  }
+}
+</script>

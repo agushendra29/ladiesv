@@ -74,7 +74,7 @@
             <div class="col-md-6 col-lg-6">
               <div class="form-group">
                 <label for="sup_email">Email:</label>
-                <input type="email" class="form-control" id="sup_email" placeholder="Email optional" name="sup_email">
+                <input type="email" class="form-control" id="sup_email" placeholder="Email optional" name="sup_email" required>
               </div>
             </div>
 

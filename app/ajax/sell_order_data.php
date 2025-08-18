@@ -13,7 +13,7 @@ $searchArray = [];
 
 ## Filter suppliar jika bukan role 1 (HO)
 $whereExtra = '';
-if ($_SESSION['role_id'] != 1) {
+if ($_SESSION['role_id'] != 1 || $_SESSION['role_id'] != 10) {
     $whereExtra = " AND i.suppliar_id = :suppliar_id ";
 }
 
@@ -60,7 +60,7 @@ $totalRecordwithFilter = $stmt->fetch()['allcount'];
 $sqlFetch = "
     SELECT i.*,
         u2.name AS distributor_name,
-        GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ', d.quantity) SEPARATOR ', ') AS items_summary
+        GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR ', ') AS items_summary
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
     LEFT JOIN invoice_details d ON i.id = d.invoice_no

@@ -101,6 +101,23 @@ $("#editCatForm").submit(function (e) {
         }
       );
   }),
+   $(document).on("click", "#suppliarActive_btn", function (e) {
+    e.preventDefault(),
+      ($delete_id = $(this).data("id")),
+      confirm("Are You sure want to non active this item?") &&
+      $.post(
+        "app/action/active_suppliar.php", {
+          delete_id: $delete_id,
+          active_data: "active_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data suspend successfull"), location.reload()) :
+            alert(e);
+        }
+      );
+  }),
   $(document).on("click", "#productDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),

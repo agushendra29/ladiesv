@@ -7,7 +7,7 @@
         <h2 style="margin: 0; font-size: 26px; font-weight: 600; color: #222; user-select:none;">
           📋 DAFTAR HADIAH
         </h2>
-        <?php if ($_SESSION['role_id'] == 1): ?>
+        <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
            <a href="index.php?page=add_reward" 
             style="
               background-color: #0073ea;

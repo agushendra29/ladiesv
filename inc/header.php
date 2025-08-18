@@ -26,7 +26,8 @@ $roleNames = [
     2 => 'Head Distributor',
     3 => 'Distributor',
     4 => 'Agent',
-    5 => 'Reseller'
+    5 => 'Reseller',
+  10 => 'Super Admin'
 ];
 $roleName = $roleNames[$roleId] ?? 'User';
 ?>
@@ -251,7 +252,7 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       <ul class="nav-right navbar-nav" role="menubar">
         <li class="user-info" role="none">
           <div><?php echo htmlspecialchars($userRole); ?></div>
-          <div class="user-role"><b>Total Point:<?php echo htmlspecialchars($suppliar->total_point); ?></b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($roleName); ?></div>
+          <div class="user-role"><b>Total Point:<?php echo htmlspecialchars($suppliar->total_point ?? 0); ?></b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($roleName); ?></div>
            <div class="user-role"></div>
         </li>
         <li class="nav-item dropdown" style="position: relative;" role="none">
@@ -260,7 +261,7 @@ $breadcrumbText = makeBreadcrumb($actual_link);
           </a>
 
           <div id="profileDropdownMenu" class="dropdown-menu-custom" aria-labelledby="profileDropdown" role="menu">
-            <a href="index.php?page=profile" class="dropdown-item-custom" role="menuitem" tabindex="-1">
+            <a href="index.php?page=suppliar_edit&&edit_id=<?= $_SESSION['distributor_id'] ?>" class="dropdown-item-custom" role="menuitem" tabindex="-1">
               <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">person</i> Profile
             </a>
             <div class="dropdown-divider-custom" role="separator"></div>

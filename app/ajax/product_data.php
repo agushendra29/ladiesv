@@ -58,7 +58,7 @@ $empRecords = $stmt->fetchAll();
 $data = array();
 $counter = $row + 1;
 foreach($empRecords as $row){
-     if ($role_id == 1) {
+     if ($role_id == 1 || $role_id ==10) {
         $price_display = 
           "HD: Rp " . number_format($row['sell_price_hd'], 0, ',', '.') . "<br>" .
           "D: Rp " . number_format($row['sell_price_d'], 0, ',', '.') . "<br>" .
@@ -79,7 +79,7 @@ foreach($empRecords as $row){
       "product_id"=>$counter++,
       "product_name"=>$row['product_name'],
       "sell_price" =>  $price_display,
-      "action"=> $_SESSION['role_id'] == 1 ?'
+      "action"=> $_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10 ?'
           <div class="btn-group" role="group" aria-label="Basic example">
             <a href="index.php?page=product_edit&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" id="memberEdit_btn"><i class="fas fa-edit"></i></a>
             <button type="button" id="productDelete_btn" class="btn btn-danger btn-sm rounded-0 ml-2" data-id="'.$row['id'].'"><i class="fas fa-trash-alt"></i></button>

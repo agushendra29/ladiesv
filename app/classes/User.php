@@ -11,18 +11,25 @@ class User extends Objects {
 
 	// user login method to dashboard
 	public function login($username, $pass) {
-		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE suppliar_code = :username AND password = :pass ");
+		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE suppliar_code = :username AND password = :pass");
 		$stmt->bindValue(":username", $username, PDO::PARAM_STR);
 		$stmt->bindValue(":pass", $pass, PDO::PARAM_STR);
 		$stmt->execute();
 		$user = $stmt->fetch(PDO::FETCH_OBJ);
 		$count = $stmt->rowCount();
+
 		if ($count > 0) {
+			 if ($user->is_active == 0) {
+            // Kalau akun suspend
+            	$_SESSION['login_error'] = "Your account has been suspended. Please contact admin.";
+            	redirect("login.php");
+        	} else {
 			$_SESSION['user_id'] = $user->id;
 			$_SESSION['user_role'] = $user->username;
 			$_SESSION['role_id'] = $user->role_id;
 			$_SESSION['distributor_id'] = $user->suppliar_id;
 			redirect("index.php");
+			}
 		} else {
 			$_SESSION['login_error'] = "Invalid Username or Password";
 			redirect("login.php");

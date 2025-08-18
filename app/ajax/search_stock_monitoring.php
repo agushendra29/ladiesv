@@ -54,7 +54,7 @@ if (trim($issueData) === '') {
     $issu_end_date   = parse_date_to_mysql($right);
 }
 
-if ($_SESSION['role_id'] == 1) {
+if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) {
     $suppliar_id = $_POST['suppliar_id'] ?? 'all';
 } else {
     $suppliar_id = $_SESSION['distributor_id'];

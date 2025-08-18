@@ -3,7 +3,7 @@ require_once '../init.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $issueData = $_POST['issuedate'] ?? '';
-    $suppliar_id = ($_SESSION['role_id'] == 1) ? ($_POST['suppliar_id'] ?? 'all') : $_SESSION['distributor_id'];
+    $suppliar_id = ($_SESSION['role_id'] == 1) || ($_SESSION['role_id'] == 10) ? ($_POST['suppliar_id'] ?? 'all') : $_SESSION['distributor_id'];
     $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
     $limit = 10; // jumlah data per halaman
     $offset = ($page - 1) * $limit;

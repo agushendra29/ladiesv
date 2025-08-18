@@ -42,7 +42,7 @@
       </li>
 
       <!-- Member -->
-      <?php if ($roleId <= 1 || $roleId == 4 || $roleId == 5): ?>
+      <?php if ($roleId <= 1 || $roleId == 4 || $roleId == 5 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -60,7 +60,7 @@
       <?php endif; ?>
 
       <!-- News -->
-      <?php if ($roleId < 2): ?>
+      <?php if ($roleId < 2 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=news" class="nav-link <?php echo $actual_link=='news'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -136,7 +136,7 @@
 
       <!-- Pemesanan -->
        
-      <?php if ($roleId <= 3): ?>
+      <?php if ($roleId <= 3 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=purchase_order" class="nav-link <?php echo $actual_link=='purchase_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -155,7 +155,7 @@
 
       <!-- Proses Refund -->
        
-      <?php if ($roleId <=1): ?>
+      <?php if ($roleId <=1 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=refund_process" class="nav-link <?php echo $actual_link=='refund_process'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -172,7 +172,7 @@
       </li>
       
       <?php endif; ?>
-      <?php if ($roleId <=1): ?>
+      <?php if ($roleId <=1 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=reward_list" class="nav-link <?php echo $actual_link=='reward_list'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;

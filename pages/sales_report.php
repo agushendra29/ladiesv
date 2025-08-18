@@ -118,7 +118,7 @@
               </div>
             </div>
 
-            <?php if ($_SESSION['role_id'] == 1): ?>
+            <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
             <div class="col-md-5">
               <label class="fw-bold">Select Member</label>
               <div>
