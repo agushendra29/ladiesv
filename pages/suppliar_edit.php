@@ -6,7 +6,7 @@
         if (isset($_GET['edit_id'])) {
           $edit_id = $_GET['edit_id'];
           $stmt = $pdo->prepare("
-            SELECT s.*, u.role_id
+            SELECT s.*
             FROM suppliar s
             LEFT JOIN user u ON s.id = u.suppliar_id
             WHERE s.id = ?
@@ -52,6 +52,14 @@
         </div>
 
         <div>
+          <label for="sup_bank">Nama Akun Bank *</label>
+          <input type="text"
+            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;" 
+            value="<?= htmlspecialchars($data->nama_rekening); ?>"
+            id="sup_name_bank" placeholder="Nama Akun Bank" name="sup_name_bank" required>
+        </div>
+
+        <div>
           <label for="bank" style="font-weight: 600; color: #334155;">Nama Bank <span
               style="color:#ef4444;">*</span></label>
           <select id="sup_bank" name="bank" required
@@ -89,9 +97,10 @@
           <label for="role" style="font-weight: 600; color: #334155;">Level Anggota <span
               style="color:#ef4444;">*</span></label>
 
-          <select id="role" name="role" <?= ($data->role_id != 7) ? 'disabled' : 'required' ?>
+          <select id="role" name="role" <?= ($_SESSION['role_id'] != 10) ? 'disabled' : 'required' ?>
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
             <option value="" disabled <?= empty($data->role_id) ? 'selected' : '' ?>>-- Pilih Level Anggota --</option>
+            <option value="1" <?= $data->role_id == 10 ? 'selected' : '' ?>>Super Admin</option>
             <option value="1" <?= $data->role_id == 1 ? 'selected' : '' ?>>Head Officer</option>
             <option value="2" <?= $data->role_id == 2 ? 'selected' : '' ?>>Head Distributor</option>
             <option value="3" <?= $data->role_id == 3 ? 'selected' : '' ?>>Distributor</option>
@@ -99,7 +108,7 @@
             <option value="5" <?= $data->role_id == 5 ? 'selected' : '' ?>>Reseller</option>
           </select>
 
-          <?php if ($data->role_id != 7): ?>
+          <?php if ($_SESSION['role_id'] != 10): ?>
           <!-- Supaya value tetap terkirim ke server meski select disabled -->
           <input type="hidden" name="role" value="<?= $data->role_id ?>">
           <?php endif; ?>
@@ -119,25 +128,35 @@
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address); ?></textarea>
         </div>
 
-      <div style="position: relative; margin-bottom: 16px;">
-  <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>
-  <input type="password" id="password" name="password"
+        <div style="position: relative; margin-bottom: 16px;">
+          <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>
+          <input type="password" id="password" name="password"
+            style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+          <span onclick="togglePassword('password', this)"
+            style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
+            👁
+          </span>
+        </div>
+
+        <div style="position: relative; margin-bottom: 16px;">
+  <label for="confirm_password" style="font-weight: 600; color: #334155;">Konfirmasi Password Baru</label>
+  <input type="password" id="confirm_password" name="confirm_password"
     style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-  <span onclick="togglePassword('password', this)" 
+  <span onclick="togglePassword('confirm_password', this)"
     style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
     👁
   </span>
 </div>
 
-<div style="position: relative; margin-bottom: 16px;">
-  <label for="old_password" style="font-weight: 600; color: #334155;">Password Lama</label>
-  <input type="password" id="old_password" name="old_password"
-    style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-  <span onclick="togglePassword('old_password', this)" 
-    style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
-    👁
-  </span>
-</div>
+        <div style="position: relative; margin-bottom: 16px;">
+          <label for="old_password" style="font-weight: 600; color: #334155;">Password Lama</label>
+          <input type="password" id="old_password" name="old_password"
+            style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+          <span onclick="togglePassword('old_password', this)"
+            style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
+            👁
+          </span>
+        </div>
 
         <div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
           <button type="reset" style="
@@ -185,14 +204,14 @@
 </div>
 
 <script>
-function togglePassword(fieldId, el) {
-  const input = document.getElementById(fieldId);
-  if (input.type === "password") {
-    input.type = "text";
-    el.textContent = "🙈"; // ganti icon kalau sedang tampil
-  } else {
-    input.type = "password";
-    el.textContent = "👁"; // ganti icon kalau disembunyikan
+  function togglePassword(fieldId, el) {
+    const input = document.getElementById(fieldId);
+    if (input.type === "password") {
+      input.type = "text";
+      el.textContent = "🙈"; // ganti icon kalau sedang tampil
+    } else {
+      input.type = "password";
+      el.textContent = "👁"; // ganti icon kalau disembunyikan
+    }
   }
-}
 </script>

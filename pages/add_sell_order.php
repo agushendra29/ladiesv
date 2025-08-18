@@ -21,14 +21,20 @@ $products = $obj->all('products');
             <select id="customer_name" name="customer_name" required
               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px;">
               <option value="">Pilih Anggota</option>
-               <?php if ($_SESSION['role_id'] != 1): ?>
+               <?php if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10): ?>
                   <option value="0" data-name="Penjualan Pribadi" data-role="0">Penjualan Pribadi</option>
               <?php endif; ?>
               <?php 
                 $role_labels = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R'];
                 $distributor_id = $_SESSION['distributor_id'];
                 $role_id = $_SESSION['role_id'];
-                $all_supplier = $obj->allCondition('suppliar', 'role_id > ? AND id != ?', [$role_id, $distributor_id]);
+                if ($role_id == 10) {
+    // role 10 -> tampilkan semua suppliar kecuali dirinya sendiri
+    $all_supplier = $obj->allCondition('suppliar',  'role_id != 10 AND role_id != 1 AND id != ?', [$distributor_id]);
+} else {
+    // selain role 10 -> pakai filter biasa
+    $all_supplier = $obj->allCondition('suppliar', 'role_id > ? AND id != ?', [$role_id, $distributor_id]);
+}
                 foreach ($all_supplier as $customer) {
                     $role_text = $role_labels[$customer->role_id] ?? $customer->role_id;
                     echo "<option value='{$customer->id}' 

@@ -113,7 +113,7 @@ try {
             case 5: default: $price = (float)$product->sell_price_r;  break;
         }
 
-        $stock_suppliar_id = ($current_role_id === 1) ? 1 : $current_user_id;
+        $stock_suppliar_id = ($current_role_id === 1 || $current_role_id === 10) ? 1 : $current_user_id;
         // Cek stok penjual
         $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ? FOR UPDATE");
         $stmt->execute([$stock_suppliar_id, $pid]);

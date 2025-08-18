@@ -14,7 +14,13 @@ $user_id = $_SESSION['distributor_id'];
 $searchArray = array();
 
 ## Search 
-$searchQuery = " WHERE (role_id = 10 OR is_active = 1)"; // filter utama
+if ($_SESSION['role_id'] == 10 || $_SESSION['role_id'] == 1) {
+    // Super Admin -> bisa lihat semua
+    $searchQuery = " WHERE 1=1 ";
+} else {
+    // User biasa -> hanya lihat yang aktif
+    $searchQuery = " WHERE is_active = 1 ";
+}
 
 if ($searchValue != '') {
     $searchQuery .= " AND (suppliar_code LIKE :suppliar_code 
@@ -28,7 +34,11 @@ if ($searchValue != '') {
 }
 
 ## Total number of records without filtering
-$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE (role_id = 10 OR is_active = 1)");
+if ($_SESSION['role_id'] == 10 || $_SESSION['role_id'] == 1) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar");
+} else {
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE is_active = 1");
+}
 $stmt->execute();
 $records = $stmt->fetch();
 $totalRecords = $records['allcount'];
@@ -75,7 +85,7 @@ foreach ($empRecords as $row) {
         "address" => $row['address'],
         "con_num" => $row['con_num'],
         "role_id" => getRoleName($row['role_id']),
-       "action" => $_SESSION['role_id'] == 1 ? '
+       "action" => $_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10 ? '
     <div class="btn-group" role="group" aria-label="Actions" style="gap:4px;">
         <!-- Tombol Edit -->
         <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
@@ -85,22 +95,18 @@ foreach ($empRecords as $row) {
            <i class="fas fa-edit" style="font-size:14px;"></i>
         </a>
         
-        ' . ($row['role_id'] == 10 ? '
-        <!-- Tombol Delete hanya untuk role_id = 10 -->
-        <button id="suppliarDelete_btn" data-id="' . $row['id'] . '" 
-           class="btn btn-danger btn-sm" 
-           style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;" 
-           title="Hapus">
-           <i class="fas fa-trash-alt" style="font-size:14px;"></i>
-        </button>' : '') . '
         
         <!-- Tombol Suspend/Aktifkan -->
-        <button id="suppliarActive_btn" data-id="' . $row['id'] . '" 
-           class="btn btn-warning btn-sm" 
-           style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;" 
-           title="Suspend / Aktifkan">
-           <i class="fas fa-toggle-on" style="font-size:14px;"></i>
-        </button>
+      <button id="suppliarActive_btn" 
+        data-id="' . $row['id'] . '" 
+        data-status="' . $row['is_active'] . '"
+        class="btn btn-warning btn-sm" 
+        style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;" 
+        title="' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '">
+   <i class="fas ' . ($row['is_active'] == 1 ? 'fa-toggle-off' : 'fa-toggle-on') . '" style="font-size:14px;"></i> 
+   ' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '
+</button>
+
     </div>
 ' : '',
 

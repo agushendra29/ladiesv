@@ -74,6 +74,14 @@ $("#editCatForm").submit(function (e) {
  
   $("#editSuppliarForm").submit(function (e) {
     e.preventDefault();
+    var password = $("#password").val();
+    var confirmPassword = $("#confirm_password").val();
+
+    // Validasi konfirmasi password
+    if (password !== "" && password !== confirmPassword) {
+        alert("Password baru dan konfirmasi password tidak sama!");
+        return false; // hentikan submit
+    }
     var t = $("#editSuppliarForm").serialize();
     $.ajax({
       type: "POST",
@@ -102,22 +110,34 @@ $("#editCatForm").submit(function (e) {
       );
   }),
    $(document).on("click", "#suppliarActive_btn", function (e) {
-    e.preventDefault(),
-      ($delete_id = $(this).data("id")),
-      confirm("Are You sure want to non active this item?") &&
-      $.post(
-        "app/action/active_suppliar.php", {
-          delete_id: $delete_id,
-          active_data: "active_data",
-        },
-        function (e) {
-          "true" == e
-            ?
-            (alert("data suspend successfull"), location.reload()) :
-            alert(e);
+  e.preventDefault();
+  let delete_id = $(this).data("id");
+  let current_status = $(this).data("status"); // ambil status aktif/tidak
+  let new_status = current_status == 1 ? 0 : 1; // toggle status
+
+  let confirmMsg = current_status == 1 
+    ? "Are you sure you want to suspend this item?" 
+    : "Are you sure you want to activate this item?";
+
+  if (confirm(confirmMsg)) {
+    $.post(
+      "app/action/active_suppliar.php",
+      {
+        delete_id: delete_id,
+        active_data: "active_data",
+        new_status: new_status
+      },
+      function (res) {
+        if (res === "true") {
+          alert(current_status == 1 ? "Data suspended successfully" : "Data activated successfully");
+          location.reload();
+        } else {
+          alert(res);
         }
-      );
-  }),
+      }
+    );
+  }
+}),
   $(document).on("click", "#productDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),

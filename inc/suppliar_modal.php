@@ -56,6 +56,12 @@
                 </select>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="sup_bank">Nama Akun Bank *</label>
+               <input type="text" class="form-control" id="sup_name_bank" placeholder="Nama Akun Bank" name="sup_name_bank" required>
+              </div>
+            </div>
 
             <div class="col-md-6 col-lg-6">
               <div class="form-group">
@@ -83,6 +89,10 @@
                 <label for="sup_role">Level Anggota *</label>
                 <select class="form-control" id="sup_role" name="sup_role" required>
                   <option value="">-- Pilih Level Anggota --</option>
+              <?php if ($_SESSION['role_id'] == 10): ?>
+    <option value="10">Super Admin</option>
+    <option value="1">Head Office</option>
+  <?php endif; ?>
                   <option value="2">Head Distributor</option>
                   <option value="3">Distributor</option>
                   <option value="4">Agen</option>

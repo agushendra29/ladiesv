@@ -16,10 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password     = $_POST['password'] ?? '';
     $old_pass     = $_POST['old_password'] ?? '';
     $update_at    = date('Y-m-d');
+    $sup_akun   = trim($_POST['sup_name_bank'] ?? '');
 
     // Validasi semua field wajib (sesuaikan kalau ada field opsional)
     if (
-        empty($name) || empty($nik) || empty($rekening) || empty($bank) ||
+        empty($name) || empty($nik) || empty($rekening) || empty($bank) || empty($sup_akun) || 
         empty($address) || empty($address_ktp) || empty($contact) || 
         empty($email) || empty($role_id)
     ) {
@@ -45,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'con_num'       => $contact,
         'email'         => $email,
         'date_of_birth' => $date_of_birth,
-        'update_at'     => $update_at
+        'update_at'     => $update_at,
+        'nama_rekening' => $sup_akun
     ];
 
     $supRes = $obj->update('suppliar', 'id', $id, $supQuery);
@@ -70,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Old password is incorrect.";
         exit;
     }
-    $updateUser = $pdo->prepare("UPDATE user SET password = ?, role_id = ?, email = ? WHERE suppliar_id = ?");
+    $updateUser = $pdo->prepare("UPDATE user SET password = ?, role_id = ?, username = ? WHERE suppliar_id = ?");
     $updateUser->execute([$password, $role_id, $email, $suppliar_id]);
 
         } else {

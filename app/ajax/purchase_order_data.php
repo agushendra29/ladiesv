@@ -9,7 +9,7 @@ $columnIndex = $_POST['order'][0]['column']; // Column index
 $columnName = $_POST['columns'][$columnIndex]['data']; // Column name
 $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
 $searchValue = $_POST['search']['value']; // Search value
-$isAdmin = $_SESSION['role_id'] == '1'; 
+$isAdmin = $_SESSION['role_id'] == '1' || $_SESSION['role_id'] == '10'; 
 $customer_id = $isAdmin ? ""  : "AND suppliar_id = ".$_SESSION['distributor_id']."";
 $searchArray = array();
 $orderBy = "FIELD(LOWER(po.status), 'pending', 'approved', 'rejected'), po.created_at DESC";

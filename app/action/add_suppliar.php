@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sup_address   = trim($_POST['supaddress'] ?? '');
     $sup_address_ktp   = trim($_POST['supaddressktp'] ?? '');
     $user_id       = $_SESSION['user_id'] ?? null;
+    $sup_akun   = trim($_POST['sup_name_bank'] ?? '');
 
     if (!empty($_POST['birth_date'])) {
         $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validasi input wajib
     if (
-        $sup_name && $sup_nik && $sup_rekening && $sup_bank && $birth_date &&
+        $sup_name && $sup_nik && $sup_rekening && $sup_bank && $birth_date && $sup_akun &&
         $sup_contact && $sup_email && $sup_role && $sup_password_plain && $sup_address
     ) {
         try {
@@ -49,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'update_by'   => $user_id,
                 'address_ktp' => $sup_address_ktp,
                 'date_of_birth' =>$birth_date,
+                'nama_rekening' => $sup_akun
             ];
 
             $suppliar_id = $obj->create('suppliar', $sup_data);

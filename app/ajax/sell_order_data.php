@@ -13,7 +13,7 @@ $searchArray = [];
 
 ## Filter suppliar jika bukan role 1 (HO)
 $whereExtra = '';
-if ($_SESSION['role_id'] != 1 || $_SESSION['role_id'] != 10) {
+if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $whereExtra = " AND i.suppliar_id = :suppliar_id ";
 }
 
@@ -33,7 +33,7 @@ if ($searchValue != '') {
 ## Total records without filtering
 $sqlTotal = "SELECT COUNT(*) AS allcount FROM invoice i WHERE 1 {$whereExtra}";
 $stmt = $pdo->prepare($sqlTotal);
-if ($_SESSION['role_id'] != 1) {
+if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] !== 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
 $stmt->execute();
@@ -47,7 +47,7 @@ $sqlTotalFilter = "
     WHERE 1 {$whereExtra} {$searchQuery}
 ";
 $stmt = $pdo->prepare($sqlTotalFilter);
-if ($_SESSION['role_id'] != 1) {
+if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
 foreach ($searchArray as $key => $search) {
@@ -71,7 +71,7 @@ $sqlFetch = "
     LIMIT :limit OFFSET :offset
 ";
 $stmt = $pdo->prepare($sqlFetch);
-if ($_SESSION['role_id'] != 1) {
+if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
 foreach ($searchArray as $key => $search) {

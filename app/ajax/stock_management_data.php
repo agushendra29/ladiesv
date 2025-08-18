@@ -18,7 +18,7 @@ $filterDistributorQuery = '';
 $filterParams = [];
 
 ## Filter berdasarkan role (kalau bukan admin, batasi distributor)
-if ($role_id > 1) {
+if ($role_id > 1 && $role_id != 10) {
     $filterDistributorQuery = " AND suppliar_id = :distributor_id ";
     $filterParams['distributor_id'] = $distributor_id;
 }
