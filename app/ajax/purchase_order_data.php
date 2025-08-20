@@ -9,10 +9,13 @@ $columnIndex = $_POST['order'][0]['column']; // Column index
 $columnName = $_POST['columns'][$columnIndex]['data']; // Column name
 $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
 $searchValue = $_POST['search']['value']; // Search value
+
 $isAdmin = $_SESSION['role_id'] == '1' || $_SESSION['role_id'] == '10'; 
-$customer_id = $isAdmin ? ""  : "AND suppliar_id = ".$_SESSION['distributor_id']."";
+$customerFilter = $isAdmin ? ""  : "AND po.suppliar_id = ".$_SESSION['distributor_id']."";
+
 $searchArray = array();
 $orderBy = "FIELD(LOWER(po.status), 'pending', 'approved', 'rejected'), po.created_at DESC";
+
 ## Search 
 $searchQuery = "";
 if($searchValue != ''){
@@ -29,34 +32,39 @@ if($searchValue != ''){
 }
 
 // Total number of records without filtering
-$stmt = $pdo->prepare("SELECT COUNT(*) AS allcount 
+$stmt = $pdo->prepare("SELECT COUNT(DISTINCT po.po_id) AS allcount 
     FROM purchase_orders po
     LEFT JOIN suppliar u ON po.suppliar_id = u.id
-    WHERE 1");
+    WHERE 1 $customerFilter");
 $stmt->execute();
 $records = $stmt->fetch();
 $totalRecords = $records['allcount'];
 
 // Total number of records with filtering
-$stmt = $pdo->prepare("SELECT COUNT(DISTINCT po.id) AS allcount 
+$stmt = $pdo->prepare("SELECT COUNT(DISTINCT po.po_id) AS allcount 
     FROM purchase_orders po
     LEFT JOIN suppliar u ON po.suppliar_id = u.id
-    WHERE 1 ".$searchQuery);
+    WHERE 1 ".$searchQuery." $customerFilter");
 $stmt->execute($searchArray);
 $records = $stmt->fetch();
 $totalRecordwithFilter = $records['allcount'];
 
-// Fetch records
+// Fetch records (group by po_id)
 $stmt = $pdo->prepare("SELECT 
-    po.*,
+    po.po_id,
+    po.invoice_number,
+    po.status,
+    po.created_at,
+    po.approved_at,
     u.name AS suppliar_name,
+    SUM(po.total_amount) AS total_amount,
     GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ', po.quantity) SEPARATOR ', ') AS items_summary
 FROM purchase_orders po
 LEFT JOIN suppliar u ON po.suppliar_id = u.id
 LEFT JOIN products p ON po.product_id = p.id
-WHERE 1 ".$searchQuery." ".$customer_id."
-GROUP BY po.id
-ORDER BY ".$orderBy."
+WHERE 1 ".$searchQuery." $customerFilter
+GROUP BY po.po_id
+ORDER BY $orderBy
 LIMIT :offset, :limit");
 
 // Bind search values
@@ -80,7 +88,7 @@ foreach ($empRecords as $row) {
     }
 
     $rowData = array(
-        "id" => $row['invoice_number'],
+        "id" => $row['invoice_number'] ?: $row['po_id'],
         "suppliar_id" => $row['suppliar_name'],
         "total_amount" => 'Rp ' . number_format($row['total_amount'], 0, ',', '.'),
         "status" => strtoupper($row['status']),
@@ -89,8 +97,8 @@ foreach ($empRecords as $row) {
         "approved_at" => $row['approved_at'],
         "action" => $isAdmin && strtolower($row['status']) == "pending"  ? '
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['id'].'"><i class="fas fa-check"></i> Setuju</button>
-                <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['id'].'"><i class="fas fa-times"></i> Tolak</button>
+                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['po_id'].'"><i class="fas fa-check"></i> Setuju</button>
+                <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['po_id'].'"><i class="fas fa-times"></i> Tolak</button>
             </div>' : ''
     );
 

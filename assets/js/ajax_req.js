@@ -138,6 +138,23 @@ $("#editCatForm").submit(function (e) {
     );
   }
 }),
+$(document).on("click", "#newsDelete_btn", function (e) {
+    e.preventDefault(),
+      ($delete_id = $(this).data("id")),
+      confirm("Are You sure want to delete this item?") &&
+      $.post(
+        "app/action/delete_news.php", {
+          delete_id: $delete_id,
+             delete_data: "delete_data",
+        },
+        function (e) {
+          "true" == e
+            ?
+            (alert("data deleted successfull"), location.reload()) :
+            alert(e);
+        }
+      );
+  }),
   $(document).on("click", "#productDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),

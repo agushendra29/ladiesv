@@ -101,7 +101,6 @@
                 <th style="padding: 16px 20px; font-size: 11px;">Jumlah Baru</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Diubah Oleh</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Tanggal</th>
-                <th style="padding: 16px 20px; font-size: 11px; border-top-right-radius: 12px;">Catatan</th>
               </tr>
             </thead>
             <tbody style="color: #374151; font-weight: 500;">

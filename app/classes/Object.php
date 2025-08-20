@@ -95,6 +95,12 @@ class Objects {
     return $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 
+public function allQuery($sql, $params = []) {
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 
 	// find a specific data
 	public function find($table,$column,$value) {

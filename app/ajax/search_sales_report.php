@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td>{$dateFormatted}</td>
                 <td>{$data->invoice_number}</td>
                 <td>{$data->type}</td>
-                <td>".htmlspecialchars($data->customer_name ?? 'Penjualan Pribadi')."</td> 
+                <td>".htmlspecialchars($data->customer_name ?? 'Penjualan Pribadi'). "</td> 
                 <td>{$quantityDisplay}</td>
                 <td>".htmlspecialchars($data->note)."</td>
             </tr>";

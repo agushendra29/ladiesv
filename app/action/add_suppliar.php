@@ -50,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'update_by'   => $user_id,
                 'address_ktp' => $sup_address_ktp,
                 'date_of_birth' =>$birth_date,
-                'nama_rekening' => $sup_akun
+                'nama_rekening' => $sup_akun,
+                'is_active'    => 1,
             ];
 
             $suppliar_id = $obj->create('suppliar', $sup_data);

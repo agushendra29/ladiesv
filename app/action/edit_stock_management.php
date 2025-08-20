@@ -43,7 +43,7 @@ try {
     $logData = array(
         'suppliar_id'  => $stockRecord['suppliar_id'],
         'product_id'   => $stockRecord['product_id'],
-        'action_type'  => $change > 0 ? 'add' : 'reduce',
+        'action_type'  => $change > 0 ? 'add' : 'minus',
         'old_quantity' => $currentStock,
         'new_quantity' => $newStock,
         'changed_by'   => $user_id,

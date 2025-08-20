@@ -92,7 +92,7 @@ foreach ($records as $row) {
         "invoice_number"   => $row['invoice_number'],
         "customer_name"    => $row['customer_name'],
         "distributor_name" => $row['distributor_name'],
-        "net_total"        => 'Rp ' . number_format($row['net_total'], 0, ',', '.'),
+        "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),
         "order_date"       => $row['order_date'],
         "items_summary"    => $row['items_summary'],
     ];

@@ -49,7 +49,8 @@
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Judul</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; width: 500px;">Isi Berita</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Publikasi</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Tanggal Dibuat</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Dibuat</th>
+                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Aksi</th>
               </tr>
             </thead>
             <tbody style="color: #374151; font-weight: 500;">

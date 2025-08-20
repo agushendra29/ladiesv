@@ -94,7 +94,7 @@ foreach ($empRecords as $row) {
            title="Edit">
            <i class="fas fa-edit" style="font-size:14px;"></i>
         </a>
-        
+    
         
         <!-- Tombol Suspend/Aktifkan -->
       <button id="suppliarActive_btn" 

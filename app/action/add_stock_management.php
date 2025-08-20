@@ -23,46 +23,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-         $stmt = $pdo->prepare("SELECT id FROM distributor_stocks WHERE suppliar_id= ? AND product_id = ?");
+        // Check existing stock
+        $stmt = $pdo->prepare("SELECT id, stock FROM distributor_stocks WHERE suppliar_id= ? AND product_id = ?");
         $stmt->execute([$suppliar->id, $product->id]);
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($existing) {
-            echo "This supplier already has this product in stock";
-            exit;
-        }
+            // Update existing stock
+            $new_stock = $existing['stock'] + $stock_quantity;
+            $stmtUpdate = $pdo->prepare("UPDATE distributor_stocks SET stock = ? WHERE id = ?");
+            $stmtUpdate->execute([$new_stock, $existing['id']]);
 
-        // Prepare data to insert
-        $query = array(				
-            'suppliar_id'   => $suppliar->id,						
-            'product_id'    => $product->id,
-            'suppliar_name' => $suppliar->name,
-            'product_name'  => $product->product_name,						
-            'stock'         => $stock_quantity,
-            'role_id'       => $suppliar->role_id		
-        );
-
-        // Insert into distributor_stocks
-        $res = $obj->create('distributor_stocks', $query);
-        if ($res) {
             // Insert log ke stock_logs
             $logData = array(
                 'suppliar_id'  => $suppliar->id,
                 'product_id'   => $product->id,
                 'action_type'  => 'add',
-                'old_quantity' => NULL,
-                'new_quantity' => $stock_quantity,
+                'old_quantity' => $existing['stock'],
+                'new_quantity' => $new_stock,
                 'changed_by'   => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0,
-                'note'         => 'Initial stock added'
+                'note'         => 'Stock updated'
             );
             $obj->create('stock_logs', $logData);
+
+            // Insert transaction history
             $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
             $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $suppliar->name, "-"]);
 
-            echo "yes";
+            echo "Stock updated successfully";
         } else {
-            echo "Failed to add product";
+            // Insert new stock
+            $query = array(				
+                'suppliar_id'   => $suppliar->id,						
+                'product_id'    => $product->id,
+                'suppliar_name' => $suppliar->name,
+                'product_name'  => $product->product_name,						
+                'stock'         => $stock_quantity,
+                'role_id'       => $suppliar->role_id		
+            );
+            $res = $obj->create('distributor_stocks', $query);
+
+            if ($res) {
+                // Insert log ke stock_logs
+                $logData = array(
+                    'suppliar_id'  => $suppliar->id,
+                    'product_id'   => $product->id,
+                    'action_type'  => 'create',
+                    'old_quantity' => NULL,
+                    'new_quantity' => $stock_quantity,
+                    'changed_by'   => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0,
+                    'note'         => 'Initial stock added'
+                );
+                $obj->create('stock_logs', $logData);
+
+                // Insert transaction history
+                $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
+                $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $suppliar->name, "-"]);
+
+                echo "Product added successfully";
+            } else {
+                echo "Failed to add product";
+            }
         }
+
     } else {
         echo "Please fill out all required fields";
     }

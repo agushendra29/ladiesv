@@ -172,6 +172,9 @@ $("#empTable").DataTable({
         e = $("#p_suppliar").val(),
         d = $("#stock_quantity").val();
     if ("" != t && "" != e && null != d) {
+         if (!confirm("Are you sure you want to add/update this stock?")) {
+        return; // jika user cancel, hentikan submit
+    }
         var r = $("#addStockManagement").serialize();
         $.ajax({
             type: "POST",
@@ -182,33 +185,69 @@ $("#empTable").DataTable({
             }
         })
     } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
-})), $("#purchaseOrderForm").submit(function (e) {
+})), $(document).ready(function () {
+  $("#purchaseOrderForm").submit(function (e) {
     e.preventDefault();
 
-    var product = $("#product_id").val(),
-        qty = $("#quantity").val();
+    // ambil semua produk & qty
+    var products  = $("select[name='product_id[]']").map(function(){ return $(this).val(); }).get();
+    var quantities = $("input[name='quantity[]']").map(function(){ return $(this).val(); }).get();
 
-    if ("" != product && null != qty && qty > 0) {
-        var formData = $("#purchaseOrderForm").serialize();
-        $.ajax({
-            type: "POST",
-            url: "app/action/add_purchase_order.php",
-            data: formData,
-            success: function (res) {
-                if ($.trim(res) == "yes") {
-                    $(".purchaseOrderError-area").show();
-                    $("#purchaseOrderError").html("Pemesanan berhasil ditambahkan");
-                    $("#purchaseOrderForm")[0].reset();
-                } else {
-                    $(".purchaseOrderError-area").show();
-                    $("#purchaseOrderError").html(res);
-                }
-            }
-        });
-    } else {
-        $(".purchaseOrderError-area").show();
-        $("#purchaseOrderError").html("Silakan isi semua field yang diperlukan");
+    // cek minimal 1 produk valid
+    if (products.length === 0 || products.includes(null) || products.includes("")) {
+      $(".purchaseOrderError-area").show();
+      $("#purchaseOrderError").html("Silakan pilih minimal satu produk.");
+      return;
     }
+
+    if (quantities.some(qty => qty === "" || parseInt(qty) <= 0)) {
+      $(".purchaseOrderError-area").show();
+      $("#purchaseOrderError").html("Silakan masukkan kuantitas yang valid.");
+      return;
+    }
+
+    var formData = $(this).serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "app/action/add_purchase_order.php", // ganti endpoint sesuai form baru
+      data: formData,
+      beforeSend: function () {
+        $(".purchaseOrderError-area").hide();
+        $("#purchaseOrderForm button[type=submit]").prop("disabled", true).text("Loading...");
+      },
+      success: function (res) {
+        try {
+          let data = JSON.parse(res);
+
+          if (data.status === "success") {
+            $(".purchaseOrderError-area").removeClass("alert-danger").addClass("alert-success").show();
+            $("#purchaseOrderError").html(data.message || "Pemesanan berhasil ditambahkan ✅");
+
+            // reset form
+            $("#purchaseOrderForm")[0].reset();
+            $("#grandTotal").val("");
+            $("#productWrapper .product-row:gt(0)").remove(); // hapus row selain pertama
+            $(".select2").val(null).trigger("change");
+          } else {
+            $(".purchaseOrderError-area").removeClass("alert-success").addClass("alert-danger").show();
+            $("#purchaseOrderError").html(data.message || "Terjadi kesalahan saat menambahkan pemesanan.");
+          }
+        } catch (e) {
+          console.error("Invalid response:", res);
+          $(".purchaseOrderError-area").removeClass("alert-success").addClass("alert-danger").show();
+          $("#purchaseOrderError").html("Terjadi error di server.");
+        }
+      },
+      error: function (xhr, status, error) {
+        $(".purchaseOrderError-area").removeClass("alert-success").addClass("alert-danger").show();
+        $("#purchaseOrderError").html("Request gagal: " + error);
+      },
+      complete: function () {
+        $("#purchaseOrderForm button[type=submit]").prop("disabled", false).text("Submit PO");
+      }
+    });
+  });
 }),$("#refundForm").submit(function (e) {
     e.preventDefault();
 
@@ -501,9 +540,6 @@ $("#empTable").DataTable({
         {
             "data": "created_at"
         },
-        {
-            "data": "note"
-        }
     ]
 }),$("#newsTable").DataTable({
     processing: !0,
@@ -518,6 +554,7 @@ $("#empTable").DataTable({
         {data: "content"},
         { data: "publish_date" },  // formatted publish date
         { data: "created_at" },    // created datetime
+        {data: "action"}
     ]
 }),$("#rewardListTable").DataTable({
     processing: false,

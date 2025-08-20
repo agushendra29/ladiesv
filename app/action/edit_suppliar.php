@@ -61,22 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user) {
         if (!empty($password)) {
-            // Jika ganti password, wajib masukkan old password
-            if (empty($old_pass)) {
-        echo "Please enter the old password.";
-        exit;
-    }
-
-            // Verifikasi password lama dengan password hash di DB
-        if ($old_pass !== $user->password) {
-        echo "Old password is incorrect.";
-        exit;
-    }
-    $updateUser = $pdo->prepare("UPDATE user SET password = ?, role_id = ?, username = ? WHERE suppliar_id = ?");
-    $updateUser->execute([$password, $role_id, $email, $suppliar_id]);
+            $updateUser = $pdo->prepare("UPDATE user SET password = ?, role_id = ?, username = ? WHERE suppliar_id = ?");
+            $updateUser->execute([$password, $role_id, $email, $suppliar_id]);
 
         } else {
-            // Jika password tidak diubah, update role saja
             $updateUser = $pdo->prepare("UPDATE user SET role_id = ? WHERE suppliar_id = ?");
             $updateUser->execute([$role_id, $suppliar_id]);
         }
@@ -85,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if ($supRes) {
+    if ($supRes !== false) {
         echo "Supplier updated successfully.";
     } else {
         echo "Failed to update supplier.";

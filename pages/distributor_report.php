@@ -65,52 +65,33 @@
 </style>
 
 <div class="container mt-5">
-  <h3 class="mb-3 mt-4">Stock Monitoring</h3>
-  
   <div class="row mb-3">
     <div class="col-md-4">
       <label>Periode</label>
       <input type="text" id="issuedate" class="form-control" readonly />
     </div>
 
-    <?php if ($_SESSION['role_id']  == 1 ||  $_SESSION['role_id'] == 10): ?>
-      <div class="col-md-4">
-        <label>Pilih Supplier</label>
-        <select id="supplier_id" class="form-control">
-          <option value="">-- Pilih Supplier --</option>
-          <?php
-            $suppliers = $obj->all("suppliar");
-            foreach($suppliers as $sup){
-              echo '<option value="'.htmlspecialchars($sup->id).'">'.htmlspecialchars($sup->name).'</option>';
-            }
-          ?>
-          <option value="all">Semua Supplier</option>
-        </select>
-      </div>
-    <?php else: ?>
-      <!-- untuk non admin, supplier_id diset hidden -->
-      <input type="hidden" id="supplier_id" value="<?= htmlspecialchars($distributor_id) ?>">
-    <?php endif; ?>
-
     <div class="col-md-2 align-self-end">
       <button id="btnSearchStock" class="btn btn-primary">Cari</button>
     </div>
   </div>
+   <div id="reportHeader" style="color:#374151; margin-top:25px; font-size:20px;">
+    Penjualan tim distributor anda periode: <b>&nbsp; <span id="periodeText">-</span></b>
+</div>
 
   <div class="table-responsive">
     <table id="stockMonitoringTable" class="table text-center">
       <thead>
         <tr>
-          <th>Product Name</th>
-          <th>Pembelian</th>
-          <th>Penjualan</th>
-          <th>Refund</th>
-          <th>Last Updated</th>
+          <th>ID Distributor</th>
+          <th>Nama Distributor</th>
+          <th>Total PerItem</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody id="stock_monitoring_res">
         <tr>
-          <td colspan="5" class="no-data">Pilih supplier & periode untuk melihat data.</td>
+          <td colspan="4" class="no-data">Pilih periode untuk melihat data.</td>
         </tr>
       </tbody>
     </table>
@@ -126,7 +107,9 @@
   var end = moment();
 
   function cb(start, end) {
-    $('#issuedate').val(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
+    var periodeText = start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY');
+    $('#issuedate').val(periodeText);
+    $('#periodeText').text(periodeText);
   }
 
   $('#issuedate').daterangepicker({
@@ -147,14 +130,12 @@
   cb(start, end);
 
   // Fungsi load stock monitoring
-  function loadStockMonitoring(supplier_id, issuedate) {
-    console.log('AJAX stock_monitoring -> supplier_id:', supplier_id, 'issuedate:', issuedate);
-
+  function loadStockMonitoring(issuedate) {
     $.ajax({
-      url: 'app/ajax/search_stock_monitoring.php',
+      url: 'app/ajax/search_distributor_stock.php',
       method: 'POST',
       data: {
-        suppliar_id: supplier_id,
+        suppliar_id: <?= json_encode($_SESSION['distributor_id']) ?>,
         issuedate: issuedate
       },
       cache: false,
@@ -170,21 +151,14 @@
 
   // Klik tombol cari
   $(document).on('click', '#btnSearchStock', function() {
-    var supplier_id = $("#supplier_id").val();
     var issuedate = $("#issuedate").val();
-
-    if (!supplier_id) {
-      alert("Pilih supplier terlebih dahulu!");
-      $("#supplier_id").focus();
-      return;
-    }
     if (!issuedate) {
       alert("Pilih periode tanggal!");
       $("#issuedate").focus();
       return;
     }
-
-    loadStockMonitoring(supplier_id, issuedate);
+    // update header juga
+    $('#periodeText').text(issuedate);
+    loadStockMonitoring(issuedate);
   });
-
 </script>

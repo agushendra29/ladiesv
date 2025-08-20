@@ -44,8 +44,6 @@ foreach ($searchArray as $key => $search) {
     $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
 }
 
-
-
 // Bind pagination params
 $stmt->bindValue(':limit', (int)$rowperpage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
@@ -60,28 +58,30 @@ function deleteNews($pdo, $id) {
 }
 
 function limitContent($text, $maxChars = 100) {
-    // Hilangkan HTML tag
     $text = strip_tags($text);
-    // Potong string
     if (strlen($text) > $maxChars) {
         $text = substr($text, 0, $maxChars) . '...';
     }
-    // Batasi hanya 2 baris
-    $lines = explode("\n", wordwrap($text, 50)); // wrap tiap 50 karakter
+    $lines = explode("\n", wordwrap($text, 50));
     $lines = array_slice($lines, 0, 2);
     return implode("<br>", $lines);
 }
 
 $data = array();
 foreach ($newsRecords as $row) {
-   $data[] = array(
-    "id" => $row['id'],
-    "title" => htmlspecialchars($row['title']),
-    "content" => '<div class="content-cell">' . htmlspecialchars($row['content']) . '</div>',
-    "publish_date" => date('d M Y', strtotime($row['publish_date'])),
-    "created_at" => date('d M Y H:i', strtotime($row['created_at'])),
-);
-
+    $data[] = array(
+        "id" => $row['id'],
+        "title" => htmlspecialchars($row['title']),
+        "content" => '<div class="content-cell">' . htmlspecialchars(limitContent($row['content'])) . '</div>',
+        "publish_date" => date('d M Y', strtotime($row['publish_date'])),
+        "created_at" => date('d M Y H:i', strtotime($row['created_at'])),
+        "action" => '
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a href="index.php?page=edit_news&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" id="memberEdit_btn"><i class="fas fa-edit"></i></a>
+            <button type="button" id="newsDelete_btn" class="btn btn-danger btn-sm rounded-0 ml-2" data-id="'.$row['id'].'"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        '
+    );
 }
 
 // Prepare response for DataTables
@@ -93,5 +93,3 @@ $response = array(
 );
 
 echo json_encode($response);
-
-
