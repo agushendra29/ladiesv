@@ -366,9 +366,12 @@ $("#empTable").DataTable({
     }
 }),$("#salesForm").submit(function (e) {
     e.preventDefault();
-    
+
     let buyerSelect = $("#customer_name").val(),
-        buyerInput = $("#buyer").val().trim();
+        buyerInput = $("#buyer").val().trim(),
+        selectedBuyer = $("#customer_name option:selected"),
+        buyerRole = selectedBuyer.data("role"),
+        buyerName = buyerInput || selectedBuyer.data("name");
 
     // Validasi pembeli
     if ((buyerSelect === "0" || buyerSelect === null) && buyerInput === "") {
@@ -379,24 +382,34 @@ $("#empTable").DataTable({
 
     let products = [];
     let errorMsg = "";
+    let totalAll = 0;
 
     $(".product-row").each(function () {
-        let productId = $(this).find("[name='product_id[]']").val(),
-            qty = parseInt($(this).find("[name='quantity[]']").val()) || 0;
+        let prodSelect = $(this).find(".product-select")[0],
+            productId = $(prodSelect).val(),
+            productName = $(prodSelect).find("option:selected").text(),
+            qty = parseInt($(this).find(".quantity-input").val()) || 0,
+            price = getPriceByRole(prodSelect.options[prodSelect.selectedIndex], buyerRole),
+            subtotal = price * qty;
 
         if (!productId || productId === "0") {
             errorMsg = "Produk wajib dipilih.";
-            return false; // stop loop
+            return false;
         }
         if (qty <= 0) {
             errorMsg = "Jumlah wajib lebih dari 0.";
-            return false; // stop loop
+            return false;
         }
 
         products.push({
             product_id: productId,
-            quantity: qty
+            name: productName,
+            price: price,
+            quantity: qty,
+            subtotal: subtotal
         });
+
+        totalAll += subtotal;
     });
 
     if (errorMsg) {
@@ -406,31 +419,60 @@ $("#empTable").DataTable({
 
     let formData = {
         buyer: buyerSelect,
-        buyerName: buyerInput,
+        buyerName: buyerName,
         products: products,
-        total_payment: $("#total_payment").val()
+        total_payment: totalAll
     };
 
-    // 🔔 Konfirmasi sebelum submit
-    if (!confirm(`Yakin ingin submit penjualan dengan total Rp ${formData.total_payment} kepada ${formData.buyerName} ?`)) {
-        return;
-    }
+    // 🔔 Build HTML konfirmasi
+    let confirmHtml = `<p><b>Pembeli:</b> ${buyerName}</p><hr>`;
+    confirmHtml += `<table style="width:100%; font-size:14px; text-align:left;">
+        <tr><th>Produk</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr>`;
+    products.forEach(p => {
+        confirmHtml += `<tr>
+            <td>${p.name}</td>
+            <td>${p.quantity}</td>
+            <td>Rp ${p.price.toLocaleString()}</td>
+            <td>Rp ${p.subtotal.toLocaleString()}</td>
+        </tr>`;
+    });
+    confirmHtml += `</table><hr>`;
+    confirmHtml += `<p><b>Total:</b> Rp ${totalAll.toLocaleString()}</p>`;
 
-    $.ajax({
-        type: "POST",
-        url: "app/action/add_sell_order.php",
-        data: { data: JSON.stringify(formData) },
-        success: function (res) {
-            if ($.trim(res) === "yes") {
-                alert("✅ Penjualan berhasil disubmit!");
-                // 👉 Redirect ke halaman sell_order
-                window.location.href = "index.php?page=sell_order";
-            } else {
-                $("#saleErrorArea").css("color", "#b91c1c").show().html(res);
-            }
-        },
-        error: function () {
-            $("#saleErrorArea").css("color", "#b91c1c").show().html("Terjadi kesalahan saat mengirim data.");
+    Swal.fire({
+        title: "Konfirmasi Penjualan",
+        html: confirmHtml,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Submit",
+        cancelButtonText: "Batal",
+        width: 600
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: "app/action/add_sell_order.php",
+                data: { data: JSON.stringify(formData) },
+                success: function (res) {
+                    if ($.trim(res) === "yes") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Berhasil",
+                            text: "✅ Penjualan berhasil disubmit!",
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = "index.php?page=sell_order";
+                        });
+                    } else {
+                        $("#saleErrorArea").css("color", "#b91c1c").show().html(res);
+                    }
+                },
+                error: function () {
+                    $("#saleErrorArea").css("color", "#b91c1c").show()
+                        .html("Terjadi kesalahan saat mengirim data.");
+                }
+            });
         }
     });
 }), $("#purchaseOrderTable").DataTable({
@@ -895,5 +937,101 @@ $("#empTable").DataTable({
     }) : alert("Your data are save")
 })), $("#EditaddNewRowBtn").on("click", (function (a) {
     a.preventDefault(), editAddNewRow()
-}));
+})), $('#combinedForm').on('submit', function(e){
+      e.preventDefault();
+
+      const payload = {};
+      $('#combinedForm').find('input, select, textarea').each(function(){
+          const name = $(this).attr('name');
+          if(name && !name.endsWith("[]")){ 
+              payload[name] = $(this).val().trim();
+          }
+      });
+
+      payload.products = [];
+      $('.product-row').each(function(){
+          const pid = $(this).find('.product-select').val();
+          const qty = $(this).find('.quantity-input').val();
+          if(pid && qty){
+              payload.products.push({
+                  product_id: pid,
+                  quantity: parseInt(qty)
+              });
+          }
+      });
+
+      // Validasi minimal 2 produk
+      let totalQty = payload.products.reduce((sum, p) => sum + p.quantity, 0);
+      if(totalQty < 2){
+          $('#formErrorArea').text("pendaftaran reseller harus membeli minimal 2 produk").show();
+          return;
+      }
+      $('#formErrorArea').hide();
+
+      // Pesan konfirmasi
+      let confirmHtml = `
+        <div style="text-align:left">
+          <p><b>Nama:</b> ${payload.sup_name}</p>
+          <p><b>NIK:</b> ${payload.sup_nik}</p>
+          <p><b>Tgl Lahir:</b> ${payload.birth_date}</p>
+          <p><b>No HP:</b> ${payload.sup_contact}</p>
+          <p><b>Alamat KTP:</b> ${payload.supaddressktp}</p>
+          <p><b>Alamat Domisili:</b> ${payload.supaddress}</p>
+          <p><b>Bank:</b> ${payload.sup_bank}</p>
+          <p><b>Nama pada Bank:</b> ${payload.sup_name_bank}</p>
+          <p><b>No. Rekening:</b> ${payload.sup_rekening}</p>
+          <hr>
+          <p style="color:red; font-weight:bold;">
+            PENDAFTARAN YANG SUDAH DIPROSES TIDAK DAPAT DIBATALKAN.
+          </p>
+          <p>Jika data ini sudah benar, silahkan dilanjutkan.</p>
+        </div>
+      `;
+
+      Swal.fire({
+        title: 'Konfirmasi Data',
+        html: confirmHtml,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Lanjutkan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        width: 600
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Submit via AJAX
+          $.ajax({
+              url: 'app/action/add_register_reseller.php',
+              type: 'POST',
+              data: { data: JSON.stringify(payload) },
+              dataType: 'text',
+              success: function(res){
+                  res = res.trim();
+                  if(res === 'yes'){
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Reseller berhasil didaftarkan dan penjualan berhasil.',
+                        timer: 2000,
+                        showConfirmButton: false
+                      }).then(() => {
+                      });
+                      window.location.href = 'index.php?page=add_register_reseller';
+                  } else {
+                      Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
+                  }
+              },
+              error: function(xhr, status, error){
+                console.error(error);
+                $('#formErrorArea').text('Terjadi error server.').show();
+            }
+          });
+        }
+      });
+
+  });
+
+
+
 

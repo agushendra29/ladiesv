@@ -205,6 +205,23 @@
       </li>
       
       <?php endif; ?>
+      <?php if ($roleId != 5): ?>
+      <li style="margin-bottom: 6px;">
+        <a href="index.php?page=add_register_reseller" class="nav-link <?php echo $actual_link=='add_register_reseller'?'active':'';?>" style="
+          display: flex; align-items: center; gap: 14px;
+          font-size: 14px !important; font-weight: 400;
+          color: <?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#374151' ?>;
+          text-decoration: none; padding: 14px 18px; border-radius: 12px;
+          transition: background-color 0.25s ease, color 0.25s ease;
+          user-select:none;
+        " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
+          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#374151' ?>'">
+          <i class="material-symbols-outlined" style="font-size:22px;">news</i>
+          <span>Pendaftaran Reseller</span>
+        </a>
+      </li>
+      
+      <?php endif; ?>
 
       <!-- Reports -->
       <li style="margin-bottom: 6px; position: relative;">
