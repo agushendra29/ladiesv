@@ -11,16 +11,29 @@ $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
 $searchValue = $_POST['search']['value']; // Search value
 $user_id = $_SESSION['distributor_id'];
 
+
 $searchArray = array();
 
-## Search 
-if ($_SESSION['role_id'] == 10 || $_SESSION['role_id'] == 1) {
-    // Super Admin -> bisa lihat semua
+if ($_SESSION['role_id'] == 10) {
+    // Super Admin -> lihat semua
     $searchQuery = " WHERE 1=1 ";
+} elseif ($_SESSION['role_id'] == 1) {
+    // HO -> lihat semua kecuali HO & Super Admin
+    $searchQuery = " WHERE role_id != 10 AND role_id != 1";
+} elseif ($_SESSION['role_id'] == 2) {
+    // HD -> lihat supplier child-nya (anak dari distributor_id ini) yang aktif
+    $searchQuery = " WHERE parent_id = " . intval($_SESSION['distributor_id']) . " AND is_active = 1";
+} elseif ($_SESSION['role_id'] == 3) {
+    // Distributor -> hanya lihat sesama distributor
+    $searchQuery = " WHERE role_id = 3 AND is_active = 1";
+} elseif ($_SESSION['role_id'] == 4) {
+    // Agen -> hanya lihat distributor
+    $searchQuery = " WHERE role_id = 3 AND is_active = 1";
 } else {
-    // User biasa -> hanya lihat yang aktif
-    $searchQuery = " WHERE is_active = 1 ";
+    // Default fallback -> hanya lihat yang aktif
+    $searchQuery = " WHERE is_active = 1";
 }
+
 
 if ($searchValue != '') {
     $searchQuery .= " AND (suppliar_code LIKE :suppliar_code 
@@ -32,16 +45,37 @@ if ($searchValue != '') {
         'con_num' => "%$searchValue%"
     );
 }
-
 ## Total number of records without filtering
-if ($_SESSION['role_id'] == 10 || $_SESSION['role_id'] == 1) {
+if ($_SESSION['role_id'] == 10) {
+    // Super Admin -> semua data
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar");
+
+} elseif ($_SESSION['role_id'] == 1) {
+    // HO -> semua data kecuali HO & Super Admin
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id != 10 AND role_id != 1");
+
+} elseif ($_SESSION['role_id'] == 2) {
+    // HD -> hanya child dari distributor_id + aktif
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE parent_id = :parent_id AND is_active = 1");
+    $stmt->bindValue(':parent_id', (int)$_SESSION['distributor_id'], PDO::PARAM_INT);
+
+} elseif ($_SESSION['role_id'] == 3) {
+    // Distributor -> hanya sesama distributor
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 AND is_active = 1");
+
+} elseif ($_SESSION['role_id'] == 4) {
+    // Agen -> hanya distributor
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 AND is_active = 1");
+
 } else {
+    // Default -> hanya yang aktif
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE is_active = 1");
 }
+
 $stmt->execute();
 $records = $stmt->fetch();
 $totalRecords = $records['allcount'];
+
 
 ## Total number of records with filtering
 $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar " . $searchQuery);

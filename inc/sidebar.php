@@ -42,7 +42,7 @@
       </li>
 
       <!-- Member -->
-      <?php if ($roleId <= 1 || $roleId == 4 || $roleId == 5 || $roleId == 10): ?>
+      <?php if ($roleId != 3): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -188,7 +188,6 @@
       </li>
       
       <?php endif; ?>
-      <?php if ($roleId <=1 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=reward_list" class="nav-link <?php echo $actual_link=='reward_list'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -203,8 +202,6 @@
           <span>Daftar Hadiah</span>
         </a>
       </li>
-      
-      <?php endif; ?>
       <?php if ($roleId != 5): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=add_register_reseller" class="nav-link <?php echo $actual_link=='add_register_reseller'?'active':'';?>" style="

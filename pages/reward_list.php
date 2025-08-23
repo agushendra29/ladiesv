@@ -33,14 +33,27 @@
       </div>
 
       <!-- TAB MENU -->
-      <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-        <button class="reward-tab active" data-role="all">Semua Role</button>
-        <button class="reward-tab" data-role="2">Head Distributor</button>
-        <button class="reward-tab" data-role="3">Distributor</button>
-        <button class="reward-tab" data-role="4">Agen</button>
-        <button class="reward-tab" data-role="5">Reseller</button>
-      </div>
-      
+     <!-- TAB MENU -->
+<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+  <?php if ($_SESSION['role_id'] == 10 || $_SESSION['role_id'] == 1): ?>
+    <button class="reward-tab active" data-role="all">Semua Role</button>
+    <button class="reward-tab" data-role="2">Head Distributor</button>
+    <button class="reward-tab" data-role="3">Distributor</button>
+    <button class="reward-tab" data-role="4">Agen</button>
+    <button class="reward-tab" data-role="5">Reseller</button>
+  <?php else: ?>
+    <?php if ($_SESSION['role_id'] == 2): ?>
+      <button class="reward-tab active" data-role="2">Head Distributor</button>
+    <?php elseif ($_SESSION['role_id'] == 3): ?>
+      <button class="reward-tab active" data-role="3">Distributor</button>
+    <?php elseif ($_SESSION['role_id'] == 4): ?>
+      <button class="reward-tab active" data-role="4">Agen</button>
+    <?php elseif ($_SESSION['role_id'] == 5): ?>
+      <button class="reward-tab active" data-role="5">Reseller</button>
+    <?php endif; ?>
+  <?php endif; ?>
+</div>
+
 
       <!-- Table -->
       <div class="table-responsive" style="overflow-x:auto;">

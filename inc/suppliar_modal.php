@@ -96,7 +96,6 @@
                   <option value="2">Head Distributor</option>
                   <option value="3">Distributor</option>
                   <option value="4">Agen</option>
-                  <option value="5">Reseller</option>
                 </select>
               </div>
             </div>

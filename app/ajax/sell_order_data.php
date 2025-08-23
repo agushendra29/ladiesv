@@ -33,7 +33,7 @@ if ($searchValue != '') {
 ## Total records without filtering
 $sqlTotal = "SELECT COUNT(*) AS allcount FROM invoice i WHERE 1 {$whereExtra}";
 $stmt = $pdo->prepare($sqlTotal);
-if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] !== 10) {
+if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
 $stmt->execute();

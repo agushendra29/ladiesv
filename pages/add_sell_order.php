@@ -20,7 +20,8 @@ function getStockProduct($pid) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <div>
   <!-- Main -->
   <section class="content">
@@ -37,10 +38,10 @@ function getStockProduct($pid) {
           <div class="col-md-6">
             <label for="customer_name" style="font-weight: 500; display: block; margin-bottom: 8px;">Anggota</label>
             <select id="customer_name" name="customer_name" required
-              style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px;">
+              style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px; background:white;">
               <option value="">Pilih Anggota</option>
               <?php if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10): ?>
-              <option value="0" data-name="Penjualan Pribadi" data-role="0">Penjualan Pribadi</option>
+              <option value="0" data-name="Penjualan Pribadi" data-role="0" data-suppliar-code="000000">Penjualan Pribadi</option>
               <?php endif; ?>
               <?php 
                 $role_labels = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R'];
@@ -60,6 +61,7 @@ function getStockProduct($pid) {
                     $role_text = $role_labels[$customer->role_id] ?? $customer->role_id;
                     echo "<option value='{$customer->id}' 
                               data-name='{$customer->name}' 
+                              data-code='{$customer->suppliar_code}'
                               data-role='{$customer->role_id}'>
                               {$customer->name} - {$customer->suppliar_code} - {$role_text}
                           </option>";
@@ -129,6 +131,14 @@ foreach ($products as $p) {
 }
 ?>
 <script>
+ document.addEventListener("DOMContentLoaded", function() {
+  new Choices("#customer_name", {
+    searchEnabled: true,   // aktifkan fitur search
+    itemSelectText: '',    // hilangkan tulisan "Press to select"
+    shouldSort: false,     // biar urutan option asli tidak berubah
+    placeholderValue: "Pilih Anggota"
+  });
+});
 const productsData = <?php echo json_encode(array_map(function($p){
     $p->pStock = getStockProduct($p->id);
     return $p;

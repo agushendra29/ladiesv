@@ -372,6 +372,7 @@ $("#empTable").DataTable({
         selectedBuyer = $("#customer_name option:selected"),
         buyerRole = selectedBuyer.data("role"),
         buyerName = buyerInput || selectedBuyer.data("name");
+        buyerCode = selectedBuyer.data("code") || "-"; // ✅ ambil buyer code
 
     // Validasi pembeli
     if ((buyerSelect === "0" || buyerSelect === null) && buyerInput === "") {
@@ -425,19 +426,43 @@ $("#empTable").DataTable({
     };
 
     // 🔔 Build HTML konfirmasi
-    let confirmHtml = `<p><b>Pembeli:</b> ${buyerName}</p><hr>`;
-    confirmHtml += `<table style="width:100%; font-size:14px; text-align:left;">
-        <tr><th>Produk</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr>`;
-    products.forEach(p => {
-        confirmHtml += `<tr>
-            <td>${p.name}</td>
-            <td>${p.quantity}</td>
-            <td>Rp ${p.price.toLocaleString()}</td>
-            <td>Rp ${p.subtotal.toLocaleString()}</td>
-        </tr>`;
-    });
-    confirmHtml += `</table><hr>`;
-    confirmHtml += `<p><b>Total:</b> Rp ${totalAll.toLocaleString()}</p>`;
+   let confirmHtml = `
+  <div style="text-align:left; font-size:14px;">
+    <p><b>Pembeli:</b> ${buyerName} <br><b>Kode:</b> ${buyerCode}</p>
+    <hr style="margin:10px 0;">
+    
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+      <thead>
+        <tr style="background:#f3f4f6; text-align:left;">
+          <th style="padding:6px; border-bottom:1px solid #ddd;">Produk</th>
+          <th style="padding:6px; border-bottom:1px solid #ddd;">Qty</th>
+          <th style="padding:6px; border-bottom:1px solid #ddd;">Harga</th>
+          <th style="padding:6px; border-bottom:1px solid #ddd;">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${products.map(p => `
+          <tr>
+            <td style="padding:6px; border-bottom:1px solid #eee;">${p.name}</td>
+            <td style="padding:6px; border-bottom:1px solid #eee;">${p.quantity}</td>
+            <td style="padding:6px; border-bottom:1px solid #eee;">Rp ${p.price.toLocaleString()}</td>
+            <td style="padding:6px; border-bottom:1px solid #eee;">Rp ${p.subtotal.toLocaleString()}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+    
+    <hr style="margin:10px 0;">
+    <p style="font-size:15px; font-weight:bold; margin-bottom:8px;">
+      Total: Rp ${totalAll.toLocaleString()}
+    </p>
+    <p style="color:#b91c1c; font-size:13px; font-weight:600; line-height:1.4;">
+      ⚠️ Penjualan yang sudah diproses <u>tidak dapat dibatalkan</u>.<br>
+      Pastikan data sudah benar sebelum dilanjutkan.
+    </p>
+  </div>
+`;
+
 
     Swal.fire({
         title: "Konfirmasi Penjualan",
