@@ -72,11 +72,54 @@ foreach ($newsRecords as $row) {
      $isActive = (int)$row['is_active'] === 1;
 
     $publishButton = '';
-    if ($isActive) {
-        $publishButton = '<button type="button" class="btn newsTogglePublish_btn" data-id="'.$row['id'].'" data-action="hide">Hide</button>';
-    } else {
-        $publishButton = '<button type="button" class="btn ml-2 newsTogglePublish_btn" data-id="'.$row['id'].'" data-action="publish">Publish</button>';
-    }
+   if ($isActive) {
+    $publishButton = '
+        <button type="button"
+            class="newsTogglePublish_btn"
+            data-id="'.$row['id'].'"
+            data-action="hide"
+            style="
+                background-color: #ef4444;
+                color: #fff;
+                font-size: 12px;
+                font-weight: 600;
+                border: none;
+                border-radius: 8px;
+                padding: 6px 14px;
+                cursor: pointer;
+                box-shadow: 0 2px 6px rgba(239,68,68,0.3);
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.backgroundColor=\'#dc2626\'; this.style.boxShadow=\'0 3px 8px rgba(220,38,38,0.4)\'"
+            onmouseout="this.style.backgroundColor=\'#ef4444\'; this.style.boxShadow=\'0 2px 6px rgba(239,68,68,0.3)\'"
+        >
+            🚫 Hide
+        </button>';
+} else {
+    $publishButton = '
+        <button type="button"
+            class="newsTogglePublish_btn"
+            data-id="'.$row['id'].'"
+            data-action="publish"
+            style="
+                background-color: #3b82f6;
+                color: #fff;
+                font-size: 12px;
+                font-weight: 600;
+                border: none;
+                border-radius: 8px;
+                padding: 6px 14px;
+                cursor: pointer;
+                box-shadow: 0 2px 6px rgba(59,130,246,0.3);
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.backgroundColor=\'#2563eb\'; this.style.boxShadow=\'0 3px 8px rgba(37,99,235,0.4)\'"
+            onmouseout="this.style.backgroundColor=\'#3b82f6\'; this.style.boxShadow=\'0 2px 6px rgba(59,130,246,0.3)\'"
+        >
+            ✅ Publish
+        </button>';
+}
+
 
     $data[] = array(
         "title" => htmlspecialchars($row['title']),

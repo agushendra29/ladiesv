@@ -24,17 +24,37 @@ if ($role_id > 1 && $role_id != 10) {
 }
 
 $searchQuery = "";
-if ($searchValue != '') {
-    $searchQuery = " AND (
-        product_name LIKE :search OR
-        suppliar_name LIKE :search OR
-        CAST(product_id AS CHAR) LIKE :search OR
-        CAST(suppliar_id AS CHAR) LIKE :search OR
-        CAST(stock AS CHAR) LIKE :search
-    ) ";
-    $searchArray = array(
-        'search' => "%$searchValue%"
-    );
+
+if ($role_id == 1 || $role_id == 10) {
+    // 🔹 Superadmin
+    if ($searchValue != '') {
+        // Ada search → normal filter
+        $searchQuery = " AND (
+            product_name LIKE :search OR
+            suppliar_name LIKE :search OR
+            CAST(product_id AS CHAR) LIKE :search OR
+            CAST(suppliar_id AS CHAR) LIKE :search OR
+            CAST(stock AS CHAR) LIKE :search
+        ) ";
+        $searchArray = array(
+            'search' => "%$searchValue%"
+        );
+    } else {
+        // Search kosong → tampilkan hanya HO
+        $filterDistributorQuery .= " AND suppliar_id = '1' ";
+    }
+} else {
+    // 🔹 Selain superadmin → ga usah tambah apa-apa, sudah dibatasi ke distributor login
+    if ($searchValue != '') {
+        $searchQuery = " AND (
+            product_name LIKE :search OR
+            CAST(product_id AS CHAR) LIKE :search OR
+            CAST(stock AS CHAR) LIKE :search
+        ) ";
+        $searchArray = array(
+            'search' => "%$searchValue%"
+        );
+    }
 }
 
 ## Total records without filtering

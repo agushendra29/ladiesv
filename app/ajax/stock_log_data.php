@@ -35,19 +35,23 @@ $stmt->execute();
 $totalRecords = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
 // Query untuk pencarian
-$where = "";
+$where = " WHERE 1=1 ";  // biar gampang tambah kondisi
 $params = [];
+
 if (!empty($searchValue)) {
-    $where = " WHERE 
+    $where .= " AND (
         s.name LIKE :search 
         OR p.product_name LIKE :search
         OR cb.name LIKE :search
         OR sl.action_type LIKE :search
         OR sl.note LIKE :search
-    ";
+    ) ";
     $params[':search'] = "%$searchValue%";
+} else {
+    // Kalau search kosong → filter suppliar_id = 1
+    $where .= " AND sl.suppliar_id = :suppliar_id ";
+    $params[':suppliar_id'] = 1;
 }
-
 // Query untuk total setelah filter
 $stmt = $pdo->prepare("SELECT COUNT(*) AS total " . $baseQuery . $where);
 $stmt->execute($params);

@@ -57,7 +57,7 @@
 
             <tbody style="color: #374151; font-weight: 500;">
               <!-- DataTables will inject data here -->
-            </tbody>
+          </tbody>
           </table>
         </div>
       </div>

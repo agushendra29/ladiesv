@@ -201,7 +201,7 @@
         <h3 class="section-title">📰 Latest News</h3>
         <div class="news-scroll">
           <?php 
-      $stmt = $pdo->prepare("SELECT * FROM news ORDER BY publish_date DESC");
+      $stmt = $pdo->prepare("SELECT * FROM news WHERE is_active = 1 ORDER BY publish_date DESC");
       $stmt->execute();
       $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
       if($newsList):

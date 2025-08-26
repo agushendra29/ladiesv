@@ -114,6 +114,22 @@
           <?php endif; ?>
         </div>
 
+        <div>
+  <label for="provinsi" style="font-weight:600; color:#334155;">Provinsi <span style="color:#ef4444;">*</span></label>
+  <select id="provinsi" name="provinsi" required
+    style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
+    <option value="">-- Pilih Provinsi --</option>
+  </select>
+</div>
+
+<div>
+  <label for="kota" style="font-weight:600; color:#334155;">Kota / Kabupaten <span style="color:#ef4444;">*</span></label>
+  <select id="kota" name="kota" required
+    style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
+    <option value="">-- Pilih Kota / Kabupaten --</option>
+  </select>
+</div>
+
         <div style="grid-column: 1 / -1;">
           <label for="address_ktp" style="font-weight: 600; color: #334155;">Alamat (Diisi Sesuai KTP) <span
               style="color:#ef4444;">*</span></label>
@@ -192,6 +208,7 @@
   </section>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   function togglePassword(fieldId, el) {
     const input = document.getElementById(fieldId);
@@ -203,4 +220,51 @@
       el.textContent = "👁"; // ganti icon kalau disembunyikan
     }
   }
+  document.addEventListener("DOMContentLoaded", function () {
+  const provinsiSelect = document.getElementById("provinsi");
+  const kotaSelect = document.getElementById("kota");
+
+  const selectedProvinsi = "<?= htmlspecialchars($data->provinsi ?? '') ?>";
+  const selectedKota = "<?= htmlspecialchars($data->kota ?? '') ?>";
+
+  // Load daftar provinsi
+  fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(prov => {
+        let option = document.createElement("option");
+        option.value = prov.id;
+        option.textContent = prov.name;
+        if (prov.id == selectedProvinsi) option.selected = true;
+        provinsiSelect.appendChild(option);
+      });
+
+      if (selectedProvinsi) {
+        loadKota(selectedProvinsi, selectedKota);
+      }
+    });
+
+  // Event saat ganti provinsi
+  provinsiSelect.addEventListener("change", function () {
+    loadKota(this.value, null);
+  });
+
+  // Load kota sesuai provinsi
+  function loadKota(provinsiId, selected = null) {
+    kotaSelect.innerHTML = '<option value="">-- Pilih Kota / Kabupaten --</option>';
+    if (!provinsiId) return;
+
+    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinsiId}.json`)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(kota => {
+          let option = document.createElement("option");
+          option.value = kota.id;
+          option.textContent = kota.name;
+          if (kota.id == selected) option.selected = true;
+          kotaSelect.appendChild(option);
+        });
+      });
+  }
+});
 </script>

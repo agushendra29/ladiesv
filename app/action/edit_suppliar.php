@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old_pass     = $_POST['old_password'] ?? '';
     $update_at    = date('Y-m-d');
     $sup_akun   = trim($_POST['sup_name_bank'] ?? '');
+    $provinsi_id   = $_POST['provinsi'] ?? '';
+    $kota_id     = $_POST['kota'] ?? '';
 
     // Validasi semua field wajib (sesuaikan kalau ada field opsional)
     if (
@@ -47,7 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'email'         => $email,
         'date_of_birth' => $date_of_birth,
         'update_at'     => $update_at,
-        'nama_rekening' => $sup_akun
+        'nama_rekening' => $sup_akun,
+        'provinsi'   => $provinsi_id,
+        'kota'       => $kota_id
     ];
 
     $supRes = $obj->update('suppliar', 'id', $id, $supQuery);

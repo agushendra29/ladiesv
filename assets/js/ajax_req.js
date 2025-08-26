@@ -72,27 +72,70 @@ $("#editCatForm").submit(function (e) {
         }
       );
   }),
- 
-  $("#editSuppliarForm").submit(function (e) {
-    e.preventDefault();
-    var password = $("#password").val();
-    var confirmPassword = $("#confirm_password").val();
+ $("#editSuppliarForm").submit(function (e) {
+  e.preventDefault();
+  var password = $("#password").val();
+  var confirmPassword = $("#confirm_password").val();
 
-    // Validasi konfirmasi password
-    if (password !== "" && password !== confirmPassword) {
-        alert("Password baru dan konfirmasi password tidak sama!");
-        return false; // hentikan submit
+  // Validasi konfirmasi password
+  if (password !== "" && password !== confirmPassword) {
+    Swal.fire("Error", "Password baru dan konfirmasi password tidak sama!", "error");
+    return false; // hentikan submit
+  }
+
+  var t = $("#editSuppliarForm").serialize();
+
+  // ubah string query jadi object
+  var payload = {};
+  t.split("&").forEach(function (item) {
+    var parts = item.split("=");
+    payload[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
+  });
+
+  console.log(payload);
+
+  let confirmHtml = `
+    <div style="text-align:left">
+      <p><b>Nama:</b> ${payload.name || '-'}</p>
+      <p><b>NIK:</b> ${payload.nik || '-'}</p>
+      <p><b>Tgl Lahir:</b> ${payload.date_of_birth || '-'}</p>
+      <p><b>No HP:</b> ${payload.contact || '-'}</p>
+      <p><b>Alamat KTP:</b> ${payload.address_ktp || '-'}</p>
+      <p><b>Alamat Domisili:</b> ${payload.address || '-'}</p>
+      <p><b>Bank:</b> ${payload.bank || '-'}</p>
+      <p><b>Nama pada Bank:</b> ${payload.sup_name_bank || '-'}</p>
+      <p><b>No. Rekening:</b> ${payload.rekening || '-'}</p>
+      <hr>
+      <p style="color:red; font-weight:bold;">
+        PERUBAHAN DATA YANG SUDAH DISIMPAN TIDAK DAPAT DIBATALKAN.
+      </p>
+      <p>Jika data ini sudah benar, silahkan dilanjutkan.</p>
+    </div>
+  `;
+
+  Swal.fire({
+    title: "Konfirmasi Perubahan",
+    html: confirmHtml,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Simpan",
+    cancelButtonText: "Batal"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: "POST",
+        url: "app/action/edit_suppliar.php",
+        data: t,
+        success: function (e) {
+          Swal.fire("Sukses", e, "success");
+        },
+        error: function () {
+          Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");
+        }
+      });
     }
-    var t = $("#editSuppliarForm").serialize();
-    $.ajax({
-      type: "POST",
-      url: "app/action/edit_suppliar.php",
-      data: t,
-      success: function (e) {
-        alert(e);
-      },
-    });
-  }),
+  });
+}),
   $(document).on("click", "#suppliarDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
