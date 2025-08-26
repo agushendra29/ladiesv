@@ -35,7 +35,7 @@ $records = $stmt->fetch();
 $totalRecordwithFilter = $records['allcount'];
 
 // Fetch records with limit, offset, order, and search
-$stmt = $pdo->prepare("SELECT id, title, content, publish_date, created_at FROM news "
+$stmt = $pdo->prepare("SELECT id, title, content, publish_date, created_at, is_active FROM news "
     . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder
     . " LIMIT :limit OFFSET :offset");
 
@@ -69,16 +69,25 @@ function limitContent($text, $maxChars = 100) {
 
 $data = array();
 foreach ($newsRecords as $row) {
+     $isActive = (int)$row['is_active'] === 1;
+
+    $publishButton = '';
+    if ($isActive) {
+        $publishButton = '<button type="button" class="btn newsTogglePublish_btn" data-id="'.$row['id'].'" data-action="hide">Hide</button>';
+    } else {
+        $publishButton = '<button type="button" class="btn ml-2 newsTogglePublish_btn" data-id="'.$row['id'].'" data-action="publish">Publish</button>';
+    }
+
     $data[] = array(
-        "id" => $row['id'],
         "title" => htmlspecialchars($row['title']),
         "content" => '<div class="content-cell">' . htmlspecialchars(limitContent($row['content'])) . '</div>',
         "publish_date" => date('d M Y', strtotime($row['publish_date'])),
-        "created_at" => date('d M Y H:i', strtotime($row['created_at'])),
+        "created_at" => date('d M Y', strtotime($row['created_at'])),
         "action" => '
             <div class="btn-group" role="group" aria-label="Basic example">
                 <a href="index.php?page=edit_news&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" id="memberEdit_btn"><i class="fas fa-edit"></i></a>
             <button type="button" id="newsDelete_btn" class="btn btn-danger btn-sm rounded-0 ml-2" data-id="'.$row['id'].'"><i class="fas fa-trash-alt"></i></button>
+            '.$publishButton.'
           </div>
         '
     );

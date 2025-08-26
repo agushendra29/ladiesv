@@ -7,10 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$po_id = $_POST['order_id'] ?? null;
+$po_id = $_POST['approve_po_id'] ?? null;
 $fromDistributorId = $_SESSION['distributor_id']; // distributor/ pusat yang approve
+$payment_type   = $_POST['payment_type'] ?? null;
+$shipping_type  = $_POST['shipping_type'] ?? null;
 
-if (!$po_id) {
+if (!$po_id || !$payment_type || !$shipping_type) {
     echo json_encode(['status' => false, 'message' => 'Missing po_id']);
     exit;
 }
@@ -102,15 +104,17 @@ try {
     $user = $stmt->fetch();
 
     foreach ($orders as $o) {
-        $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) 
-            VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number,payment_type, jenis_pengiriman) 
+            VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?,?,?)");
         $stmt->execute([
             $fromDistributorId,
             $o['product_id'],
             $o['quantity'],
             $toDistributorId,
             $user['name'],
-            $invoice_number
+            $invoice_number,
+            $payment_type,
+            $shipping_type
         ]);
     }
 

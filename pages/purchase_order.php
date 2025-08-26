@@ -28,7 +28,7 @@
           </a>
           <?php endif; ?>
         </div>
-    
+
 
         <div class="table-responsive" style="overflow-x:auto;">
           <table id="purchaseOrderTable" class="display dataTable text-center" style="
@@ -63,12 +63,58 @@
               <!-- Rows akan diisi dari server -->
             </tbody>
           </table>
+          <!-- Modal Approve dengan Tipe Pembayaran & Pengiriman -->
+          <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <div class="modal-header">
+                  <h5 class="modal-title">Setujui Purchase Order</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                    <span>&times;</span>
+                  </button>
+                </div>
+
+                <form id="approveForm">
+                  <div class="modal-body">
+                    <input type="hidden" name="approve_po_id" id="approve_po_id">
+
+                    <!-- Pilih Tipe Pembayaran -->
+                    <div class="form-group">
+                      <label for="payment_type">Tipe Pembayaran</label>
+                      <select class="form-control" id="payment_type" name="payment_type" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="cash">Cash</option>
+                        <option value="bank BRI">Pembayaran Melalui Bank BRI</option>
+                        <option value="bank BNI">Pembayaran Melalui Bank BNI</option>
+                        <option value="bank Mandiri">Pembayaran Melalui Bank MANDIRI</option>
+                        <option value="bank BCA">Pembayaran Melalui Bank BCA</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="shipping_type">Jenis Pengiriman</label>
+                      <input type="text" class="form-control" id="shipping_type" name="shipping_type"
+                        placeholder="Contoh: Ambil sendiri, Kurir internal, JNE, J&T, dll" required>
+                    </div>
+
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Setujui PO</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   </section>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
   #purchaseOrderTable tbody tr {
     background-color: #fff;
@@ -130,7 +176,3 @@
     background-color: #1d4ed8;
   }
 </style>
-
-<script>
-  // Row hover handled by CSS, script not needed unless dynamic
-</script>

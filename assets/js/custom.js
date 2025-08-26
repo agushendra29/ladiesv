@@ -186,65 +186,62 @@ $("#empTable").DataTable({
         })
     } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
 })), $(document).ready(function () {
-  $("#purchaseOrderForm").submit(function (e) {
+  $("#purchaseOrderForm").on("submit", function (e) {
     e.preventDefault();
 
-    // ambil semua produk & qty
-    var products  = $("select[name='product_id[]']").map(function(){ return $(this).val(); }).get();
-    var quantities = $("input[name='quantity[]']").map(function(){ return $(this).val(); }).get();
+    let products    = $("select[name='product_id[]']").map(function(){ return $(this).val(); }).get();
+    let quantities  = $("input[name='quantity[]']").map(function(){ return $(this).val(); }).get();
 
-    // cek minimal 1 produk valid
-    if (products.length === 0 || products.includes(null) || products.includes("")) {
-      $(".purchaseOrderError-area").show();
-      $("#purchaseOrderError").html("Silakan pilih minimal satu produk.");
-      return;
+    let confirmHtml = "";
+    let subtotal    = 0;
+
+    for (let i = 0; i < products.length; i++) {
+      let productId     = products[i];
+      let qty           = parseInt(quantities[i] || 0);
+
+      // ambil <option> terpilih
+      let productOption = $("select[name='product_id[]']").eq(i).find("option:selected");
+      let productName   = productOption.text();
+      let price         = parseFloat(productOption.data("price") || 0);
+
+      subtotal += price * qty;
+
+      confirmHtml += `
+        <p>
+          <b>Produk:</b> ${productName} <br>
+          <b>Qty:</b> ${qty} <br>
+          <b>Harga Satuan:</b> Rp ${price.toLocaleString()} <br>
+          <b>Subtotal:</b> Rp ${(price*qty).toLocaleString()}
+        </p>
+        <hr>
+      `;
     }
 
-    if (quantities.some(qty => qty === "" || parseInt(qty) <= 0)) {
-      $(".purchaseOrderError-area").show();
-      $("#purchaseOrderError").html("Silakan masukkan kuantitas yang valid.");
-      return;
-    }
+    confirmHtml += `<h4>Total: Rp ${subtotal.toLocaleString()}</h4>`;
 
-    var formData = $(this).serialize();
-
-    $.ajax({
-      type: "POST",
-      url: "app/action/add_purchase_order.php", // ganti endpoint sesuai form baru
-      data: formData,
-      beforeSend: function () {
-        $(".purchaseOrderError-area").hide();
-        $("#purchaseOrderForm button[type=submit]").prop("disabled", true).text("Loading...");
-      },
-      success: function (res) {
-        try {
-          let data = JSON.parse(res);
-
-          if (data.status === "success") {
-            $(".purchaseOrderError-area").removeClass("alert-danger").addClass("alert-success").show();
-            $("#purchaseOrderError").html(data.message || "Pemesanan berhasil ditambahkan ✅");
-
-            // reset form
+    Swal.fire({
+      title: "Konfirmasi Purchase Order",
+      html: confirmHtml,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Kirim",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // submit form via ajax
+        $.ajax({
+          url: "app/action/add_purchase_order.php",
+          type: "POST",
+          data: $("#purchaseOrderForm").serialize(),
+          success: function (res) {
+            Swal.fire("Berhasil!", "Purchase Order berhasil disimpan", "success");
             $("#purchaseOrderForm")[0].reset();
-            $("#grandTotal").val("");
-            $("#productWrapper .product-row:gt(0)").remove(); // hapus row selain pertama
-            $(".select2").val(null).trigger("change");
-          } else {
-            $(".purchaseOrderError-area").removeClass("alert-success").addClass("alert-danger").show();
-            $("#purchaseOrderError").html(data.message || "Terjadi kesalahan saat menambahkan pemesanan.");
+            $("#productRows").html(""); // reset rows
+          },
+          error: function () {
+            Swal.fire("Error!", "Terjadi kesalahan saat menyimpan.", "error");
           }
-        } catch (e) {
-          console.error("Invalid response:", res);
-          $(".purchaseOrderError-area").removeClass("alert-success").addClass("alert-danger").show();
-          $("#purchaseOrderError").html("Terjadi error di server.");
-        }
-      },
-      error: function (xhr, status, error) {
-        $(".purchaseOrderError-area").removeClass("alert-success").addClass("alert-danger").show();
-        $("#purchaseOrderError").html("Request gagal: " + error);
-      },
-      complete: function () {
-        $("#purchaseOrderForm button[type=submit]").prop("disabled", false).text("Submit PO");
+        });
       }
     });
   });
@@ -285,19 +282,82 @@ $("#empTable").DataTable({
         $("#refundError").html("Invoice number harus diisi.");
     }
 }), $("#adsuppliarForm").submit(function (e) {
-    e.preventDefault();
-    var t = $("#adsuppliarForm").serialize();
-    $.ajax({
-      type: "POST",
-      url: "app/action/add_suppliar.php",
-      data: t,
-      success: function (e) {
-        "yes" == $.trim(e) ?
-          (alert("suppliar added successfully."), location.reload()) :
-          alert(e);
-      },
-    });
-  }),$("#addNews").submit(function (e) {
+  e.preventDefault();
+
+  // Ambil data form dalam bentuk object
+  var formData = $("#adsuppliarForm").serializeArray();
+  var payload = {};
+  formData.forEach(function (item) {
+    payload[item.name] = item.value;
+  });
+
+  // Buat HTML konfirmasi
+  let confirmHtml = `
+    <div style="text-align:left">
+      <p><b>Nama:</b> ${payload.sup_name || '-'}</p>
+      <p><b>NIK:</b> ${payload.sup_nik || '-'}</p>
+      <p><b>Tgl Lahir:</b> ${payload.birth_date || '-'}</p>
+      <p><b>No HP:</b> ${payload.sup_contact || '-'}</p>
+      <p><b>Alamat KTP:</b> ${payload.supaddressktp || '-'}</p>
+      <p><b>Alamat Domisili:</b> ${payload.supaddress || '-'}</p>
+      <p><b>Bank:</b> ${payload.sup_bank || '-'}</p>
+      <p><b>Nama pada Bank:</b> ${payload.sup_name_bank || '-'}</p>
+      <p><b>No. Rekening:</b> ${payload.sup_rekening || '-'}</p>
+      <hr>
+      <p style="color:red; font-weight:bold;">
+        PENDAFTARAN YANG SUDAH DIPROSES TIDAK DAPAT DIBATALKAN.
+      </p>
+      <p>Jika data ini sudah benar, silahkan dilanjutkan.</p>
+    </div>
+  `;
+
+  Swal.fire({
+    title: 'Konfirmasi Data',
+    html: confirmHtml,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Lanjutkan',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    width: 600
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Kirim ke server jika user klik "Ya, Lanjutkan"
+      $.ajax({
+        type: "POST",
+        url: "app/action/add_suppliar.php",
+        data: $("#adsuppliarForm").serialize(),
+        success: function (e) {
+          if ($.trim(e) == "yes") {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil!',
+              text: 'Suppliar berhasil ditambahkan.',
+              timer: 2000,
+              showConfirmButton: false
+            }).then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal!',
+              text: e
+            });
+          }
+        },
+        error: function () {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Terjadi kesalahan saat menyimpan data suppliar.'
+          });
+        }
+      });
+    }
+  });
+}),$("#addNews").submit(function (e) {
     e.preventDefault();
 
     var title = $("#title").val(),
@@ -428,7 +488,7 @@ $("#empTable").DataTable({
     // 🔔 Build HTML konfirmasi
    let confirmHtml = `
   <div style="text-align:left; font-size:14px;">
-    <p><b>Pembeli:</b> ${buyerName} <br><b>Kode:</b> ${buyerCode}</p>
+    <p><b>Pembeli:</b> ${buyerName} <br><b>ID:</b> ${buyerCode}</p>
     <hr style="margin:10px 0;">
     
     <table style="width:100%; border-collapse:collapse; font-size:13px;">
@@ -616,7 +676,6 @@ $("#empTable").DataTable({
         url: "app/ajax/news_data.php"  // adjust the path to your PHP backend
     },
     columns: [
-        { data: "id" },            // news id
         { data: "title" },         // news title
         {data: "content"},
         { data: "publish_date" },  // formatted publish date

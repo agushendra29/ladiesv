@@ -40,25 +40,6 @@
           <span>Dashboard</span>
         </a>
       </li>
-
-      <!-- Member -->
-      <?php if ($roleId != 3): ?>
-      <li style="margin-bottom: 6px;">
-        <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
-          display: flex; align-items: center; gap: 14px;
-          font-size: 14px !important; font-weight: 400;
-          color: <?= ($actual_link == 'suppliar') ? '#2563eb' : '#374151' ?>;
-          text-decoration: none; padding: 14px 18px; border-radius: 12px;
-          transition: background-color 0.25s ease, color 0.25s ease;
-          user-select:none;
-        " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
-          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'suppliar') ? '#2563eb' : '#374151' ?>'">
-          <i class="material-symbols-outlined" style="font-size:22px;">group</i>
-          <span>Member</span>
-        </a>
-      </li>
-      <?php endif; ?>
-
       <!-- News -->
       <?php if ($roleId < 2 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
@@ -76,22 +57,60 @@
         </a>
       </li>
       <?php endif; ?>
-         <?php if ($roleId == 1 || $roleId == 10): ?>
-      <li style="margin-bottom: 6px;">
-        <a href="index.php?page=distributor_management" class="nav-link <?php echo $actual_link=='distributor_management'?'active':'';?>" style="
+      <li style="margin-bottom: 6px; position: relative;">
+        <input type="checkbox" id="user-menu-toggle" style="display:none;">
+        <label for="user-menu-toggle" style="
           display: flex; align-items: center; gap: 14px;
           font-size: 14px !important; font-weight: 400;
-          color: <?= ($actual_link == 'distributor_management') ? '#2563eb' : '#374151' ?>;
-          text-decoration: none; padding: 14px 18px; border-radius: 12px;
-          transition: background-color 0.25s ease, color 0.25s ease;
-          user-select:none;
+          color: <?= ($actual_link == 'distributor_management' || $actual_link == 'suppliar' || $actual_link == 'add_register_reseller') ? '#2563eb' : '#374151' ?>;
+          padding: 14px 18px; border-radius: 12px; cursor: pointer;
+          user-select:none; transition: background-color 0.25s ease, color 0.25s ease;
         " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
-          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'distributor_management') ? '#2563eb' : '#374151' ?>'">
-          <i class="material-symbols-outlined" style="font-size:22px;">draft</i>
-          <span>Manage Distributor</span>
-        </a>
+          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'distributor_management' || $actual_link == 'suppliar' || $actual_link == 'add_register_reseller') ? '#2563eb' : '#374151' ?>'">
+          <i class="material-symbols-outlined" style="font-size:22px;">inventory</i>
+          <span>User Manajemen</span>
+          <i class="fas fa-angle-down" style="margin-left:auto; font-size:16px; transition: transform 0.3s ease;" id="produk-arrow"></i>
+        </label>
+        <ul id="user-submenu" style="list-style: none; padding-left: 24px; margin: 8px 0 0 0; display: none;">
+          <li style="margin-bottom: 6px;">
+            <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
+              display: block; font-size: 14px !important; font-weight: 500;
+              color: <?= ($actual_link == 'suppliar') ? '#2563eb' : '#4b5563' ?>;
+              text-decoration: none; padding: 10px 18px; border-radius: 10px;
+              transition: background-color 0.25s ease, color 0.25s ease;
+            " onmouseover="this.style.backgroundColor='#e0e7ff'; this.style.color='#2563eb';"
+              onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'suppliar') ? '#2563eb' : '#4b5563' ?>'">
+              Daftar User
+            </a>
+          </li>
+            <?php if ($roleId == 1 || $roleId == 10): ?>
+          <li style="margin-bottom: 6px;">
+            <a href="index.php?page=distributor_management" class="nav-link <?php echo $actual_link=='distributor_management'?'active':'';?>" style="
+              display: block; font-size: 14px !important; font-weight: 500;
+              color: <?= ($actual_link == 'distributor_management') ? '#2563eb' : '#4b5563' ?>;
+              text-decoration: none; padding: 10px 18px; border-radius: 10px;
+              transition: background-color 0.25s ease, color 0.25s ease;
+            " onmouseover="this.style.backgroundColor='#e0e7ff'; this.style.color='#2563eb';"
+              onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'distributor_management') ? '#2563eb' : '#4b5563' ?>'">
+              Manajemen Distributor
+            </a>
+          </li>
+          <?php endif ?>
+           <?php if ($roleId != 5): ?>
+           <li style="margin-bottom: 6px;">
+            <a href="index.php?page=add_register_reseller" class="nav-link <?php echo $actual_link=='add_register_reseller'?'active':'';?>" style="
+              display: block; font-size: 14px !important; font-weight: 500;
+              color: <?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#4b5563' ?>;
+              text-decoration: none; padding: 10px 18px; border-radius: 10px;
+              transition: background-color 0.25s ease, color 0.25s ease;
+            " onmouseover="this.style.backgroundColor='#e0e7ff'; this.style.color='#2563eb';"
+              onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#4b5563' ?>'">
+              Tambah Reseller
+            </a>
+          </li>
+          <?php endif ?>
+        </ul>
       </li>
-      <?php endif; ?>
 
       <!-- Produk with toggle -->
       <li style="margin-bottom: 6px; position: relative;">
@@ -202,24 +221,6 @@
           <span>Daftar Hadiah</span>
         </a>
       </li>
-      <?php if ($roleId != 5): ?>
-      <li style="margin-bottom: 6px;">
-        <a href="index.php?page=add_register_reseller" class="nav-link <?php echo $actual_link=='add_register_reseller'?'active':'';?>" style="
-          display: flex; align-items: center; gap: 14px;
-          font-size: 14px !important; font-weight: 400;
-          color: <?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#374151' ?>;
-          text-decoration: none; padding: 14px 18px; border-radius: 12px;
-          transition: background-color 0.25s ease, color 0.25s ease;
-          user-select:none;
-        " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
-          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#374151' ?>'">
-          <i class="material-symbols-outlined" style="font-size:22px;">news</i>
-          <span>Pendaftaran Reseller</span>
-        </a>
-      </li>
-      
-      <?php endif; ?>
-
       <!-- Reports -->
       <li style="margin-bottom: 6px; position: relative;">
         <input type="checkbox" id="reports-menu-toggle" style="display:none;">
@@ -277,7 +278,8 @@
     </ul>
   </nav>
 </aside>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
   document.querySelectorAll('input[type="checkbox"]').forEach(input => {
     input.addEventListener('change', (e) => {

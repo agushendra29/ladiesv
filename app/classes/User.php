@@ -8,6 +8,19 @@ class User extends Objects {
 	function __construct($pdo) {
 		$this->pdo = $pdo;
 	}
+	
+	public function getName($username)
+	{
+    $stmt = $this->pdo->prepare("SELECT name FROM suppliar WHERE suppliar_code = :username LIMIT 1");
+    $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        return $row['name'];
+    }
+    return ""; // kalau tidak ada
+	}
+
 
 	// user login method to dashboard
 	public function login($username, $pass) {
@@ -19,6 +32,7 @@ class User extends Objects {
 		$count = $stmt->rowCount();
 
 		if ($count > 0) {
+	
 			 if ($user->is_active == 0) {
             // Kalau akun suspend
             	$_SESSION['login_error'] = "Your account has been suspended. Please contact admin.";
@@ -26,6 +40,7 @@ class User extends Objects {
         	} else {
 			$_SESSION['user_id'] = $user->id;
 			$_SESSION['user_role'] = $user->username;
+			$_SESSION['name'] = $this->getName($user->suppliar_code);
 			$_SESSION['role_id'] = $user->role_id;
 			$_SESSION['distributor_id'] = $user->suppliar_id;
 			redirect("index.php");
@@ -79,7 +94,6 @@ class User extends Objects {
 	  $count = $stmt->rowCount();
 	  return ($count > 0)? true : false;
 	}
-
 
 	//check email if it is alrady sign up
 	public function checkEmail($email)

@@ -58,7 +58,7 @@ $totalRecordwithFilter = $stmt->fetch()['allcount'];
 
 ## Fetch records with join
 $sqlFetch = "
-    SELECT i.*,
+    SELECT suppliar_id, customer_id, i.*,
         u2.name AS distributor_name,
         GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR ', ') AS items_summary
     FROM invoice i
@@ -84,14 +84,24 @@ $records = $stmt->fetchAll();
 
 ## Format data for DataTables
 $data = [];
+
+function getSuppliarCode($name) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT suppliar_code FROM suppliar WHERE id = :id LIMIT 1");
+    $stmt->bindValue(':id', $name, PDO::PARAM_INT);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ? $row['suppliar_code'] : null;
+}
+
 foreach ($records as $row) {
     if (empty($row['items_summary']) || $row['net_total'] == 0) {
         continue;
     }
     $data[] = [
         "invoice_number"   => $row['invoice_number'],
-        "customer_name"    => $row['customer_name'],
-        "distributor_name" => $row['distributor_name'],
+        "customer_name"    => $row['customer_name'] . ' - ' . getSuppliarCode($row['customer_id']),
+        "distributor_name" => $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']),
         "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),
         "order_date"       => $row['order_date'],
         "items_summary"    => $row['items_summary'],

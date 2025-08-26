@@ -45,11 +45,10 @@
           ">
             <thead style="background-color: #2563eb; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
               <tr>
-                <th style="padding: 16px 20px; border-bottom: none; border-top-left-radius: 12px; font-size: 11px;">No</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Judul</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; width:150px;">Judul</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; width: 500px;">Isi Berita</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Publikasi</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Dibuat</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;width:100px;">Tanggal Publikasi</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;width:100px;">Tanggal Dibuat</th>
                  <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Aksi</th>
               </tr>
             </thead>

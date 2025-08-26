@@ -87,6 +87,55 @@ foreach ($empRecords as $row) {
         continue;
     }
 
+    $actionButtons = '';
+    if ($isAdmin && strtolower($row['status']) == "pending") {
+        $actionButtons = '
+            <div style="display:flex; gap:8px;">
+                <button 
+                    type="button" 
+                    class="btn-open-form" 
+                    data-id="'.$row['po_id'].'" 
+                    data-invoice="'.$row['invoice_number'].'"
+                    data-object=\''.json_encode($row, JSON_HEX_APOS | JSON_HEX_QUOT).'\'
+                    style="
+                        background-color:#007bff;
+                        color:#fff;
+                        border:none;
+                        padding:6px 14px;
+                        border-radius:6px;
+                        font-size:14px;
+                        cursor:pointer;
+                        transition:background 0.3s ease;
+                    "
+                    onmouseover="this.style.backgroundColor=\'#0069d9\'" 
+                    onmouseout="this.style.backgroundColor=\'#007bff\'"
+                >
+                    Proses
+                </button>
+
+                <button 
+                    type="button" 
+                    class="btn-reject" 
+                    data-id="'.$row['po_id'].'"
+                    style="
+                        background-color:#dc3545;
+                        color:#fff;
+                        border:none;
+                        padding:6px 14px;
+                        border-radius:6px;
+                        font-size:14px;
+                        cursor:pointer;
+                        transition:background 0.3s ease;
+                    "
+                    onmouseover="this.style.backgroundColor=\'#c82333\'" 
+                    onmouseout="this.style.backgroundColor=\'#dc3545\'"
+                >
+                    Tolak
+                </button>
+            </div>
+        ';
+    }
+
     $rowData = array(
         "id" => $row['invoice_number'] ?: $row['po_id'],
         "suppliar_id" => $row['suppliar_name'],
@@ -95,11 +144,7 @@ foreach ($empRecords as $row) {
         "items_summary" => $row['items_summary'],
         "created_at" => $row['created_at'],
         "approved_at" => $row['approved_at'],
-        "action" => $isAdmin && strtolower($row['status']) == "pending"  ? '
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-success btn-sm btn-approve" data-id="'.$row['po_id'].'"><i class="fas fa-check"></i> Setuju</button>
-                <button type="button" class="btn btn-danger btn-sm ml-2 btn-reject" data-id="'.$row['po_id'].'"><i class="fas fa-times"></i> Tolak</button>
-            </div>' : ''
+        "action" => $actionButtons
     );
 
     $data[] = $rowData;

@@ -23,16 +23,17 @@ if ($role_id > 1 && $role_id != 10) {
     $filterParams['distributor_id'] = $distributor_id;
 }
 
-## Search 
-$searchQuery = " ";
+$searchQuery = "";
 if ($searchValue != '') {
-    $searchQuery = " AND (product_id LIKE :product_id OR 
-        suppliar_id LIKE :suppliar_id OR 
-        stock LIKE :stock ) ";
+    $searchQuery = " AND (
+        product_name LIKE :search OR
+        suppliar_name LIKE :search OR
+        CAST(product_id AS CHAR) LIKE :search OR
+        CAST(suppliar_id AS CHAR) LIKE :search OR
+        CAST(stock AS CHAR) LIKE :search
+    ) ";
     $searchArray = array(
-        'product_id' => "%$searchValue%",
-        'suppliar_id' => "%$searchValue%",
-        'stock' => "%$searchValue%"
+        'search' => "%$searchValue%"
     );
 }
 

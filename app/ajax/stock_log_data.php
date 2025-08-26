@@ -83,11 +83,20 @@ $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Format data untuk DataTables
 $data = [];
 foreach ($logs as $log) {
+      if ($log['note'] == "Initial stock added") {
+        $actionType = "Create";
+    } elseif ($log['old_quantity'] < $log['new_quantity']) {
+        $actionType = "Add";
+    } elseif ($log['old_quantity'] > $log['new_quantity']) {
+        $actionType = "Minus";
+    } else {
+        $actionType = "-"; // kalau sama persis, fallback
+    }
     $changedByName = getSuppliarName($pdo, $log['changed_by']);
     $data[] = [
         "suppliar_name" => $log['suppliar_name'],
         "product_name" => $log['product_name'],
-        "action_type" => ucfirst($log['action_type']),
+        "action_type" => $actionType,
         "old_quantity" => $log['old_quantity'],
         "new_quantity" => $log['new_quantity'],
         "changed_by" => $changedByName ?? '-',

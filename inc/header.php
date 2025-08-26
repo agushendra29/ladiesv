@@ -18,7 +18,7 @@ if ($distributor_id) {
     $suppliar = $stmt->fetch(PDO::FETCH_OBJ);
 }
 
-$userRole = $_SESSION['user_role'] ?? 'Guest';
+$userRole = $_SESSION['name'] ?? 'Guest';
 $roleId = $_SESSION['role_id'] ?? 'User';
 
 $roleNames = [

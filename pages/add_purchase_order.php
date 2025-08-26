@@ -22,7 +22,21 @@ $products = $obj->all('products');
                 <select name="product_id[]" class="form-control select2 product-select" required style="border-radius: 8px;">
                   <option disabled selected>Pilih produk</option>
                   <?php foreach ($products as $product): ?>
-                    <option value="<?= $product->id ?>" data-price="<?= $product->sell_price_hd ?>">
+                    <?php
+    $role_id = $_SESSION['role_id'];
+    $price = 0;
+
+    if ($role_id == 2) {
+        $price = $product->sell_price_hd;
+    } elseif ($role_id == 3) {
+        $price = $product->sell_price_d;
+    } elseif ($role_id == 4) {
+        $price = $product->sell_price_a;
+    } elseif ($role_id == 5) {
+        $price = $product->sell_price_r;
+    }
+  ?>
+                    <option value="<?= $product->id ?>" data-price="<?= $price ?>">
                       <?= $product->product_name ?>
                     </option>
                   <?php endforeach; ?>
@@ -91,6 +105,7 @@ $products = $obj->all('products');
 <!-- Select2 CDN -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
   function initSelect2() {

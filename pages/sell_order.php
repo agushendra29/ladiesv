@@ -43,8 +43,8 @@
             <thead style="background-color: #2563eb; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
               <tr>
                 <th style="padding: 16px 20px; border-bottom: none; border-top-left-radius: 12px; font-size: 11px;">No Invoice</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Nama Distributor</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Nama Customer</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">DiProses Oleh</th>
+                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">DiPesan Oleh</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Total Bayar</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Penjualan</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Produk</th>

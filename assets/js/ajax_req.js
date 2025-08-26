@@ -1,3 +1,4 @@
+let currentPO = null;
 $("#editCatForm").submit(function (e) {
     e.preventDefault();
     var t = $("#editCatForm").serialize();
@@ -389,6 +390,69 @@ $(document).on("click", "#newsDelete_btn", function (e) {
         }
       );
   }),
+  $("#approveForm").on("submit", function (e) {
+    e.preventDefault();
+
+    // tampilkan konfirmasi SweetAlert
+    Swal.fire({
+        title: "Approve Purchase Order?",
+      html: `
+  <div style="text-align:left; font-size:14px; line-height:1.6; font-family:Arial, sans-serif;">
+    <table style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td style="font-weight:bold; padding:4px 8px; width:120px;">Invoice</td>
+        <td style="padding:4px 8px;">${currentPO?.invoice_number ?? "-"}</td>
+      </tr>
+      <tr>
+        <td style="font-weight:bold; padding:4px 8px;">Nama Pemesan</td>
+        <td style="padding:4px 8px;">${currentPO?.suppliar_name ?? "-"}</td>
+      </tr>
+      <tr>
+        <td style="font-weight:bold; padding:4px 8px;">Total</td>
+        <td style="padding:4px 8px;">Rp ${parseInt(currentPO?.total_amount).toLocaleString('de-DE') ?? "0"}</td>
+      </tr>
+    </table>
+
+    <div style="margin-top:12px; font-weight:bold;">Produk Dipesan:</div>
+    <ul style="margin:6px 0 0 20px; padding:0;">
+      ${
+        currentPO?.items_summary
+          ? currentPO.items_summary
+              .split(",")
+              .map(item => `<li style="margin:3px 0;">${item.trim()}</li>`)
+              .join("")
+          : "<li>-</li>"
+      }
+    </ul>
+  </div>
+`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Approve",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: "app/action/approve_purchase_order.php",
+                data: $("#approveForm").serialize(),
+                success: function (response) {
+                    if (response.status === true) {
+                        Swal.fire("Berhasil!", "Purchase Order berhasil di-approve.", "success");
+                        $("#approveModal").modal("hide");
+                        $("#approveForm")[0].reset();
+                        $("#purchaseOrderTable").DataTable().ajax.reload();
+                    } else {
+                        Swal.fire("Gagal!", response.message, "error");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server.", "error");
+                },
+            });
+        }
+    });
+}),
   $(document).on("click", ".btn-approve", function () {
     const orderId = $(this).data("id");
     const suppliarId = $(this).data("suppliar-id");
@@ -414,6 +478,25 @@ $(document).on("click", "#newsDelete_btn", function (e) {
       });
     }
   }),
+   $(document).on('click', '.btn-open-form', function() {
+    let poId = $(this).data('id');
+    let invoice = $(this).data('invoice');
+    let obj = $(this).data('object');
+     if (typeof obj === "string") {
+        try {
+            obj = JSON.parse(obj);
+        } catch (e) {
+            console.error("Data-object bukan JSON valid:", obj);
+            obj = {};
+        }
+    }
+
+    currentPO = obj; // simpan object ke global variable
+    console.log("Current PO:", currentPO); // cek di console
+    $('#approveModal #approve_po_id').val(poId);
+    $('#approveModal #invoice_number').text(invoice);
+    $('#approveModal').modal('show');
+}),
   $(document).on("click", ".btn-reject", function () {
     const orderId = $(this).data('id');
     if (confirm("Apakah Anda yakin ingin menolak pesanan ini?")) {
@@ -491,5 +574,35 @@ $(document).on("click", "#newsDelete_btn", function (e) {
     error: function() {
       alert('Terjadi kesalahan pada server.');
     }
+    });
+}),$(document).on('click', '.newsTogglePublish_btn', function() {
+    var id = $(this).data('id');
+    var action = $(this).data('action');
+
+    // Pesan konfirmasi dinamis
+    var confirmMsg = (action === 'publish') 
+        ? "Apakah kamu yakin ingin mempublish berita ini?" 
+        : "Apakah kamu yakin ingin menyembunyikan berita ini?";
+
+    if (!confirm(confirmMsg)) {
+        return; // batal
+    }
+
+    $.ajax({
+        url: 'app/action/toogle_isactive.php',
+        type: 'POST',
+        data: { id: id, action: action },
+        success: function(response) {
+            var res = JSON.parse(response);
+            if (res.status === 'success') {
+                alert('Status berhasil diupdate!');
+                $('#newsTable').DataTable().ajax.reload(null, false); 
+            } else {
+                alert('Gagal update status');
+            }
+        },
+        error: function() {
+            alert('Terjadi kesalahan pada server.');
+        }
     });
 });

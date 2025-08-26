@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <div class="mt-5">
   <section class="content">
     <div class="container-fluid">
@@ -38,7 +40,6 @@
             <div class="col-md-12" style="margin-bottom: 24px;">
               <label for="p_suppliar" style="font-weight: 600; display: block; margin-bottom: 8px;">Distributor / Agen *</label>
               <select name="p_suppliar" id="p_suppliar" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;">
-                <option disabled selected>Pilih Distributor/Agen</option>
                 <?php 
                   $all_sup = $obj->all('suppliar');
                   foreach ($all_sup as $catagory) {
@@ -66,3 +67,13 @@
     </div>
   </section>
 </div>
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+  new Choices("#p_suppliar", {
+    searchEnabled: true,   // aktifkan fitur search
+    itemSelectText: '',    // hilangkan tulisan "Press to select"
+    shouldSort: false,     // biar urutan option asli tidak berubah
+    placeholderValue: "Pilih Distributor/Agen"
+  });
+});
+</script>

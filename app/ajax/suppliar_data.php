@@ -36,14 +36,21 @@ if ($_SESSION['role_id'] == 10) {
 
 
 if ($searchValue != '') {
-    $searchQuery .= " AND (suppliar_code LIKE :suppliar_code 
-        OR name LIKE :name 
-        OR con_num LIKE :con_num)";
-    $searchArray = array(
-        'suppliar_code' => "%$searchValue%",
-        'name' => "%$searchValue%",
-        'con_num' => "%$searchValue%"
-    );
+    if ($_SESSION['role_id'] == 10 && strtolower($searchValue) == 'suspend') {
+        // Khusus Super Admin -> cari user suspend
+        $searchQuery .= " AND is_active = 0 ";
+        $searchArray = []; // kosong, karena kita tidak pakai LIKE
+    } else {
+        // Normal search
+        $searchQuery .= " AND (suppliar_code LIKE :suppliar_code 
+            OR name LIKE :name 
+            OR con_num LIKE :con_num)";
+        $searchArray = array(
+            'suppliar_code' => "%$searchValue%",
+            'name' => "%$searchValue%",
+            'con_num' => "%$searchValue%"
+        );
+    }
 }
 ## Total number of records without filtering
 if ($_SESSION['role_id'] == 10) {
@@ -140,6 +147,15 @@ foreach ($empRecords as $row) {
    <i class="fas ' . ($row['is_active'] == 1 ? 'fa-toggle-off' : 'fa-toggle-on') . '" style="font-size:14px;"></i> 
    ' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '
 </button>
+<form action="app/action/reset_password.php" method="post" style="display:inline;">
+            <input type="hidden" name="username" value="' . $row['suppliar_code'] . '">
+            <input type="hidden" name="nik_last6" value="' . substr($row['nik'], -6) . '">
+            <button type="submit" class="btn btn-danger btn-sm" 
+                style="color:white;padding: 4px 8px; font-size: 10px; display:flex; align-items:center; justify-content:center;background:red;"
+                onclick="return confirm(\'Yakin reset password ' . $row['name'] . '?\')">
+                <i class="fas fa-key" style="font-size:12px;"></i> <span style="font-size:12px; padding-left:4px;">Reset</span>
+            </button>
+        </form>
 
     </div>
 ' : '',
