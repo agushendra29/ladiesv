@@ -52,6 +52,11 @@
               <input type="number" class="form-control" id="jumlah_point" name="jumlah_point" placeholder="Jumlah point"
                 style="border-radius: 8px;" required min="0" step="1">
             </div>
+            <div class="col-md-6 mb-3">
+              <label for="jumlah_point" style="font-weight: 500;">Maksimal Redeem *</label>
+              <input type="number" class="form-control" id="max_redeem" name="max_redeem" placeholder="Maksimal Redeem"
+                style="border-radius: 8px;" required min="0" step="1">
+            </div>
           </div>
 
           <div class="row mt-4">
@@ -91,3 +96,4 @@
     </div>
   </section>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

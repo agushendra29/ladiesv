@@ -2,17 +2,32 @@
 $distributor_id = $_SESSION['distributor_id'];
 $products = $obj->all('products');
 function getStockProduct($pid) {
-    global $obj, $distributor_id; 
-    $stockData = $obj->allCondition(
-        'distributor_stocks', 
-        "product_id = ? AND suppliar_id = ?", 
-        [$pid, $distributor_id]
-    );
+    global $obj, $distributor_id;
+
+    // cek role
+    $role_id = $_SESSION['role_id'] ?? null;
+
+    if ($role_id == 10) {
+        // Super Admin → ambil dari supplier_id = 1
+        $stockData = $obj->allCondition(
+            'distributor_stocks', 
+            "product_id = ? AND suppliar_id = ?", 
+            [$pid, 1]
+        );
+    } else {
+        // Default → ambil dari distributor_stocks
+        $stockData = $obj->allCondition(
+            'distributor_stocks', 
+            "product_id = ? AND suppliar_id = ?", 
+            [$pid, $distributor_id]
+        );
+    }
 
     if (!empty($stockData)) {
-        return $stockData[0]->stock; 
+        // pastikan ambil sesuai struktur data (array assoc atau object)
+        return is_array($stockData[0]) ? $stockData[0]['stock'] : $stockData[0]->stock;
     }
-    return 0; 
+    return 0;
 }
 ?>
 

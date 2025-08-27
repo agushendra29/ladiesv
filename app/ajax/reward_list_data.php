@@ -35,14 +35,36 @@ if (count($rows) > 0) {
         $periode = htmlspecialchars($row['periode_hadiah_dari']) . " s/d " . htmlspecialchars($row['periode_hadiah_sampai']);
         $roleName = getRoleName($row['role_id']);
 
+        // Tombol Hide / Unhide
+        if ($row['is_active'] == 1) {
+            $toggleBtn = "<button class='btn btn-sm btn-outline-secondary hideReward' data-id='{$row['id']}' data-status='0' title='Sembunyikan'>
+                            <i class='fas fa-eye-slash'></i>
+                          </button>";
+        } else {
+            $toggleBtn = "<button class='btn btn-sm btn-outline-success unhideReward' data-id='{$row['id']}' data-status='1' title='Tampilkan'>
+                            <i class='fas fa-eye'></i>
+                          </button>";
+        }
+
         echo "<tr>
-            <td>" . ($index + 1) . "</td>
-            <td>" . htmlspecialchars($row['nama_reward']) . "</td>
-            <td>{$periode}</td>
-            <td>{$roleName}</td>
-            <td>" . htmlspecialchars($row['jumlah_point']) . "</td>
-        </tr>";
+    <td>" . ($index + 1) . "</td>
+    <td>" . htmlspecialchars($row['nama_reward']) . "</td>
+    <td>{$periode}</td>
+    <td>{$roleName}</td>
+    <td>" . htmlspecialchars($row['jumlah_point']) . "</td>
+    <td>" . htmlspecialchars($row['max_redeem']) . "</td>
+    <td>
+        <a href='index.php?page=edit_reward&edit_id={$row['id']}' class='btn btn-sm btn-outline-warning' title='Edit'>
+            <i class='fas fa-edit'></i>
+        </a>
+        <button class='btn btn-sm btn-outline-danger deleteReward' data-id='{$row['id']}' title='Hapus'>
+            <i class='fas fa-trash'></i>
+        </button>
+        {$toggleBtn}
+    </td>
+</tr>";
+
     }
 } else {
-    echo "<tr><td colspan='5' class='no-data'>Tidak ada data ditemukan.</td></tr>";
+    echo "<tr><td colspan='6' class='no-data'>Tidak ada data ditemukan.</td></tr>";
 }

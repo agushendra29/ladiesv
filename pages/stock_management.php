@@ -97,6 +97,7 @@
                 <th style="padding: 16px 20px; font-size: 11px;">Distributor</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Produk</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Aksi</th>
+        <th style="padding: 16px 20px; font-size: 11px;">+/-</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Jumlah Sebelumnya</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Jumlah Baru</th>
                 <th style="padding: 16px 20px; font-size: 11px;">Diubah Oleh</th>

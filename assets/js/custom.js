@@ -397,32 +397,71 @@ $("#empTable").DataTable({
         periode_hadiah_dari = $("#periode_hadiah_dari").val(),
         periode_hadiah_sampai = $("#periode_hadiah_sampai").val(),
         role_id = $("#role_id").val(),
-        jumlah_point = $("#jumlah_point").val();
+        jumlah_point = $("#jumlah_point").val(),
+        max_redeem = $("#max_redeem").val();
 
-    if (nama_reward !== "" && periode_hadiah_dari !== "" && periode_hadiah_sampai !== "" && role_id !== "" && jumlah_point !== "") {
-        var formData = $("#addReward").serialize();
-        $.ajax({
-            type: "POST",
-            url: "app/action/add_reward.php",
-            data: formData,
-            success: function (res) {
-                if ($.trim(res) === "Reward berhasil disimpan.") {
-                    $("#rewardErrorArea").css("border-color", "green").show();
-                    $("#rewardErrorMessage").html(res).css("color", "green");
-                    $("#addReward")[0].reset();
-                } else {
-                    $("#rewardErrorArea").css("border-color", "red").show();
-                    $("#rewardErrorMessage").html(res).css("color", "red");
-                }
-            },
-            error: function () {
-                $("#rewardErrorArea").css("border-color", "red").show();
-                $("#rewardErrorMessage").html("Terjadi kesalahan pada server.").css("color", "red");
+    if (
+        nama_reward !== "" &&
+        periode_hadiah_dari !== "" &&
+        periode_hadiah_sampai !== "" &&
+        role_id !== "" &&
+        jumlah_point !== "" &&
+        max_redeem !== ""
+    ) {
+        // Konfirmasi sebelum submit
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data reward akan disimpan.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, simpan!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = $("#addReward").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "app/action/add_reward.php",
+                    data: formData,
+                    success: function (res) {
+                        if ($.trim(res) === "Reward berhasil disimpan.") {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Berhasil!",
+                                text: res,
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $("#addReward")[0].reset();
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Gagal!",
+                                text: res,
+                                confirmButtonText: "OK"
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Terjadi kesalahan pada server.",
+                            confirmButtonText: "Coba Lagi"
+                        });
+                    }
+                });
             }
         });
     } else {
-        $("#rewardErrorArea").css("border-color", "red").show();
-        $("#rewardErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
+        Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Silakan isi semua field yang diperlukan.",
+            confirmButtonText: "OK"
+        });
     }
 }),$("#salesForm").submit(function (e) {
     e.preventDefault();
@@ -488,7 +527,7 @@ $("#empTable").DataTable({
     // 🔔 Build HTML konfirmasi
    let confirmHtml = `
   <div style="text-align:left; font-size:14px;">
-    <p><b>Pembeli:</b> ${buyerName} <br><b>ID:</b> ${buyerCode}</p>
+    <p><b>Pembeli:</b> ${buyerName} <br><b>ID Anggota:</b> ${buyerCode}</p>
     <hr style="margin:10px 0;">
     
     <table style="width:100%; border-collapse:collapse; font-size:13px;">
@@ -660,6 +699,17 @@ $("#empTable").DataTable({
         },
         {
             "data": "new_quantity"
+        },
+        { 
+            data: "difference",
+            render: function (data, type, row) {
+                if (row.difference_raw > 0) {
+                    return '<span style="color:green; font-weight:bold;">' + data + '</span>';
+                } else if (row.difference_raw < 0) {
+                    return '<span style="color:red; font-weight:bold;">' + data + '</span>';
+                }
+                return '<span style="color:gray;">' + data + '</span>';
+            }
         },
         {
             "data": "changed_by"

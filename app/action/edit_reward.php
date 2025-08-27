@@ -2,14 +2,15 @@
 require_once '../init.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id                   = $_POST['id'] ?? null;
     $nama_reward           = trim($_POST['nama_reward'] ?? '');
     $periode_hadiah_dari   = trim($_POST['periode_hadiah_dari'] ?? '');
     $periode_hadiah_sampai = trim($_POST['periode_hadiah_sampai'] ?? '');
     $role_id               = trim($_POST['role_id'] ?? '');
     $jumlah_point          = trim($_POST['jumlah_point'] ?? '');
-    $max_redeem = trim($_POST['max_redeem'] ?? '');
+    $max_redeem            = trim($_POST['max_redeem'] ?? '');
 
-    if ($nama_reward !== '' && $periode_hadiah_dari !== '' && $periode_hadiah_sampai !== '' && $role_id !== '' && $jumlah_point !== '') {
+    if ($id && $nama_reward !== '' && $periode_hadiah_dari !== '' && $periode_hadiah_sampai !== '' && $role_id !== '' && $jumlah_point !== '') {
         try {
             $pdo->beginTransaction();
 
@@ -19,18 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'periode_hadiah_sampai' => $periode_hadiah_sampai,
                 'role_id'               => $role_id,
                 'jumlah_point'          => $jumlah_point,
-                'max_redeem' => $max_redeem,
-                'created_at'            => date('Y-m-d H:i:s'),
-                'is_active' => 1 
+                'max_redeem'            => $max_redeem,
+                'updated_at'            => date('Y-m-d H:i:s')
             ];
 
-            $obj->create('rewards', $rewardData);
+            $obj->update('rewards', $rewardData, ['id' => $id]);
 
             $pdo->commit();
-            echo 'Reward berhasil disimpan.';
+            echo 'Reward berhasil diupdate.';
         } catch (Exception $e) {
             $pdo->rollBack();
-            echo 'Gagal menyimpan reward: ' . $e->getMessage();
+            echo 'Gagal update reward: ' . $e->getMessage();
         }
     } else {
         echo 'Silakan lengkapi semua field.';

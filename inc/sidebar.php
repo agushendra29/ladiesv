@@ -219,7 +219,7 @@
         " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
           onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'reward_list') ? '#2563eb' : '#374151' ?>'">
           <i class="material-symbols-outlined" style="font-size:22px;">star</i>
-          <span>Daftar Hadiah</span>
+          <span>Promo Rewards</span>
         </a>
       </li>
       <!-- Reports -->

@@ -96,6 +96,17 @@ foreach ($logs as $log) {
     } else {
         $actionType = "-"; // kalau sama persis, fallback
     }
+
+
+    $difference = $log['new_quantity'] - $log['old_quantity'];
+if ($difference > 0) {
+    $differenceFormatted = '+' . $difference;
+} elseif ($difference < 0) {
+    $differenceFormatted = (string)$difference; // otomatis minus
+} else {
+    $differenceFormatted = '0';
+}
+
     $changedByName = getSuppliarName($pdo, $log['changed_by']);
     $data[] = [
         "suppliar_name" => $log['suppliar_name'],
@@ -105,6 +116,8 @@ foreach ($logs as $log) {
         "new_quantity" => $log['new_quantity'],
         "changed_by" => $changedByName ?? '-',
         "created_at" => $log['created_at'],
+          "difference"    => $differenceFormatted, // ✅ buat ditampilkan
+    "difference_raw"=> $difference,          // ✅ angka murni
         "note" => $log['note']
     ];
 }

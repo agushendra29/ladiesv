@@ -181,6 +181,82 @@ $("#editCatForm").submit(function (e) {
       }
     );
   }
+}),$("#editRewardForm").submit(function (e) {
+  e.preventDefault();
+
+  var t = $("#editRewardForm").serialize();
+
+  // ubah string query jadi object
+  var payload = {};
+  t.split("&").forEach(function (item) {
+    var parts = item.split("=");
+    payload[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
+  });
+
+  let confirmHtml = `
+    <div style="text-align:left">
+      <p><b>Nama Reward:</b> ${payload.nama_reward || '-'}</p>
+      <p><b>Role:</b> ${$("#role_id option:selected").text() || '-'}</p>
+      <p><b>Periode Dari:</b> ${payload.periode_hadiah_dari || '-'}</p>
+      <p><b>Periode Sampai:</b> ${payload.periode_hadiah_sampai || '-'}</p>
+      <p><b>Jumlah Point:</b> ${payload.jumlah_point || '-'}</p>
+      <p><b>Maksimal Redeem:</b> ${payload.max_redeem || '-'}</p>
+      <hr>
+      <p style="color:red; font-weight:bold;">
+        PERUBAHAN DATA YANG SUDAH DISIMPAN TIDAK DAPAT DIBATALKAN.
+      </p>
+      <p>Jika data ini sudah benar, silahkan dilanjutkan.</p>
+    </div>
+  `;
+
+  Swal.fire({
+    title: "Konfirmasi Perubahan",
+    html: confirmHtml,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Simpan",
+    cancelButtonText: "Batal"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: "POST",
+        url: "app/action/edit_reward.php", // file proses update reward
+        data: t,
+        success: function (res) {
+          Swal.fire("Sukses", "Reward berhasil diubah", "success").then(() => {
+            window.location.href = "index.php?page=reward_list";
+          });
+        },
+        error: function () {
+          Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");
+        }
+      });
+    }
+  });
+}),
+$(document).on('click', '.hideReward, .unhideReward', function() {
+    var btn = $(this);
+    var id = btn.data('id');
+    var status = btn.data('status');
+
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: status == 1 ? "Tampilkan reward ini?" : "Sembunyikan reward ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post('app/action/reward_toogle.php', { id: id, status: status }, function(res) {
+                Swal.fire('Sukses', res, 'success').then(() => {
+                    location.reload(); // refresh halaman agar status tombol berubah
+                });
+            }).fail(function() {
+                Swal.fire('Error', 'Terjadi kesalahan saat mengubah status', 'error');
+            });
+        }
+    });
 }),
 $(document).on("click", "#newsDelete_btn", function (e) {
     e.preventDefault(),

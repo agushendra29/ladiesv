@@ -60,7 +60,7 @@ $totalRecordwithFilter = $stmt->fetch()['allcount'];
 $sqlFetch = "
     SELECT suppliar_id, customer_id, i.*,
         u2.name AS distributor_name,
-        GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR ', ') AS items_summary
+        GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR '||') AS items_summary
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
     LEFT JOIN invoice_details d ON i.id = d.invoice_no
@@ -98,13 +98,14 @@ foreach ($records as $row) {
     if (empty($row['items_summary']) || $row['net_total'] == 0) {
         continue;
     }
+       $itemsSummary = str_replace('||', '<br>', $row['items_summary']);
     $data[] = [
         "invoice_number"   => $row['invoice_number'],
         "customer_name"    => $row['customer_name'] . ' - ' . getSuppliarCode($row['customer_id']),
         "distributor_name" => $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']),
         "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),
         "order_date"       => $row['order_date'],
-        "items_summary"    => $row['items_summary'],
+        "items_summary"    => $itemsSummary,
     ];
 }
 
