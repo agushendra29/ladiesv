@@ -34,9 +34,11 @@ if ($_SESSION['role_id'] == 10) {
     $searchQuery = " WHERE is_active = 1";
 }
 
+$searchValueLower = strtolower($searchValue);
+ $suspendKeywords = ['sus', 'susp', 'suspe', 'suspen', 'suspend'];
 
 if ($searchValue != '') {
-    if ($_SESSION['role_id'] == 10 && strtolower($searchValue) == 'suspend') {
+    if ($_SESSION['role_id'] == 10 && in_array($searchValueLower, $suspendKeywords)) {
         // Khusus Super Admin -> cari user suspend
         $searchQuery .= " AND is_active = 0 ";
         $searchArray = []; // kosong, karena kita tidak pakai LIKE

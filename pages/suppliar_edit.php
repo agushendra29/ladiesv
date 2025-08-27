@@ -114,6 +114,21 @@
           <?php endif; ?>
         </div>
 
+        
+
+        <div style="grid-column: 1 / -1;">
+          <label for="address_ktp" style="font-weight: 600; color: #334155;">Alamat (Diisi Sesuai KTP) <span
+              style="color:#ef4444;">*</span></label>
+          <textarea id="address_ktp" name="address_ktp" rows="3" required
+            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address_ktp); ?></textarea>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label for="address" style="font-weight: 600; color: #334155;">Alamat Pengiriman <span
+              style="color:#ef4444;">*</span></label>
+          <textarea id="address" name="address" rows="3" required
+            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address); ?></textarea>
+        </div>
         <div>
   <label for="provinsi" style="font-weight:600; color:#334155;">Provinsi <span style="color:#ef4444;">*</span></label>
   <select id="provinsi" name="provinsi" required
@@ -129,20 +144,6 @@
     <option value="">-- Pilih Kota / Kabupaten --</option>
   </select>
 </div>
-
-        <div style="grid-column: 1 / -1;">
-          <label for="address_ktp" style="font-weight: 600; color: #334155;">Alamat (Diisi Sesuai KTP) <span
-              style="color:#ef4444;">*</span></label>
-          <textarea id="address_ktp" name="address_ktp" rows="3" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address_ktp); ?></textarea>
-        </div>
-
-        <div style="grid-column: 1 / -1;">
-          <label for="address" style="font-weight: 600; color: #334155;">Alamat Pengiriman <span
-              style="color:#ef4444;">*</span></label>
-          <textarea id="address" name="address" rows="3" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address); ?></textarea>
-        </div>
 
         <div style="position: relative; margin-bottom: 16px;">
           <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>

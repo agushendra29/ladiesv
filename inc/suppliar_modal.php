@@ -102,7 +102,23 @@
                 </select>
               </div>
             </div>
-           <div class="col-md-12 col-lg-12 mb-4">
+           
+
+            <div class="col-md-12 col-lg-12">
+              <div class="form-group">
+                <label for="supaddressktp">Alamat (Diisi Sesuai KTP):</label>
+                <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai ktp" id="supaddressktp"
+                  name="supaddressktp"></textarea>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+              <div class="form-group">
+                <label for="supaddress">Alamat Pengiriman:</label>
+                <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai tempat domisili"
+                  id="supaddress" name="supaddress"></textarea>
+              </div>
+            </div>
+              <div class="col-md-12 col-lg-12 mb-4">
               <label for="sup_provinsi" style="font-weight: 600; color: #334155;">Provinsi <span
                   style="color:#ef4444;">*</span></label>
               <select id="sup_provinsi" name="sup_provinsi" required
@@ -118,22 +134,6 @@
                 style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
                 <option value="" disabled selected>-- Pilih Kota/Kabupaten --</option>
               </select>
-            </div>
-
-            <div class="col-md-12 col-lg-12">
-              <div class="form-group">
-                <label for="supaddressktp">Alamat (Diisi Sesuai KTP):</label>
-                <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai ktp" id="supaddressktp"
-                  name="supaddressktp"></textarea>
-              </div>
-            </div>
-
-            <div class="col-md-12 col-lg-12">
-              <div class="form-group">
-                <label for="supaddress">Alamat Pengiriman:</label>
-                <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai tempat domisili"
-                  id="supaddress" name="supaddress"></textarea>
-              </div>
             </div>
           </div>
 
