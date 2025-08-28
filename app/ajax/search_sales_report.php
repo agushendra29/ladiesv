@@ -42,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dataSql = "
         SELECT th.*, 
                s1.name AS suppliar_name, 
-               s2.name AS customer_name
+               s2.name AS customer_name,
+               s2.suppliar_code AS customer_code
         FROM transaction_histories th
         LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
         LEFT JOIN suppliar s2 ON th.customer_id = s2.id
@@ -69,12 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (strtolower($data->type) === 'refund') {
               $quantityDisplay = "<span style='color:red;'>-" . $data->quantity . "</span>";
             }
+
             $dateFormatted = date('d-m', strtotime($data->created_at));
             echo "<tr>
                 <td>{$dateFormatted}</td>
                 <td>{$data->invoice_number}</td>
                 <td>{$data->type}</td>
-                <td>".htmlspecialchars($data->customer_name ?? 'Penjualan Pribadi'). "</td> 
+ <td>" . (!empty($data->customer_name) 
+        ? htmlspecialchars($data->customer_name . " - " . $data->customer_code) 
+        : "Penjualan Pribadi") . "</td>
                 <td>{$quantityDisplay}</td>
                 <td>".htmlspecialchars($data->note)."</td>
             </tr>";

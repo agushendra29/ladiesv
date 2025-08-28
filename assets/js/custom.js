@@ -30,26 +30,6 @@ $("#empTable").DataTable({
     }, {
         data: "action"
     }]
-}), $("#suppliarTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/suppliar_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "name"
-    }, {
-        data: "address"
-    }, {
-        data: "con_num"
-    }, {
-        data: "role_id"
-    }, {
-        data: "action"
-    }]
 }), $("#staffTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -291,6 +271,9 @@ $("#empTable").DataTable({
     payload[item.name] = item.value;
   });
 
+  let provName = $("#sup_provinsi option:selected").text();
+  let kotaName = $("#sup_kota option:selected").text();
+
   // Buat HTML konfirmasi
   let confirmHtml = `
     <div style="text-align:left">
@@ -300,6 +283,8 @@ $("#empTable").DataTable({
       <p><b>No HP:</b> ${payload.sup_contact || '-'}</p>
       <p><b>Alamat KTP:</b> ${payload.supaddressktp || '-'}</p>
       <p><b>Alamat Domisili:</b> ${payload.supaddress || '-'}</p>
+      <p><b>Provinsi:</b> ${provName || '-'}</p>
+       <p><b>Kota:</b> ${kotaName || '-'}</p>
       <p><b>Bank:</b> ${payload.sup_bank || '-'}</p>
       <p><b>Nama pada Bank:</b> ${payload.sup_name_bank || '-'}</p>
       <p><b>No. Rekening:</b> ${payload.sup_rekening || '-'}</p>
@@ -1074,6 +1059,9 @@ $("#empTable").DataTable({
 })), $('#combinedForm').on('submit', function(e){
       e.preventDefault();
 
+        let provName = $("#provinsi option:selected").text();
+        let kotaName = $("#kota option:selected").text();
+
       const payload = {};
       $('#combinedForm').find('input, select, textarea').each(function(){
           const name = $(this).attr('name');
@@ -1111,6 +1099,8 @@ $("#empTable").DataTable({
           <p><b>No HP:</b> ${payload.sup_contact}</p>
           <p><b>Alamat KTP:</b> ${payload.supaddressktp}</p>
           <p><b>Alamat Domisili:</b> ${payload.supaddress}</p>
+          <p><b>Provinsi:</b> ${provName}</p>
+          <p><b>Kota:</b> ${kotaName}</p>
           <p><b>Bank:</b> ${payload.sup_bank}</p>
           <p><b>Nama pada Bank:</b> ${payload.sup_name_bank}</p>
           <p><b>No. Rekening:</b> ${payload.sup_rekening}</p>
@@ -1150,8 +1140,9 @@ $("#empTable").DataTable({
                         timer: 2000,
                         showConfirmButton: false
                       }).then(() => {
+                          window.location.href = 'index.php?page=sell_order';
                       });
-                      window.location.href = 'index.php?page=sell_order';
+                    
                   } else {
                       Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
                   }
@@ -1165,6 +1156,31 @@ $("#empTable").DataTable({
       });
 
   });
+  let suppliarTable = $("#suppliarTable").DataTable({
+    processing: true,
+    serverSide: true,
+    serverMethod: "post",
+    ajax: {
+        url: "app/ajax/suppliar_data.php",
+        data: function (d) {
+            d.roleFilter = $("#roleFilter").val() || ""; // kirim roleFilter
+        }
+    },
+    columns: [
+        { data: "id" },
+        { data: "name" },
+        { data: "address" },
+        { data: "con_num" },
+        { data: "role_id" },
+        { data: "created_at" },
+        { data: "action" }
+    ]
+});
+
+// ketika filter berubah → reload table
+$("#roleFilter").on("change", function () {
+    suppliarTable.ajax.reload();
+});
 
 
 

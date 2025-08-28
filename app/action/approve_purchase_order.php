@@ -39,6 +39,13 @@ try {
     $toDistributorId = $orders[0]['suppliar_id']; // distributor tujuan (pemesan)
     $invoice_number = 'INV-' . strtoupper(uniqid());
 
+    function getProductName($pdo, $productId) {
+    $stmt = $pdo->prepare("SELECT product_name FROM products WHERE id = ?");
+    $stmt->execute([$productId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ? $row['product_name'] : null; // return null kalau tidak ada
+}
+
     // ====== 1. Cek semua stok pusat/distributor sumber dulu ======
     foreach ($orders as $o) {
         $productId = $o['product_id'];
@@ -48,11 +55,12 @@ try {
         $stmt->execute(["1", $productId]);
         $fromStock = $stmt->fetch();
 
+         $productName = getProductName($pdo, $productId);
         if (!$fromStock) {
             throw new Exception("Stok tidak ditemukan untuk product_id {$productId}");
         }
         if ($fromStock['stock'] < $qty) {
-            throw new Exception("Stok tidak cukup untuk produk {$productId}. Sisa: {$fromStock['stock']}, permintaan: {$qty}");
+            throw new Exception("Stok tidak cukup untuk produk <b>{$productName}</b>. <br>Sisa: {$fromStock['stock']}, <br>permintaan: {$qty}");
         }
     }
 

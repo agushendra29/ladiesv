@@ -2,27 +2,29 @@
 require_once '../init.php';
 
 ## Read value
-$draw = $_POST['draw'];
-$row = $_POST['start'];
-$rowperpage = $_POST['length']; // Rows display per page
-$columnIndex = $_POST['order'][0]['column']; // Column index
-$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
+$draw            = $_POST['draw'];
+$row             = $_POST['start'];
+$rowperpage      = $_POST['length']; // Rows display per page
+$columnIndex     = $_POST['order'][0]['column']; // Column index
+$columnName      = $_POST['columns'][$columnIndex]['data']; // Column name
 $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
-$searchValue = $_POST['search']['value']; // Search value
-$user_id = $_SESSION['distributor_id'];
+$searchValue     = $_POST['search']['value']; // Search value
+$user_id         = $_SESSION['distributor_id'];
+$roleFilter      = isset($_POST['roleFilter']) ? $_POST['roleFilter'] : '';
 
+$searchArray = [];
 
-$searchArray = array();
-
+## Role-based access
 if ($_SESSION['role_id'] == 10) {
     // Super Admin -> lihat semua
     $searchQuery = " WHERE 1=1 ";
 } elseif ($_SESSION['role_id'] == 1) {
     // HO -> lihat semua kecuali HO & Super Admin
-    $searchQuery = " WHERE role_id != 10 AND role_id != 1";
+    $searchQuery = " WHERE role_id NOT IN (1,10)";
 } elseif ($_SESSION['role_id'] == 2) {
     // HD -> lihat supplier child-nya (anak dari distributor_id ini) yang aktif
-    $searchQuery = " WHERE parent_id = " . intval($_SESSION['distributor_id']) . " AND is_active = 1";
+    $searchQuery = " WHERE parent_id = :parent_id AND is_active = 1";
+    $searchArray['parent_id'] = (int)$_SESSION['distributor_id'];
 } elseif ($_SESSION['role_id'] == 3) {
     // Distributor -> hanya lihat sesama distributor
     $searchQuery = " WHERE role_id = 3 AND is_active = 1";
@@ -34,76 +36,71 @@ if ($_SESSION['role_id'] == 10) {
     $searchQuery = " WHERE is_active = 1";
 }
 
+## Tambahan: filter berdasarkan role dari dropdown
+if (!empty($roleFilter)) {
+    $searchQuery .= " AND role_id = :roleFilter";
+    $searchArray['roleFilter'] = $roleFilter;
+}
+
+## Search (include "suspend" special case)
 $searchValueLower = strtolower($searchValue);
- $suspendKeywords = ['sus', 'susp', 'suspe', 'suspen', 'suspend'];
+$suspendKeywords  = ['sus', 'susp', 'suspe', 'suspen', 'suspend'];
 
 if ($searchValue != '') {
     if ($_SESSION['role_id'] == 10 && in_array($searchValueLower, $suspendKeywords)) {
         // Khusus Super Admin -> cari user suspend
         $searchQuery .= " AND is_active = 0 ";
-        $searchArray = []; // kosong, karena kita tidak pakai LIKE
     } else {
         // Normal search
         $searchQuery .= " AND (suppliar_code LIKE :suppliar_code 
             OR name LIKE :name 
             OR con_num LIKE :con_num)";
-        $searchArray = array(
-            'suppliar_code' => "%$searchValue%",
-            'name' => "%$searchValue%",
-            'con_num' => "%$searchValue%"
-        );
+        $searchArray['suppliar_code'] = "%$searchValue%";
+        $searchArray['name']          = "%$searchValue%";
+        $searchArray['con_num']       = "%$searchValue%";
     }
 }
-## Total number of records without filtering
+
+## Total number of records tanpa filter
 if ($_SESSION['role_id'] == 10) {
-    // Super Admin -> semua data
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar");
-
 } elseif ($_SESSION['role_id'] == 1) {
-    // HO -> semua data kecuali HO & Super Admin
-    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id != 10 AND role_id != 1");
-
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id NOT IN (1,10)");
 } elseif ($_SESSION['role_id'] == 2) {
-    // HD -> hanya child dari distributor_id + aktif
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE parent_id = :parent_id AND is_active = 1");
     $stmt->bindValue(':parent_id', (int)$_SESSION['distributor_id'], PDO::PARAM_INT);
-
 } elseif ($_SESSION['role_id'] == 3) {
-    // Distributor -> hanya sesama distributor
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 AND is_active = 1");
-
 } elseif ($_SESSION['role_id'] == 4) {
-    // Agen -> hanya distributor
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 AND is_active = 1");
-
 } else {
-    // Default -> hanya yang aktif
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE is_active = 1");
 }
-
 $stmt->execute();
-$records = $stmt->fetch();
-$totalRecords = $records['allcount'];
+$totalRecords = $stmt->fetchColumn();
 
-
-## Total number of records with filtering
+## Total number of records dengan filter
 $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar " . $searchQuery);
-$stmt->execute($searchArray);
-$records = $stmt->fetch();
-$totalRecordwithFilter = $records['allcount'];
+foreach ($searchArray as $key => $val) {
+    $stmt->bindValue(':' . $key, $val);
+}
+$stmt->execute();
+$totalRecordwithFilter = $stmt->fetchColumn();
 
-## Fetch records
-$stmt = $pdo->prepare("SELECT * FROM suppliar " . $searchQuery . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit OFFSET :offset");
+## Fetch records data
+$stmt = $pdo->prepare("SELECT * FROM suppliar " . $searchQuery . 
+    " ORDER BY " . $columnName . " " . $columnSortOrder . 
+    " LIMIT :limit OFFSET :offset");
 
-foreach ($searchArray as $key => $search) {
-    $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
+foreach ($searchArray as $key => $val) {
+    $stmt->bindValue(':' . $key, $val);
 }
 $stmt->bindValue(':limit', (int)$rowperpage, PDO::PARAM_INT);
 $stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
 $stmt->execute();
 $empRecords = $stmt->fetchAll();
 
-## Function untuk mapping role_id ke nama role
+## Helper functions
 function getRoleName($role_id) {
     switch ($role_id) {
         case 1: return 'HO';
@@ -115,62 +112,52 @@ function getRoleName($role_id) {
         default: return '-';
     }
 }
-
 function setActive($isActive) {
     return $isActive == 0 ? " (Suspend)" : "";
 }
 
-$data = array();
+## Format response data
+$data = [];
 foreach ($empRecords as $row) {
-    $data[] = array(
-        "id" => getRoleName($row['role_id']) . '-' . $row['suppliar_code'],
-        "name" => $row['name'] . setActive($row['is_active']),
-        "address" => $row['address'],
-        "con_num" => $row['con_num'],
-        "role_id" => getRoleName($row['role_id']),
-       "action" => $_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10 ? '
-    <div class="btn-group" role="group" aria-label="Actions" style="gap:4px;">
-        <!-- Tombol Edit -->
-        <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
-           class="btn btn-primary btn-sm" 
-           style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;"
-           title="Edit">
-           <i class="fas fa-edit" style="font-size:14px;"></i>
-        </a>
-    
-        
-        <!-- Tombol Suspend/Aktifkan -->
-      <button id="suppliarActive_btn" 
-        data-id="' . $row['id'] . '" 
-        data-status="' . $row['is_active'] . '"
-        class="btn btn-warning btn-sm" 
-        style="padding: 4px 8px; font-size: 12px; display: flex; align-items: center; justify-content: center;" 
-        title="' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '">
-   <i class="fas ' . ($row['is_active'] == 1 ? 'fa-toggle-off' : 'fa-toggle-on') . '" style="font-size:14px;"></i> 
-   ' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '
-</button>
-<form action="app/action/reset_password.php" method="post" style="display:inline;">
-            <input type="hidden" name="username" value="' . $row['suppliar_code'] . '">
-            <input type="hidden" name="nik_last6" value="' . substr($row['nik'], -6) . '">
-            <button type="submit" class="btn btn-danger btn-sm" 
-                style="color:white;padding: 4px 8px; font-size: 10px; display:flex; align-items:center; justify-content:center;background:red;"
-                onclick="return confirm(\'Yakin reset password ' . $row['name'] . '?\')">
-                <i class="fas fa-key" style="font-size:12px;"></i> <span style="font-size:12px; padding-left:4px;">Reset</span>
-            </button>
-        </form>
-
-    </div>
-' : '',
-
-    );
+    $data[] = [
+        "id"         => getRoleName($row['role_id']) . '-' . $row['suppliar_code'],
+        "name"       => $row['name'] . setActive($row['is_active']),
+        "address"    => $row['address'],
+        "con_num"    => $row['con_num'],
+        "role_id"    => getRoleName($row['role_id']),
+        "created_at" => $row['create_at'],
+        "action"     => ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) ? '
+            <div class="btn-group" role="group" style="gap:4px;">
+                <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
+                   class="btn btn-primary btn-sm" 
+                   title="Edit">
+                   <i class="fas fa-edit"></i>
+                </a>
+                <button id="suppliarActive_btn" 
+                        data-id="' . $row['id'] . '" 
+                        data-status="' . $row['is_active'] . '"
+                        class="btn btn-warning btn-sm"
+                        title="' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '">
+                   <i class="fas ' . ($row['is_active'] == 1 ? 'fa-toggle-off' : 'fa-toggle-on') . '"></i> 
+                   ' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '
+                </button>
+                <form action="app/action/reset_password.php" method="post" style="display:inline;">
+                    <input type="hidden" name="username" value="' . $row['suppliar_code'] . '">
+                    <input type="hidden" name="nik_last6" value="' . substr($row['nik'], -6) . '">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm(\'Yakin reset password ' . $row['name'] . '?\')">
+                        <i class="fas fa-key"></i> Reset
+                    </button>
+                </form>
+            </div>' : ''
+    ];
 }
 
-## Response
-$response = array(
+## Response JSON
+$response = [
     "draw" => intval($draw),
     "iTotalRecords" => $totalRecords,
     "iTotalDisplayRecords" => $totalRecordwithFilter,
     "aaData" => $data
-);
-
+];
 echo json_encode($response);

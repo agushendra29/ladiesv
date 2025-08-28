@@ -511,6 +511,8 @@ $(document).on("click", "#newsDelete_btn", function (e) {
   }),
   $("#approveForm").on("submit", function (e) {
     e.preventDefault();
+    console.log($("#approveForm").serialize());
+    let data = new URLSearchParams($("#approveForm").serialize());
 
     // tampilkan konfirmasi SweetAlert
     Swal.fire({
@@ -525,6 +527,14 @@ $(document).on("click", "#newsDelete_btn", function (e) {
       <tr>
         <td style="font-weight:bold; padding:4px 8px;">Nama Pemesan</td>
         <td style="padding:4px 8px;">${currentPO?.suppliar_name ?? "-"}</td>
+      </tr>
+       <tr>
+        <td style="font-weight:bold; padding:4px 8px;">Tipe Pembayaran</td>
+        <td style="padding:4px 8px;">${data.get('payment_type') ?? "-"}</td>
+      </tr>
+        <tr>
+        <td style="font-weight:bold; padding:4px 8px;">Jenis Pengiriman</td>
+        <td style="padding:4px 8px;">${data.get('shipping_type') ?? "-"}</td>
       </tr>
       <tr>
         <td style="font-weight:bold; padding:4px 8px;">Total</td>

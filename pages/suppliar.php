@@ -29,10 +29,28 @@
             <i class="fas fa-plus" style="font-size: 16px;"></i> Tambah Anggota
           </button>
           <?php endif; ?>
+          
         </div>
 
         <!-- Table Responsive -->
         <div class="table-responsive" style="overflow-x:auto;">
+          <div style="margin-bottom:20px; display:flex; align-items:center; gap:12px;">
+  <label for="roleFilter" style="font-weight:600; font-size:13px; color:#333;margin-bottom:0px;">Filter Role:</label>
+  <select id="roleFilter" style="
+      padding:8px 14px; 
+      border-radius:8px; 
+      border:1px solid #d1d5db; 
+      font-size:13px; 
+      outline:none;
+      ">
+    <option value="">Semua</option>
+    <option value="1">HO</option>
+    <option value="2">Head Distributor</option>
+    <option value="3">Distributor</option>
+    <option value="4">Agen</option>
+       <option value="5">Reseller</option>
+  </select>
+</div>
           <table id="suppliarTable" class="display dataTable text-center" style="
             width: 100%;
             border-collapse: separate;
@@ -51,6 +69,7 @@
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; width: 240px;">Alamat</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Kontak</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Level</th>
+                  <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Pendaftaran</th>
                 <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Aksi</th>
               </tr>
             </thead>
