@@ -1151,7 +1151,7 @@ $("#empTable").DataTable({
                         showConfirmButton: false
                       }).then(() => {
                       });
-                      window.location.href = 'index.php?page=add_register_reseller';
+                      window.location.href = 'index.php?page=sell_order';
                   } else {
                       Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
                   }

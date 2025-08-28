@@ -9,7 +9,6 @@ function getStockProduct($pid) {
         "product_id = ? AND suppliar_id = ?", 
         [$pid, 1]
     );
-
     if (!empty($stockData)) {
         return $stockData[0]->stock; 
     }
@@ -17,10 +16,6 @@ function getStockProduct($pid) {
 }
 ?>
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div>
   <section class="content">
     <div class="mt-5 mb-5">
@@ -127,17 +122,14 @@ function getStockProduct($pid) {
           <div class="col-md-6 col-lg-6">
             <div class="form-group">
               <label for="sup_email">Email:</label>
-              <input type="email" class="form-control" id="sup_email" placeholder="Email optional" name="sup_email" required>
+              <input type="email" class="form-control" id="sup_email" placeholder="Email" name="sup_email" required>
             </div>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 col-lg-6">
             <div class="form-group">
-              <label for="sup_role">Level Anggota *</label>
-              <select class="form-control" id="sup_role" name="sup_role" required>
-                <option value="">-- Pilih Level Anggota --</option>
-                <option value="5">Reseller</option>
-              </select>
+              <label for="role">Level Pendaftaran:</label>
+              <input type="text" class="form-control" id="role" placeholder="Role" name="role" disabled value="Reseller">
             </div>
           </div>
 
@@ -155,6 +147,24 @@ function getStockProduct($pid) {
               <textarea rows="3" class="form-control" placeholder="Alamat diisi sesuai domisili" id="supaddress"
                 name="supaddress"></textarea>
             </div>
+          </div>
+
+          <div class="col-md-12 col-lg-12 mb-4">
+            <label for="sup_provinsi" style="font-weight: 600; color: #334155;">Provinsi <span
+                style="color:#ef4444;">*</span></label>
+            <select id="provinsi" name="provinsi" required
+              style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
+              <option value="" disabled>-- Pilih Provinsi --</option>
+            </select>
+          </div>
+
+          <div class="col-md-12 col-lg-12 mb-4">
+            <label for="sup_kota" style="font-weight: 600; color: #334155;">Kota/Kabupaten <span
+                style="color:#ef4444;">*</span></label>
+            <select id="kota" name="kota" required
+              style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
+              <option value="" disabled selected>-- Pilih Kota/Kabupaten --</option>
+            </select>
           </div>
         </div>
 
@@ -182,6 +192,10 @@ foreach ($products as $p) {
 }
 ?>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 const productsData = <?php echo json_encode($productsData); ?>;
 const totalPaymentInput = document.getElementById('total_payment');
@@ -271,4 +285,46 @@ document.getElementById('addProductBtn').addEventListener('click', function (e) 
 
 // Buat baris pertama otomatis
 createProductRow();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const provSelect = document.getElementById("provinsi");
+  const kotaSelect = document.getElementById("kota");
+
+  // Load daftar provinsi
+  fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
+    .then(res => res.json())
+    .then(provinces => {
+      provSelect.innerHTML = "<option value='' disabled selected>-- Pilih Provinsi --</option>";
+      provinces.forEach(prov => {
+        let opt = document.createElement("option");
+        opt.value = prov.id;
+        opt.textContent = prov.name;
+        provSelect.appendChild(opt);
+      });
+    })
+    .catch(err => console.error("Gagal load provinsi:", err));
+
+  // Event pilih provinsi → load kabupaten/kota
+  provSelect.addEventListener("change", function() {
+    let provID = this.value;
+    kotaSelect.innerHTML = "<option value='' disabled selected>-- Pilih Kota/Kabupaten --</option>";
+    kotaSelect.disabled = true;
+
+    if (provID) {
+      fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provID}.json`)
+        .then(res => res.json())
+        .then(regencies => {
+          regencies.forEach(kab => {
+            let opt = document.createElement("option");
+            opt.value = kab.id;
+            opt.textContent = kab.name;
+            kotaSelect.appendChild(opt);
+          });
+          kotaSelect.disabled = false;
+        })
+        .catch(err => console.error("Gagal load kota:", err));
+    }
+  });
+});
 </script>

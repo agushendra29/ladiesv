@@ -16,8 +16,10 @@ try {
     $sup_bank      = trim($payload['sup_bank']);
     $sup_contact   = trim($payload['sup_contact']);
     $sup_email     = trim($payload['sup_email']);
-    $sup_role      = trim($payload['sup_role']);
+    $sup_role      = 5;
     $sup_address   = trim($payload['supaddress']);
+    $provinsi   = trim($payload['provinsi']);
+     $kota   = trim($payload['kota']);
     $sup_address_ktp = trim($payload['supaddressktp']);
     $sup_akun      = trim($payload['sup_name_bank']);
     $birth_date    = !empty($payload['birth_date']) ? date('Y-m-d', strtotime($payload['birth_date'])) : null;
@@ -47,6 +49,8 @@ try {
         'date_of_birth' => $birth_date,
         'nama_rekening' => $sup_akun,
         'is_active' => 1,
+        'provinsi' => $provinsi,
+        'kota' => $kota
     ];
     $suppliar_id = $obj->create('suppliar', $sup_data);
     if(!$suppliar_id) throw new Exception('Gagal menambahkan suppliar.');
