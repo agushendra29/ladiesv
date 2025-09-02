@@ -126,18 +126,38 @@
                   <option value="all">- All -</option>
                   <?php 
                     $all_customer = $obj->all('suppliar');
-                    $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R'];
+                    $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R', 10 => 'SA'];
                     foreach ($all_customer as $customer) {
                       $roleLabel = isset($roleMap[$customer->role_id]) ? $roleMap[$customer->role_id] : $customer->role_id;
-                      echo '<option value="'.$customer->id.'">'.$customer->name.' - '.$roleLabel.''.$customer->id.'</option>';
+                      echo '<option value="'.$customer->id.'">'.$customer->name.' - '.$roleLabel.'-'.$customer->suppliar_code.'</option>';
                     }
                   ?>
                 </select>
               </div>
             </div>
-            <?php else: ?>
-            <input type="hidden" name="customer" id="customer" value="<?= $_SESSION['distributor_id'] ?>">
             <?php endif; ?>
+            <div class="col-md-3 mt-3">
+              <label class="fw-bold">Tipe Transaksi</label>
+              <select id="typeFilter" class="form-select custom-select-lg">
+                <option value="all">- All -</option>
+                <option value="penjualan">Penjualan</option>
+                <option value="pembelian">Pembelian</option>
+                <option value="refund">Refund</option>
+              </select>
+            </div>
+
+            <div class="col-md-3 mt-3">
+              <label class="fw-bold">Produk</label>
+              <select id="productFilter" class="form-select custom-select-lg">
+                <option value="all">- All -</option>
+                <?php 
+      $all_products = $obj->all('products');
+      foreach ($all_products as $p) {
+        echo '<option value="'.$p->id.'">'.$p->product_name.'</option>';
+      }
+    ?>
+              </select>
+            </div>
 
             <div class="col-md-2">
               <button id="search_sales_report" class="btn btn-primary"
@@ -161,6 +181,7 @@
                   <th>Tipe</th>
                   <th>Kepada</th>
                   <th>Kuantitas</th>
+                  <th>Produk</th>
                   <th>Keterangan</th>
                 </tr>
               </thead>
@@ -185,8 +206,18 @@
 <script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    new Choices("#customer", {
+      searchEnabled: true, // aktifkan fitur search
+      itemSelectText: '', // hilangkan tulisan "Press to select"
+      shouldSort: false, // biar urutan option asli tidak berubah
+      placeholderValue: "Pilih Distributor/Agen"
+    });
+  });
   // Date range picker
   var start = moment().subtract(29, 'days');
   var end = moment();
@@ -223,49 +254,59 @@
     event.preventDefault();
     let issuedate = $.trim($("#search_date").text());
     let customer = $("#customer").val();
+    let type = $("#typeFilter").val(); // filter tipe
+    let product_id = $("#productFilter").val(); // filter produk
+
+    console.log(product_id)
     $.post('app/ajax/search_sales_report.php', {
       suppliar_id: customer,
-      issuedate: issuedate
+      issuedate: issuedate,
+      type: type,
+      product_id: product_id
     }, function (data) {
+
       $("#search_sales_report_res").html(data);
     });
     loadStockMonitoring(customer);
   });
 
-  $(function() {
-  let currentPage = 1;
+  $(function () {
+    let currentPage = 1;
 
-  function loadSalesReport(page = 1) {
-    currentPage = page;
-    let issuedate = $.trim($("#search_date").text());
-    let customer = $("#customer").val();
+    function loadSalesReport(page = 1) {
+      currentPage = page;
+      let issuedate = $.trim($("#search_date").text());
+      let customer = $("#customer").val();
+      let type = $("#typeFilter").val(); // filter tipe
+      let product_id = $("#productFilter").val(); // filter produk
+      console.log(type);
+      $.post('app/ajax/search_sales_report.php', {
+        suppliar_id: customer,
+        issuedate: issuedate,
+        type: type,
+        product_id: product_id,
+        page: page
+      }, function (data) {
+        $("#search_sales_report_res").html(data);
+      });
+    }
 
-    $.post('app/ajax/search_sales_report.php', {
-      suppliar_id: customer,
-      issuedate: issuedate,
-      page: page
-    }, function(data) {
-      $("#search_sales_report_res").html(data);
+    // Search button click
+    $(document).on('click', '#search_sales_report', function (e) {
+      e.preventDefault();
+      loadSalesReport(1);
     });
-  }
 
-  // Search button click
-  $(document).on('click', '#search_sales_report', function(e) {
-    e.preventDefault();
+    // Pagination link click
+    $(document).on('click', '.pagination .page-link', function (e) {
+      e.preventDefault();
+      const page = $(this).data('page');
+      if (page && page !== currentPage) {
+        loadSalesReport(page);
+      }
+    });
+
+    // Optional: load default page on first load
     loadSalesReport(1);
   });
-
-  // Pagination link click
-  $(document).on('click', '.pagination .page-link', function(e) {
-    e.preventDefault();
-    const page = $(this).data('page');
-    if (page && page !== currentPage) {
-      loadSalesReport(page);
-    }
-  });
-
-  // Optional: load default page on first load
-  loadSalesReport(1);
-});
-
 </script>

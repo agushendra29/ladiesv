@@ -628,6 +628,26 @@ $("#empTable").DataTable({
     }, {
         data: "items_summary"
     }]
+}), $("#refundOrderTable").DataTable({
+    processing: !0,
+    serverSide: !0,
+    serverMethod: "post",
+    ajax: {
+        url: "app/ajax/refund_order_data.php"
+    },
+    columns: [{
+        data: "invoice_number"
+    }, {
+        data: "distributor_name"
+    }, {
+        data: "customer_name"
+    }, {
+        data: "net_total"
+    }, {
+        data: "order_date"
+    }, {
+        data: "items_summary"
+    }]
 }), $("#productTable").DataTable({
 
     processing: !0,

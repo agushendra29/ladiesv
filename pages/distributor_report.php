@@ -71,13 +71,27 @@
       <input type="text" id="issuedate" class="form-control" readonly />
     </div>
 
+    <div class="col-md-4">
+      <label>Filter Produk (Per Item)</label>
+      <select id="filterItem" class="form-control">
+        <option value="">Semua Produk</option>
+        <?php 
+        // ambil data produk dari database
+        $products = $obj->all('products');
+        foreach ($products as $p): ?>
+          <option value="<?= $p->id ?>"><?= htmlspecialchars($p->product_name) ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+
     <div class="col-md-2 align-self-end">
       <button id="btnSearchStock" class="btn btn-primary">Cari</button>
     </div>
   </div>
-   <div id="reportHeader" style="color:#374151; margin-top:25px; font-size:20px;">
+
+  <div id="reportHeader" style="color:#374151; margin-top:25px; font-size:20px;">
     Penjualan tim distributor anda periode: <b>&nbsp; <span id="periodeText">-</span></b>
-</div>
+  </div>
 
   <div class="table-responsive">
     <table id="stockMonitoringTable" class="table text-center">
@@ -130,13 +144,14 @@
   cb(start, end);
 
   // Fungsi load stock monitoring
-  function loadStockMonitoring(issuedate) {
+  function loadStockMonitoring(issuedate, item_id) {
     $.ajax({
       url: 'app/ajax/search_distributor_stock.php',
       method: 'POST',
       data: {
         suppliar_id: <?= json_encode($_SESSION['distributor_id']) ?>,
-        issuedate: issuedate
+        issuedate: issuedate,
+        item_id: item_id
       },
       cache: false,
       success: function(data) {
@@ -152,6 +167,8 @@
   // Klik tombol cari
   $(document).on('click', '#btnSearchStock', function() {
     var issuedate = $("#issuedate").val();
+    var item_id = $("#filterItem").val();
+
     if (!issuedate) {
       alert("Pilih periode tanggal!");
       $("#issuedate").focus();
@@ -159,6 +176,6 @@
     }
     // update header juga
     $('#periodeText').text(issuedate);
-    loadStockMonitoring(issuedate);
+    loadStockMonitoring(issuedate, item_id);
   });
 </script>

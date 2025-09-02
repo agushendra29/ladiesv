@@ -72,6 +72,7 @@
       <label>Periode</label>
       <input type="text" id="issuedate" class="form-control" readonly />
     </div>
+    
 
     <?php if ($_SESSION['role_id']  == 1 ||  $_SESSION['role_id'] == 10): ?>
       <div class="col-md-4">
@@ -87,10 +88,20 @@
           <option value="all">Semua Supplier</option>
         </select>
       </div>
-    <?php else: ?>
-      <!-- untuk non admin, supplier_id diset hidden -->
-      <input type="hidden" id="supplier_id" value="<?= htmlspecialchars($distributor_id) ?>">
     <?php endif; ?>
+    <div class="col-md-3">
+  <label>Pilih Produk</label>
+  <select id="productFilter" class="form-control">
+    <option value="all">- All -</option>
+    <?php 
+      $all_products = $obj->all('products');
+      foreach ($all_products as $p) {
+        echo '<option value="'.$p->id.'">'.$p->product_name.'</option>';
+      }
+    ?>
+  </select>
+</div>
+    
 
     <div class="col-md-2 align-self-end">
       <button id="btnSearchStock" class="btn btn-primary">Cari</button>
@@ -122,6 +133,14 @@
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script>
+   document.addEventListener("DOMContentLoaded", function() {
+  new Choices("#supplier_id", {
+    searchEnabled: true,   // aktifkan fitur search
+    itemSelectText: '',    // hilangkan tulisan "Press to select"
+    shouldSort: false,     // biar urutan option asli tidak berubah
+    placeholderValue: "Pilih Distributor/Agen"
+  });
+});
   var start = moment().subtract(29, 'days');
   var end = moment();
 
@@ -147,7 +166,7 @@
   cb(start, end);
 
   // Fungsi load stock monitoring
-  function loadStockMonitoring(supplier_id, issuedate) {
+  function loadStockMonitoring(supplier_id, issuedate, product_id) {
     console.log('AJAX stock_monitoring -> supplier_id:', supplier_id, 'issuedate:', issuedate);
 
     $.ajax({
@@ -155,7 +174,8 @@
       method: 'POST',
       data: {
         suppliar_id: supplier_id,
-        issuedate: issuedate
+        issuedate: issuedate,
+        product_id: product_id
       },
       cache: false,
       success: function(data) {
@@ -170,8 +190,11 @@
 
   // Klik tombol cari
   $(document).on('click', '#btnSearchStock', function() {
-    var supplier_id = $("#supplier_id").val();
+    var role_id = <?php echo json_encode($_SESSION['role_id']); ?>;
+    var distributor_id = <?php echo json_encode($_SESSION['distributor_id']); ?>;
+    var supplier_id = role_id == 1 || role_id == 10 ? $("#supplier_id").val() : distributor_id;
     var issuedate = $("#issuedate").val();
+    var product_id = $("#productFilter").val();
 
     if (!supplier_id) {
       alert("Pilih supplier terlebih dahulu!");
@@ -184,7 +207,8 @@
       return;
     }
 
-    loadStockMonitoring(supplier_id, issuedate);
+
+    loadStockMonitoring(supplier_id, issuedate, product_id);
   });
 
 </script>

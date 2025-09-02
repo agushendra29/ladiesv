@@ -704,6 +704,31 @@ $(document).on("click", "#newsDelete_btn", function (e) {
       alert('Terjadi kesalahan pada server.');
     }
     });
+}),$(document).on('click', '.refund-btn', function () {
+    if (!confirm("Yakin ingin refund transaksi ini?")) return;
+
+    let invoice = $(this).data('invoice');
+
+    $.post('app/action/proses_refund.php', { invoice_number: invoice }, function (res) {
+        let data = JSON.parse(res);
+        alert(data.message);
+        if (data.status === 'success') {
+            location.reload();
+        }
+    });
+}), $(document).on('click', '.cancel-refund-btn', function(e) {
+    e.preventDefault();
+    let invoice = $(this).data('invoice');
+
+    if (!confirm("Yakin ingin membatalkan refund?")) return;
+
+    $.post('app/action/cancel_refund.php', { invoice_number: invoice }, function(res) {
+        let data = JSON.parse(res);
+        alert(data.message);
+        if (data.status === 'success') {
+            window.location.reload();
+        }
+    });
 }),$(document).on('click', '.newsTogglePublish_btn', function() {
     var id = $(this).data('id');
     var action = $(this).data('action');

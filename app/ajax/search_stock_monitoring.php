@@ -10,7 +10,6 @@ function parse_date_to_mysql($d) {
     $d = trim($d);
     if (!$d) return date('Y-m-d');
 
-    // jika ada slash
     if (strpos($d, '/') !== false) {
         $parts = explode('/', $d);
         if (count($parts) === 3) {
@@ -18,15 +17,12 @@ function parse_date_to_mysql($d) {
             $b = (int)$parts[1];
             $y = $parts[2];
 
-            // jika hari > 12 maka formatnya DD/MM/YYYY
             if ($a > 12) {
                 $day = $a; $month = $b;
             } else {
-                // jika b > 12 kebalik
                 if ($b > 12) {
                     $day = $b; $month = $a;
                 } else {
-                    // tidak pasti — anggap format DD/MM/YYYY (umumnya di ID)
                     $day = $parts[0]; $month = $parts[1];
                 }
             }
@@ -35,12 +31,9 @@ function parse_date_to_mysql($d) {
         }
     }
 
-    // fallback ke strtotime
     $ts = strtotime($d);
     return $ts ? date('Y-m-d', $ts) : date('Y-m-d');
 }
-
-// Fungsi parse tanggal tetap sama (tidak diubah)
 
 $issueData = $_POST['issuedate'] ?? '';
 if (trim($issueData) === '') {
@@ -60,7 +53,9 @@ if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) {
     $suppliar_id = $_SESSION['distributor_id'];
 }
 
-// Query tanpa GROUP BY, mengambil tiap row transaksi satu-satu
+// ✅ Tambahan filter produk
+$product_id = $_POST['product_id'] ?? 'all';
+
 $sql = "
 SELECT 
   DATE(th.created_at) AS transaksi_date,
@@ -81,6 +76,7 @@ AND (
       (th.type = 'penjualan' AND th.suppliar_id = :suppliar_id)
     )
 )
+AND (:product_id = 'all' OR th.product_id = :product_id)
 ORDER BY th.created_at ASC, p.product_name ASC, th.type ASC
 ";
 
@@ -88,7 +84,8 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([
     ':start' => $issu_first_date,
     ':end' => $issu_end_date,
-    ':suppliar_id' => $suppliar_id
+    ':suppliar_id' => $suppliar_id,
+    ':product_id' => $product_id
 ]);
 
 $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -106,7 +103,6 @@ foreach ($rows as $r) {
     $transaksi_date = $r->transaksi_date ?? '-';
     $last_update = $r->created_at ? date('d-m-Y H:i', strtotime($r->created_at)) : '-';
 
-    // Set jumlah per tipe transaksi
     $pembelian = $r->type === 'pembelian' ? intval($r->quantity) : 0;
     $penjualan = $r->type === 'penjualan' ? intval($r->quantity) : 0;
     $refund = $r->type === 'refund' ? intval($r->quantity) : 0;

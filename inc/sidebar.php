@@ -193,15 +193,15 @@
        
       <?php if ($roleId <=1 || $roleId == 10): ?>
       <li style="margin-bottom: 6px;">
-        <a href="index.php?page=refund_process" class="nav-link <?php echo $actual_link=='refund_process'?'active':'';?>" style="
+        <a href="index.php?page=refund_order" class="nav-link <?php echo $actual_link=='refund_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
           font-size: 14px !important; font-weight: 400;
-          color: <?= ($actual_link == 'refund_process') ? '#2563eb' : '#374151' ?>;
+          color: <?= ($actual_link == 'refund_order') ? '#2563eb' : '#374151' ?>;
           text-decoration: none; padding: 14px 18px; border-radius: 12px;
           transition: background-color 0.25s ease, color 0.25s ease;
           user-select:none;
         " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
-          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'refund_process') ? '#2563eb' : '#374151' ?>'">
+          onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'refund_order') ? '#2563eb' : '#374151' ?>'">
           <i class="material-symbols-outlined" style="font-size:22px;">restart_alt</i>
           <span>Proses Refund</span>
         </a>
