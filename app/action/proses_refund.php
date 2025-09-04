@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
 
         // 1. Ambil semua transaksi di invoice ini
-        $sql = "SELECT * FROM transaction_histories WHERE invoice_number = :invoice";
+        $sql = "SELECT * FROM transaction_histories WHERE invoice_number = :invoice AND ";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':invoice' => $invoice_number]);
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);

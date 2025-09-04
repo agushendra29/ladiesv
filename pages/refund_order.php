@@ -1,37 +1,70 @@
 <style>
-    /* ====== Style umum select filter ====== */
-    .custom-select-lg {
+    /* ====== Filter Section Styling ====== */
+    .filter-section {
+        background: #fff;
+        padding: 16px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .filter-section label {
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 6px;
+        display: block;
+        color: #374151;
+    }
+
+    .filter-section .form-control,
+    .filter-section .form-select {
+        font-size: 12px;
+        border-radius: 8px;
+        width: 100%; /* biar dropdown panjang penuh */
+    }
+
+    #reportrange {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 8px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    #search_refund {
         width: 100%;
-        height: 40px;
-        font-size: 1rem;
-        padding: 0 8px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        appearance: none;
-        background-image: url('data:image/svg+xml;utf8,<svg fill="%23777" height="24" viewBox="0 0 24 24" width="24" xmlns="https://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 16px;
-        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        font-size: 12px;
+        font-weight: 600;
+        height: 36px;
+        border-radius: 8px;
+        padding: 6px 10px;
     }
 
-    .custom-select-lg:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-        outline: none;
+    /* Responsive filter layout */
+    @media (max-width: 768px) {
+        .filter-section .row {
+            gap: 12px;
+        }
+        #search_refund {
+            margin-top: 4px;
+        }
     }
 
-    /* ====== Style untuk tabel ====== */
+    /* ====== Table Styling ====== */
     table {
         width: 100%;
         border-collapse: separate;
-        border-spacing: 0 10px;
-        border-radius: 12px;
+        border-spacing: 0 8px;
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.07);
         background: #fff;
-        font-size: 13px !important;
+        font-size: 11px !important; /* kecil */
         min-width: 900px;
     }
 
@@ -39,48 +72,42 @@
         background-color: #2563eb;
         color: #fff;
         text-transform: uppercase;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        font-size: 10px !important;
     }
 
     table thead th {
-        padding: 16px 20px;
+        padding: 10px 14px;
         border-bottom: none;
-    }
-
-    table thead th:first-child {
-        border-top-left-radius: 12px;
-    }
-
-    table thead th:last-child {
-        border-top-right-radius: 12px;
     }
 
     table tbody tr {
         background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
         transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     table tbody tr:hover {
         background-color: #eff6ff;
-        box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
+        box-shadow: 0 4px 12px rgba(0, 115, 234, 0.12);
     }
 
     table tbody tr td {
-        padding: 14px 22px;
+        padding: 10px 14px;
         vertical-align: middle;
         font-weight: 500;
         color: #374151;
+        font-size: 11px;
     }
 
     .no-data {
         text-align: center;
         color: #9ca3af;
         font-style: italic;
-        padding: 30px 0;
+        padding: 25px 0;
+        font-size: 11px;
     }
 </style>
 
@@ -90,10 +117,10 @@
         <div class="container-fluid mt-3">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1 class="m-0 font-weight-bold text-dark">Cancel Invoice</h1>
+                    <h1 class="m-0 font-weight-bold text-dark" style="font-size:18px;">Cancel Invoice</h1>
                 </div>
                 <div class="col-md-6">
-                    <ol class="breadcrumb float-sm-right bg-transparent p-0 m-0">
+                    <ol class="breadcrumb float-sm-right bg-transparent p-0 m-0" style="font-size:12px;">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active">Cancel Invoice</li>
                     </ol>
@@ -106,41 +133,43 @@
     <section class="content">
         <div class="container-fluid">
             <!-- Filter -->
-            <div class="">
-                <div class="card-body">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-5">
-                            <label style="font-weight:500">Start Date - End Date</label>
-                            <div id="reportrange" class="form-control" style="cursor: pointer;">
-                                <i class="fa fa-calendar"></i> &nbsp;
-                                <span id="search_date" style="font-weight:500;font-size:14px;"></span>
+            <div class="filter-section">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <!-- Date Range -->
+                        <div class="col-md-4">
+                            <label>Start Date - End Date</label>
+                            <div id="reportrange" class="form-control">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span id="search_date"></span>
                                 <i class="fa fa-caret-down float-end"></i>
                             </div>
                         </div>
 
+                        <!-- Select Member -->
                         <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
-                        <div class="col-md-5">
-                            <label class="fw-bold">Select Member</label>
-                            <div>
-                                <select name="customer" id="customer" class="form-select custom-select-lg">
-                                    <option value="all">- All -</option>
-                                    <?php 
-                    $all_customer = $obj->all('suppliar');
-                    $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R', 10 => 'SA'];
-                    foreach ($all_customer as $customer) {
-                      $roleLabel = isset($roleMap[$customer->role_id]) ? $roleMap[$customer->role_id] : $customer->role_id;
-                      echo '<option value="'.$customer->id.'">'.$customer->name.' - '.$roleLabel.'-'.$customer->suppliar_code.'</option>';
-                    }
-                  ?>
-                                </select>
-                            </div>
+                        <div class="col-md-4">
+                            <label>Select Member</label>
+                            <select name="customer" id="customer" class="form-select">
+                                <option value="all">- All -</option>
+                                <?php 
+                                $all_customer = $obj->all('suppliar');
+                                $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R', 10 => 'SA'];
+                                foreach ($all_customer as $customer) {
+                                  $roleLabel = isset($roleMap[$customer->role_id]) ? $roleMap[$customer->role_id] : $customer->role_id;
+                                  echo '<option value="'.$customer->id.'">'.$customer->name.' - '.$roleLabel.'-'.$customer->suppliar_code.'</option>';
+                                }
+                                ?>
+                            </select>
                         </div>
                         <?php else: ?>
                         <input type="hidden" name="customer" id="customer" value="<?= $_SESSION['distributor_id'] ?>">
                         <?php endif; ?>
-                        <div class="col-md-3 mt-3">
-                            <label class="fw-bold">Tipe Transaksi</label>
-                            <select id="typeFilter" class="form-select custom-select-lg">
+
+                        <!-- Type Filter -->
+                        <div class="col-md-3">
+                            <label>Tipe Transaksi</label>
+                            <select id="typeFilter" class="form-select">
                                 <option value="all">- All -</option>
                                 <option value="penjualan">Penjualan</option>
                                 <option value="pembelian">Pembelian</option>
@@ -148,10 +177,10 @@
                             </select>
                         </div>
 
-                        <div class="col-md-2">
-                            <button id="search_refund" class="btn btn-primary"
-                                style="font-size:12px;height:38px;padding: 0px 20px;">
-                                <i class="fas fa-search"></i> Search
+                        <!-- Search Button -->
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button id="search_refund" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </div>
@@ -159,33 +188,28 @@
             </div>
 
             <!-- Sales Report Table -->
-            <div class="mt-4">
-                <div class="p-0">
-                    <div class="table-responsive" style="overflow-x:auto;">
-                        <table id="salesReportTable" class="text-center">
-                            <thead>
-                                <tr>
-                                    <th>Sales Date</th>
-                                    <th>Invoice Number</th>
-                                    <th>Tipe</th>
-                                    <th>Kepada</th>
-                                    <th>Produk</th>
-                                    <th>Keterangan</th>
-                                       <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="refund_order_data_res">
-                                <tr>
-                                    <td colspan="6" class="no-data">No data available. Please use filter above.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="mt-3">
+                <div class="table-responsive">
+                    <table id="salesReportTable" class="text-center">
+                        <thead>
+                            <tr>
+                                <th>Sales Date</th>
+                                <th>Invoice Number</th>
+                                <th>Tipe</th>
+                                <th>Kepada</th>
+                                <th>Produk</th>
+                                <th>Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="refund_order_data_res">
+                            <tr>
+                                <td colspan="7" class="no-data">No data available. Please use filter above.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-            <!-- Stock Monitoring Table -->
-
 
         </div>
     </section>
@@ -195,18 +219,22 @@
 <script src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        new Choices("#customer", {
-            searchEnabled: true, // aktifkan fitur search
-            itemSelectText: '', // hilangkan tulisan "Press to select"
-            shouldSort: false, // biar urutan option asli tidak berubah
-            placeholderValue: "Pilih Distributor/Agen"
-        });
+        if (document.querySelector("#customer")) {
+            new Choices("#customer", {
+                searchEnabled: true,
+                itemSelectText: '',
+                shouldSort: false,
+                placeholderValue: "Pilih Distributor/Agen"
+            });
+        }
     });
+
     // Date range picker
     var start = moment().subtract(29, 'days');
     var end = moment();
@@ -215,6 +243,7 @@
         $('#reportrange span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
         $('#search_date').text(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
     }
+
     $('#reportrange').daterangepicker({
         startDate: start,
         endDate: end,
@@ -224,10 +253,10 @@
             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf(
-                'month')]
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     }, cb);
+
     cb(start, end);
 
     // Load stock monitoring
@@ -244,18 +273,18 @@
         event.preventDefault();
         let issuedate = $.trim($("#search_date").text());
         let customer = $("#customer").val();
-        let type = $("#typeFilter").val(); // filter tipe
+        let type = $("#typeFilter").val();
         $.post('app/ajax/refund_order_data.php', {
             suppliar_id: customer,
             issuedate: issuedate,
             type: type
         }, function (data) {
-
             $("#refund_order_data_res").html(data);
         });
         loadStockMonitoring(customer);
     });
 
+    // Pagination
     $(function () {
         let currentPage = 1;
 
@@ -263,26 +292,17 @@
             currentPage = page;
             let issuedate = $.trim($("#search_date").text());
             let customer = $("#customer").val();
-            let type = $("#typeFilter").val(); // filter tipe
-            console.log(type);
+            let type = $("#typeFilter").val();
             $.post('app/ajax/refund_order_data.php', {
                 suppliar_id: customer,
                 issuedate: issuedate,
                 type: type,
-                product_id: product_id,
                 page: page
             }, function (data) {
                 $("#refund_order_data_res").html(data);
             });
         }
 
-        // Search button click
-        $(document).on('click', '#refund_order_data', function (e) {
-            e.preventDefault();
-            loadSalesReport(1);
-        });
-
-        // Pagination link click
         $(document).on('click', '.pagination .page-link', function (e) {
             e.preventDefault();
             const page = $(this).data('page');
@@ -291,7 +311,7 @@
             }
         });
 
-        // Optional: load default page on first load
+        // Load default
         loadSalesReport(1);
     });
 </script>

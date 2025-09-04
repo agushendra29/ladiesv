@@ -1,30 +1,7 @@
 <!-- Main Sidebar Container -->
-<aside style="
-  width: 260px;
-  background-color: #d2eeff;
-  color: #374151;
-  height: 100vh;
-  position: fixed;
-  top: 0; left: 0;
-  overflow-y: auto;
-  border-right: 1px solid #e5e7eb;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.05);
-  z-index: 1030;
-  padding-bottom: 40px;
-">
+<aside  id="sidebar" class="sidebar">
   <nav style="padding-top: 16px;">
     <ul style="list-style: none; margin: 0; padding: 0 12px;">
-
-      <!-- Logo -->
-      <li style="margin-bottom: 6px;">
-        <a href="index.php?page=dashboard" style="
-          display: flex; align-items: center; justify-content: center;
-          padding: 14px 18px;
-        ">
-          <img src="assets/images/logo.png" alt="logo" style="max-width: 140px; height: auto;">
-        </a>
-      </li>
-
       <!-- Dashboard -->
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=dashboard" class="nav-link <?php echo $actual_link=='dashboard'?'active':'';?>" style="

@@ -3,19 +3,15 @@ $distributor_id = $_SESSION['distributor_id'];
 $products = $obj->all('products');
 function getStockProduct($pid) {
     global $obj, $distributor_id;
-
-    // cek role
     $role_id = $_SESSION['role_id'] ?? null;
 
     if ($role_id == 10) {
-        // Super Admin → ambil dari supplier_id = 1
         $stockData = $obj->allCondition(
             'distributor_stocks', 
             "product_id = ? AND suppliar_id = ?", 
             [$pid, 1]
         );
     } else {
-        // Default → ambil dari distributor_stocks
         $stockData = $obj->allCondition(
             'distributor_stocks', 
             "product_id = ? AND suppliar_id = ?", 
@@ -24,7 +20,6 @@ function getStockProduct($pid) {
     }
 
     if (!empty($stockData)) {
-        // pastikan ambil sesuai struktur data (array assoc atau object)
         return is_array($stockData[0]) ? $stockData[0]['stock'] : $stockData[0]->stock;
     }
     return 0;
@@ -37,8 +32,8 @@ function getStockProduct($pid) {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
 <div>
-  <!-- Main -->
   <section class="content">
     <div class="mt-5">
       <h2 class="mb-4" style="font-size: 20px; font-weight: 600; color: #333;">📦 Form Penjualan</h2>
@@ -63,13 +58,10 @@ function getStockProduct($pid) {
                 $distributor_id = $_SESSION['distributor_id'];
                 $role_id = $_SESSION['role_id'];
                 if ($role_id == 10) {
-    // role 10 -> tampilkan semua suppliar kecuali dirinya sendiri
                   $all_supplier = $obj->allCondition('suppliar',  'role_id != 10 AND role_id != 1 AND id != ?', [$distributor_id]);
                 } else if($role_id == 2) {
                   $all_supplier = $obj->allCondition('suppliar', 'role_id > 3 AND role_id != 10 AND id != ?', [$distributor_id]);   
-                }
-                  else {
-    // selain role 10 -> pakai filter biasa
+                } else {
                   $all_supplier = $obj->allCondition('suppliar', 'role_id > ? AND role_id != 10 AND id != ?', [$role_id, $distributor_id]);
                 }
                 foreach ($all_supplier as $customer) {
@@ -86,8 +78,7 @@ function getStockProduct($pid) {
           </div>
 
           <div class="col-md-6">
-            <input type="hidden" id="buyer" name="buyer" placeholder="Nama Customer" readonly
-              style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px;">
+            <input type="hidden" id="buyer" name="buyer" readonly>
           </div>
         </div>
 
@@ -99,15 +90,15 @@ function getStockProduct($pid) {
         </a>
 
         <!-- Tabel Produk -->
-        <div id="productRows" style="margin: 20px 0;">
-          <table style="width:100%; border-collapse: collapse; font-size:14px;">
+        <div id="productRows" style="margin: 20px 0; overflow-x:auto;">
+          <table class="product-table">
             <thead>
-              <tr style="background:#f3f4f6; text-align:left;">
-                <th style="padding:10px; border-bottom:1px solid #e5e7eb;text-align:center">Produk</th>
-                <th style="padding:10px; border-bottom:1px solid #e5e7eb;text-align:center">Qty</th>
-                <th style="padding:10px; border-bottom:1px solid #e5e7eb;text-align:center">Harga</th>
-                <th style="padding:10px; border-bottom:1px solid #e5e7eb;text-align:center">Subtotal</th>
-                <th style="padding:10px; border-bottom:1px solid #e5e7eb;text-align:center">Aksi</th>
+              <tr>
+                <th>Produk</th>
+                <th>Qty</th>
+                <th>Harga</th>
+                <th>Subtotal</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="productRowsBody"></tbody>
@@ -116,8 +107,7 @@ function getStockProduct($pid) {
 
         <div class="row">
           <div class="col-md-6">
-            <label for="total_payment" style="font-weight: 500; display: block; margin-bottom: 8px;">Total
-              Pembayaran</label>
+            <label for="total_payment" style="font-weight: 500; display: block; margin-bottom: 8px;">Total Pembayaran</label>
             <input type="text" id="total_payment" name="total_payment" readonly placeholder="Otomatis terisi"
               style="width: 100%; padding: 12px; background-color: #f9fafb; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px; text-align:right;">
           </div>
@@ -138,6 +128,66 @@ function getStockProduct($pid) {
   </section>
 </div>
 
+<style>
+  .product-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 800px; /* desktop tetap tabel panjang */
+  }
+  .product-table thead {
+    background: #f3f4f6;
+  }
+  .product-table th,
+  .product-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+  }
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width: 768px) {
+    .product-table {
+      min-width: unset; /* biar tidak scroll horizontal */
+    }
+
+    .product-table thead {
+      display: none;
+    }
+
+    .product-table tr {
+      display: block;
+      margin-bottom: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .product-table td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      border: none;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .product-table td:last-child {
+      border-bottom: none;
+    }
+
+    .product-table td:before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #374151;
+    }
+  }
+</style>
+
 <?php
 $productsData = [];
 foreach ($products as $p) {
@@ -146,19 +196,16 @@ foreach ($products as $p) {
 }
 ?>
 <script>
- document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
   new Choices("#customer_name", {
-    searchEnabled: true,   // aktifkan fitur search
-    itemSelectText: '',    // hilangkan tulisan "Press to select"
-    shouldSort: false,     // biar urutan option asli tidak berubah
+    searchEnabled: true,
+    itemSelectText: '',
+    shouldSort: false,
     placeholderValue: "Pilih Anggota"
   });
 });
-const productsData = <?php echo json_encode(array_map(function($p){
-    $p->pStock = getStockProduct($p->id);
-    return $p;
-}, $products)); ?>;
 
+const productsData = <?php echo json_encode($productsData); ?>;
 const buyerDropdown = document.getElementById('customer_name');
 const buyerManual = document.getElementById('buyer');
 const totalPaymentInput = document.getElementById('total_payment');
@@ -180,23 +227,19 @@ function createProductRow() {
   });
 
   row.innerHTML = `
-    <td style="padding:8px;">
+    <td data-label="Produk">
       <select name="product_id[]" class="product-select" required 
         style="width:100%; padding:8px; border-radius:8px; border:1px solid #ccc;">
         ${options}
       </select>
     </td>
-    <td style="padding:8px; text-align:center;">
+    <td data-label="Qty">
       <input type="number" name="quantity[]" class="quantity-input" min="1" value="1" required
         style="width:70px; padding:6px; border-radius:8px; border:1px solid #ccc; text-align:center;">
     </td>
-    <td style="padding:8px; text-align:right;">
-      <span class="price-label">0</span>
-    </td>
-    <td style="padding:8px; text-align:right;">
-      <span class="subtotal-label">0</span>
-    </td>
-    <td style="padding:8px; text-align:center;">
+    <td data-label="Harga"><span class="price-label">0</span></td>
+    <td data-label="Subtotal"><span class="subtotal-label">0</span></td>
+    <td data-label="Aksi">
       <button type="button" class="remove-row" 
         style="background:#ef4444; color:white; border:none; border-radius:6px; padding:6px 10px; cursor:pointer;">
         Hapus
@@ -204,13 +247,11 @@ function createProductRow() {
     </td>
   `;
 
-  // Hapus baris
   row.querySelector('.remove-row').addEventListener('click', () => {
     row.remove();
     updateTotalPayment();
   });
 
-  // Cegah produk duplikat
   row.querySelector('.product-select').addEventListener('change', function () {
     const selectedValue = this.value;
     let duplicate = false;
@@ -227,7 +268,6 @@ function createProductRow() {
     updateTotalPayment();
   });
 
-  // Hitung ulang saat qty berubah
   row.querySelector('.quantity-input').addEventListener('input', () => {
     updateRowSubtotal(row);
     updateTotalPayment();
@@ -260,7 +300,6 @@ function updateRowSubtotal(row) {
 
   const selectedBuyer = buyerDropdown.options[buyerDropdown.selectedIndex];
   const roleId = selectedBuyer ? selectedBuyer.getAttribute('data-role') : null;
-
   const isPrivateSale = buyerDropdown.value === "0";
 
   if (isPrivateSale) {

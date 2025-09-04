@@ -27,29 +27,52 @@ $roleNames = [
     3 => 'Distributor',
     4 => 'Agent',
     5 => 'Reseller',
-  10 => 'Super Admin'
+   10 => 'Super Admin'
 ];
 $roleName = $roleNames[$roleId] ?? 'User';
-?>
 
-<?php
+/**
+ * Fungsi breadcrumb
+ */
 function makeBreadcrumb($actual_link) {
-    // Ubah underscore jadi spasi & kapital tiap kata
     $formatLabel = function($txt) {
         return ucwords(str_replace('_', ' ', $txt));
     };
 
     if (strpos($actual_link, '_add') !== false) {
-        // contoh: purchase_order_add → Purchase Order > Add
         $base = str_replace('_add', '', $actual_link);
         return $formatLabel($base) . ' > Add';
     }
-
-    // default
     return $formatLabel($actual_link);
 }
 
 $breadcrumbText = makeBreadcrumb($actual_link);
+
+/**
+ * Fungsi hitung total point dari transaction_histories
+ */
+function getTotalPoints($suppliar_id) {
+    global $pdo;
+
+    $sql = "
+        SELECT 
+            COALESCE(SUM(CASE WHEN is_refund = 0 THEN quantity ELSE 0 END), 0) AS total_penjualan,
+            COALESCE(SUM(CASE WHEN is_refund = 1 THEN quantity ELSE 0 END), 0) AS total_refund
+        FROM transaction_histories
+        WHERE suppliar_id = :suppliar_id
+          AND type = 'penjualan'
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':suppliar_id' => $suppliar_id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $totalPoints = ($row['total_penjualan'] ?? 0) - ($row['total_refund'] ?? 0);
+    return max(0, $totalPoints);
+}
+
+// Hitung total point suppliar login saat ini
+$totalPoint = $distributor_id ? getTotalPoints($distributor_id) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +80,7 @@ $breadcrumbText = makeBreadcrumb($actual_link);
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
   <title>Ladies V</title>
@@ -67,6 +90,7 @@ $breadcrumbText = makeBreadcrumb($actual_link);
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
   <!-- Google Fonts -->
+   <link rel="stylesheet" href="assets/css/responsive.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
@@ -95,8 +119,6 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       margin: 0;
       padding: 0;
     }
-
-    /* Navbar Container */
     .navbar-custom {
       background-color: #fff !important;
       border-bottom: 1px solid #e5e7eb;
@@ -109,12 +131,10 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       justify-content: space-between;
       position: fixed;
       top: 0;
-      left: 260px; /* adjust to sidebar width */
+      left: 0;
       right: 0;
       z-index: 1040;
     }
-
-    /* Navigation Lists */
     .nav-left,
     .nav-right {
       display: flex;
@@ -123,8 +143,6 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       margin: 0;
       padding: 0;
     }
-
-    /* Sidebar Toggle Button */
     .nav-link {
       font-size: 20px;
       color: #4b5563;
@@ -136,13 +154,10 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       text-decoration: none;
       cursor: pointer;
     }
-
     .nav-link:hover {
       background-color: #f3f4f6;
       color: #2563eb;
     }
-
-    /* User Info Section */
     .user-info {
       text-align: right;
       min-width: 140px;
@@ -152,15 +167,12 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       font-size: 15px;
       user-select: none;
     }
-
     .user-role {
       font-size: 13px;
       color: #6c757d;
       font-weight: normal;
       margin-top: 2px;
     }
-
-    /* Profile Icon */
     .profile-icon {
       width: 40px;
       height: 40px;
@@ -178,12 +190,9 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       text-decoration: none;
       position: relative;
     }
-
     .profile-icon:hover {
       background-color: #d0e4ff;
     }
-
-    /* Dropdown Menu */
     .dropdown-menu-custom {
       position: absolute;
       top: 56px;
@@ -196,8 +205,6 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       display: none;
       flex-direction: column;
     }
-
-    /* Dropdown Items */
     .dropdown-item-custom {
       display: flex;
       align-items: center;
@@ -210,28 +217,82 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       border-radius: 8px;
       transition: background-color 0.25s ease;
     }
-
     .dropdown-item-custom:hover {
       background-color: #e0e7ff;
       color: #1e40af;
     }
-
-    /* Logout Item */
     .dropdown-item-logout {
       color: #dc2626 !important;
     }
-
     .dropdown-item-logout:hover {
       background-color: #fee2e2 !important;
       color: #991b1b !important;
     }
-
-    /* Divider */
     .dropdown-divider-custom {
       height: 1px;
       background-color: #e5e7eb;
       margin: 6px 0;
     }
+
+    /* Search box */
+.dataTables_wrapper .dataTables_filter {
+    text-align: right;
+    margin-bottom: 12px;
+}
+.dataTables_wrapper .dataTables_filter input {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 12px;
+    outline: none;
+    width: 180px;
+    transition: all 0.2s;
+}
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+}
+
+/* Show entries */
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 12px;
+}
+.dataTables_wrapper .dataTables_length select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 12px;
+    outline: none;
+    min-width: 60px;
+}
+
+/* Pagination */
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 12px;
+    text-align: center;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 5px 12px;
+    margin: 0 2px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background-color: #fff;
+    color: #374151;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #2563eb;
+    color: #fff !important;
+    border-color: #2563eb;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #e0e7ff;
+    color: #2563eb !important;
+    border-color: #2563eb;
+}
+
   </style>
 </head>
 
@@ -252,8 +313,10 @@ $breadcrumbText = makeBreadcrumb($actual_link);
       <ul class="nav-right navbar-nav" role="menubar">
         <li class="user-info" role="none">
           <div><?php echo htmlspecialchars($userRole); ?></div>
-          <div class="user-role"><b>Total Point:<?php echo htmlspecialchars($suppliar->total_point ?? 0); ?></b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($roleName); ?></div>
-           <div class="user-role"></div>
+          <div class="user-role">
+            <b>Total Point: <?php echo htmlspecialchars($totalPoint); ?></b>
+            &nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($roleName); ?>
+          </div>
         </li>
         <li class="nav-item dropdown" style="position: relative;" role="none">
           <a href="#" id="profileDropdown" class="profile-icon" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
@@ -294,7 +357,19 @@ $breadcrumbText = makeBreadcrumb($actual_link);
         });
       });
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.querySelector("[data-widget='pushmenu']");
+
+  if (toggleBtn && sidebar) {
+    toggleBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      sidebar.classList.toggle("active");
+    });
+  }
+});
+</script>
   </div>
 </body>
-
 </html>

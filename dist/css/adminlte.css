@@ -12450,7 +12450,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   .sidebar-mini.sidebar-collapse .content-wrapper,
   .sidebar-mini.sidebar-collapse .main-footer,
   .sidebar-mini.sidebar-collapse .main-header {
-    margin-left: 4.6rem !important;
+    margin-left: 0 !important;
   }
   .sidebar-mini.sidebar-collapse .nav-sidebar .nav-header {
     display: none;
@@ -12557,7 +12557,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
   .sidebar-mini-md.sidebar-collapse .content-wrapper,
   .sidebar-mini-md.sidebar-collapse .main-footer,
   .sidebar-mini-md.sidebar-collapse .main-header {
-    margin-left: 4.6rem !important;
+    margin-left: 0 !important;
   }
   .sidebar-mini-md.sidebar-collapse .nav-sidebar .nav-header {
     display: none;
@@ -12658,7 +12658,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 
 .sidebar-collapse .sidebar-no-expand.main-sidebar.sidebar-focused .brand-link,
 .sidebar-collapse .sidebar-no-expand.main-sidebar:hover .brand-link {
-  width: 4.6rem !important;
+  width: 0 !important;
 }
 
 .sidebar-collapse .sidebar-no-expand.main-sidebar.sidebar-focused .user-panel .image,

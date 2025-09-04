@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $orderId = $_POST['order_id'];
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM purchase_orders WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM purchase_orders WHERE po_id = ?");
     $stmt->execute([$orderId]);
     $order = $stmt->fetch();
 
@@ -23,7 +23,7 @@ try {
     }
 
     // Ubah status jadi rejected
-    $stmt = $pdo->prepare("UPDATE purchase_orders SET status = 'rejected', approved_at = '' WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE purchase_orders SET status = 'rejected', approved_at = '' WHERE po_id = ?");
     $stmt->execute([$orderId]);
 
     echo json_encode(['status' => true, 'message' => 'Order rejected successfully.']);

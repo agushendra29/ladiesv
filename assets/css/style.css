@@ -1,1 +1,286 @@
-.catWarning-area {display: none;}.memberFormError {display: none;}.addProductError-area {display: none;}.addStockManagementError-area {display: none;}.purchase-suppliar-info p {margin: 0;padding: 0;font-size: 14px;font-family: tahoma;}.main-header .navbar-nav .nav-item .nav-link img{width: 40px;}.material-symbols-outlined {font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48 }.material-symbols-outlined {font-size: 26px;margin-left: -11px!important;}.dropdown-menu-right i{font-size: 25px;color: #36c95f;margin-right: 7px;}.dropdown-menu-right .pic i{color: red;}.login-form-bx{width: 90% !important;}.cards .authincation-content{box-shadow: 0 12px 23px 0 rgba(62,73,84,.08) !important;background-color: #fff !important;content: "";height: 100% !important;width: 90% !important;position: relative !important;left: 210px;top: 0;margin-top: 50px;padding: 50px !important;}.login-form-bx .box-skew1 {z-index: 1 !important;background-color: #fbfbfb !important;}.login-form-bx .box-skew1{background-image: url('../images/login.png');content: "";background-size: cover;background-position: bottom;height: 100%;position: absolute;width: 140% !important;right: -28px;top: 0;z-index: 11 !important;-webkit-transform: skew(-5deg);transform: skew(-5deg);}.login-logo img{margin-top: -13px !important;}.authincation-content p{color: #7e7e7e;margin-bottom: 15px;font-weight: 100px;}.authincation-content label{font-weight: 100px;color: #7e7e7e;}.authincation-content .tag {display: table !important;}.login-form-bx .form-control {background: #fff !important;border: 1px solid #d7dae3 !important;color: #3e4954 !important;height: 56px !important;width: 88% !important;padding: 10px;}.authincation-content .btn-primary {color: #fff;background-color:#013173 !important;border-color: #013173 !important;width: 88% !important;}.authincation-content .btn {padding: 0.938rem 1.5rem !important;border-radius: 0.75rem !important;font-weight: 500 !important;font-size: 1rem !important;}.authincation-content a{color: #000 !important;}.authincation-content h3{font-size: 23px !important;text-align: left;margin: 9px;color: #3d4465;} body {  font-family: 'Plus Jakarta Sans' !important;}
+.catWarning-area {
+    display: none;
+}
+
+.memberFormError {
+    display: none;
+}
+
+.addProductError-area {
+    display: none;
+}
+
+.addStockManagementError-area {
+    display: none;
+}
+
+.purchase-suppliar-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: tahoma;
+}
+
+.main-header .navbar-nav .nav-item .nav-link img {
+    width: 40px;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL'0, 'wght'400, 'GRAD'0, 'opsz'48
+}
+
+.material-symbols-outlined {
+    font-size: 26px;
+    margin-left: -11px !important;
+}
+
+.dropdown-menu-right i {
+    font-size: 25px;
+    color: #36c95f;
+    margin-right: 7px;
+}
+
+.dropdown-menu-right .pic i {
+    color: red;
+}
+
+.login-form-bx {
+    width: 90% !important;
+}
+
+.cards .authincation-content {
+    box-shadow: 0 12px 23px 0 rgba(62, 73, 84, .08) !important;
+    background-color: #fff !important;
+    content: "";
+    height: 100% !important;
+    width: 90% !important;
+    position: relative !important;
+    left: 210px;
+    top: 0;
+    margin-top: 50px;
+    padding: 50px !important;
+}
+
+.login-form-bx .box-skew1 {
+    z-index: 1 !important;
+    background-color: #fbfbfb !important;
+}
+
+.login-form-bx .box-skew1 {
+    background-image: url('../images/login.png');
+    content: "";
+    background-size: cover;
+    background-position: bottom;
+    height: 100%;
+    position: absolute;
+    width: 140% !important;
+    right: -28px;
+    top: 0;
+    z-index: 11 !important;
+    -webkit-transform: skew(-5deg);
+    transform: skew(-5deg);
+}
+
+.login-logo img {
+    margin-top: -13px !important;
+}
+
+.authincation-content p {
+    color: #7e7e7e;
+    margin-bottom: 15px;
+    font-weight: 100px;
+}
+
+.authincation-content label {
+    font-weight: 100px;
+    color: #7e7e7e;
+}
+
+.authincation-content .tag {
+    display: table !important;
+}
+
+.login-form-bx .form-control {
+    background: #fff !important;
+    border: 1px solid #d7dae3 !important;
+    color: #3e4954 !important;
+    height: 56px !important;
+    width: 88% !important;
+    padding: 10px;
+}
+
+.authincation-content .btn-primary {
+    color: #fff;
+    background-color: #013173 !important;
+    border-color: #013173 !important;
+    width: 88% !important;
+}
+
+.authincation-content .btn {
+    padding: 0.938rem 1.5rem !important;
+    border-radius: 0.75rem !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+}
+
+.authincation-content a {
+    color: #000 !important;
+}
+
+.authincation-content h3 {
+    font-size: 23px !important;
+    text-align: left;
+    margin: 9px;
+    color: #3d4465;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans' !important;
+}
+
+
+body.sidebar-collapse .navbar-custom {
+    left: 0 !important;
+    /* navbar geser ke kiri full */
+    transition: left 0.3s ease;
+}
+
+body.sidebar-collapse .content-wrapper {
+    margin-left: 0 !important;
+    /* konten jadi full */
+    transition: margin-left 0.3s ease;
+}
+
+/* Normal mode (desktop) */
+#sidebar {
+    transition: margin-left 0.3s ease;
+}
+/* --- Sidebar umum --- */
+.sidebar {
+  width: 260px;
+  background-color: #d2eeff;
+  color: #374151;
+  height: 100vh;
+  position: fixed;
+  top: 57px; left: 0;
+  overflow-y: auto;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.05);
+  z-index: 1030;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: 0; /* default tertutup */
+  }
+
+  body.sidebar-collapse #sidebar {
+    margin-left: 0; /* kalau collapse -> buka */
+  }
+}
+/* Desktop: sidebar selalu terbuka */
+@media (min-width: 769px) {
+  #main-content {
+    margin-left: 249px; /* konten geser */
+  }
+  .sidebar {
+    transform: translateX(0);   
+  }
+
+    body.sidebar-collapse #sidebar {
+    margin-left: -260px;
+  }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    h1, h2, h3 {
+        font-size: 16px !important;
+    }
+}
+
+
+/* Mobile: sidebar default sembunyi */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%); /* sembunyikan */
+  }
+  .sidebar.active {
+    transform: translateX(0); /* munculkan saat toggle */
+  }
+  #main-content {
+    margin-left: 0 !important; /* konten full width */
+  }
+}
+
+.form-control,
+.form-select {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    height: calc(2.25rem + 2px);
+    box-shadow: inset 0 0 0 transparent;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+.choices {
+    width: 100% !important;
+    font-size: 12px;
+}
+
+.choices__inner {
+    font-size: 12px !important;
+    font-weight: 500;
+    padding: 8px 10px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    min-height: calc(2.25rem + 2px) !important;
+    box-shadow: inset 0 0 0 transparent !important;
+}
+
+.choices__list--single {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.choices__input {
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+}
+
+/* Fokus untuk Choices */
+.is-focused .choices__inner,
+.is-open .choices__inner {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+}
+
+@media (max-width: 768px) {
+  /* Search, pagination, length menu tetap rapi */
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0;
+    gap: 10px;
+    font-size:10px !important;
+  }
+  .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 280px; }
+  .dataTables_wrapper .dataTables_paginate { margin-top: 4px; gap:6px; }
+}

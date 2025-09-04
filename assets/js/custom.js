@@ -152,9 +152,9 @@ $("#empTable").DataTable({
         e = $("#p_suppliar").val(),
         d = $("#stock_quantity").val();
     if ("" != t && "" != e && null != d) {
-         if (!confirm("Are you sure you want to add/update this stock?")) {
-        return; // jika user cancel, hentikan submit
-    }
+        if (!confirm("Are you sure you want to add/update this stock?")) {
+            return; // jika user cancel, hentikan submit
+        }
         var r = $("#addStockManagement").serialize();
         $.ajax({
             type: "POST",
@@ -166,27 +166,31 @@ $("#empTable").DataTable({
         })
     } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
 })), $(document).ready(function () {
-  $("#purchaseOrderForm").on("submit", function (e) {
-    e.preventDefault();
+    $("#purchaseOrderForm").on("submit", function (e) {
+        e.preventDefault();
 
-    let products    = $("select[name='product_id[]']").map(function(){ return $(this).val(); }).get();
-    let quantities  = $("input[name='quantity[]']").map(function(){ return $(this).val(); }).get();
+        let products = $("select[name='product_id[]']").map(function () {
+            return $(this).val();
+        }).get();
+        let quantities = $("input[name='quantity[]']").map(function () {
+            return $(this).val();
+        }).get();
 
-    let confirmHtml = "";
-    let subtotal    = 0;
+        let confirmHtml = "";
+        let subtotal = 0;
 
-    for (let i = 0; i < products.length; i++) {
-      let productId     = products[i];
-      let qty           = parseInt(quantities[i] || 0);
+        for (let i = 0; i < products.length; i++) {
+            let productId = products[i];
+            let qty = parseInt(quantities[i] || 0);
 
-      // ambil <option> terpilih
-      let productOption = $("select[name='product_id[]']").eq(i).find("option:selected");
-      let productName   = productOption.text();
-      let price         = parseFloat(productOption.data("price") || 0);
+            // ambil <option> terpilih
+            let productOption = $("select[name='product_id[]']").eq(i).find("option:selected");
+            let productName = productOption.text();
+            let price = parseFloat(productOption.data("price") || 0);
 
-      subtotal += price * qty;
+            subtotal += price * qty;
 
-      confirmHtml += `
+            confirmHtml += `
         <p>
           <b>Produk:</b> ${productName} <br>
           <b>Qty:</b> ${qty} <br>
@@ -195,37 +199,37 @@ $("#empTable").DataTable({
         </p>
         <hr>
       `;
-    }
+        }
 
-    confirmHtml += `<h4>Total: Rp ${subtotal.toLocaleString()}</h4>`;
+        confirmHtml += `<h4>Total: Rp ${subtotal.toLocaleString()}</h4>`;
 
-    Swal.fire({
-      title: "Konfirmasi Purchase Order",
-      html: confirmHtml,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Ya, Kirim",
-      cancelButtonText: "Batal",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // submit form via ajax
-        $.ajax({
-          url: "app/action/add_purchase_order.php",
-          type: "POST",
-          data: $("#purchaseOrderForm").serialize(),
-          success: function (res) {
-            Swal.fire("Berhasil!", "Purchase Order berhasil disimpan", "success");
-            $("#purchaseOrderForm")[0].reset();
-            $("#productRows").html(""); // reset rows
-          },
-          error: function () {
-            Swal.fire("Error!", "Terjadi kesalahan saat menyimpan.", "error");
-          }
+        Swal.fire({
+            title: "Konfirmasi Purchase Order",
+            html: confirmHtml,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Kirim",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // submit form via ajax
+                $.ajax({
+                    url: "app/action/add_purchase_order.php",
+                    type: "POST",
+                    data: $("#purchaseOrderForm").serialize(),
+                    success: function (res) {
+                        Swal.fire("Berhasil!", "Purchase Order berhasil disimpan", "success");
+                        $("#purchaseOrderForm")[0].reset();
+                        $("#productRows").html(""); // reset rows
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menyimpan.", "error");
+                    }
+                });
+            }
         });
-      }
     });
-  });
-}),$("#refundForm").submit(function (e) {
+}), $("#refundForm").submit(function (e) {
     e.preventDefault();
 
     var invoiceNumber = $("#invoice_number").val();
@@ -262,20 +266,20 @@ $("#empTable").DataTable({
         $("#refundError").html("Invoice number harus diisi.");
     }
 }), $("#adsuppliarForm").submit(function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  // Ambil data form dalam bentuk object
-  var formData = $("#adsuppliarForm").serializeArray();
-  var payload = {};
-  formData.forEach(function (item) {
-    payload[item.name] = item.value;
-  });
+    // Ambil data form dalam bentuk object
+    var formData = $("#adsuppliarForm").serializeArray();
+    var payload = {};
+    formData.forEach(function (item) {
+        payload[item.name] = item.value;
+    });
 
-  let provName = $("#sup_provinsi option:selected").text();
-  let kotaName = $("#sup_kota option:selected").text();
+    let provName = $("#sup_provinsi option:selected").text();
+    let kotaName = $("#sup_kota option:selected").text();
 
-  // Buat HTML konfirmasi
-  let confirmHtml = `
+    // Buat HTML konfirmasi
+    let confirmHtml = `
     <div style="text-align:left">
       <p><b>Nama:</b> ${payload.sup_name || '-'}</p>
       <p><b>NIK:</b> ${payload.sup_nik || '-'}</p>
@@ -296,53 +300,53 @@ $("#empTable").DataTable({
     </div>
   `;
 
-  Swal.fire({
-    title: 'Konfirmasi Data',
-    html: confirmHtml,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Ya, Lanjutkan',
-    cancelButtonText: 'Batal',
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    width: 600
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Kirim ke server jika user klik "Ya, Lanjutkan"
-      $.ajax({
-        type: "POST",
-        url: "app/action/add_suppliar.php",
-        data: $("#adsuppliarForm").serialize(),
-        success: function (e) {
-          if ($.trim(e) == "yes") {
-            Swal.fire({
-              icon: 'success',
-              title: 'Berhasil!',
-              text: 'Suppliar berhasil ditambahkan.',
-              timer: 2000,
-              showConfirmButton: false
-            }).then(() => {
-              location.reload();
+    Swal.fire({
+        title: 'Konfirmasi Data',
+        html: confirmHtml,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Lanjutkan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        width: 600
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Kirim ke server jika user klik "Ya, Lanjutkan"
+            $.ajax({
+                type: "POST",
+                url: "app/action/add_suppliar.php",
+                data: $("#adsuppliarForm").serialize(),
+                success: function (e) {
+                    if ($.trim(e) == "yes") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Suppliar berhasil ditambahkan.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: e
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan saat menyimpan data suppliar.'
+                    });
+                }
             });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Gagal!',
-              text: e
-            });
-          }
-        },
-        error: function () {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Terjadi kesalahan saat menyimpan data suppliar.'
-          });
         }
-      });
-    }
-  });
-}),$("#addNews").submit(function (e) {
+    });
+}), $("#addNews").submit(function (e) {
     e.preventDefault();
 
     var title = $("#title").val(),
@@ -375,7 +379,7 @@ $("#empTable").DataTable({
         $("#newsErrorArea").css("border-color", "red").show();
         $("#newsErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
     }
-}),$("#addReward").submit(function (e) {
+}), $("#addReward").submit(function (e) {
     e.preventDefault();
 
     var nama_reward = $("#nama_reward").val(),
@@ -448,7 +452,7 @@ $("#empTable").DataTable({
             confirmButtonText: "OK"
         });
     }
-}),$("#salesForm").submit(function (e) {
+}), $("#salesForm").submit(function (e) {
     e.preventDefault();
 
     let buyerSelect = $("#customer_name").val(),
@@ -456,7 +460,7 @@ $("#empTable").DataTable({
         selectedBuyer = $("#customer_name option:selected"),
         buyerRole = selectedBuyer.data("role"),
         buyerName = buyerInput || selectedBuyer.data("name");
-        buyerCode = selectedBuyer.data("code") || "-"; // ✅ ambil buyer code
+    buyerCode = selectedBuyer.data("code") || "-"; // ✅ ambil buyer code
 
     // Validasi pembeli
     if ((buyerSelect === "0" || buyerSelect === null) && buyerInput === "") {
@@ -510,7 +514,7 @@ $("#empTable").DataTable({
     };
 
     // 🔔 Build HTML konfirmasi
-   let confirmHtml = `
+    let confirmHtml = `
   <div style="text-align:left; font-size:14px;">
     <p><b>Pembeli:</b> ${buyerName} <br><b>ID Anggota:</b> ${buyerCode}</p>
     <hr style="margin:10px 0;">
@@ -561,7 +565,9 @@ $("#empTable").DataTable({
             $.ajax({
                 type: "POST",
                 url: "app/action/add_sell_order.php",
-                data: { data: JSON.stringify(formData) },
+                data: {
+                    data: JSON.stringify(formData)
+                },
                 success: function (res) {
                     if ($.trim(res) === "yes") {
                         Swal.fire({
@@ -649,22 +655,42 @@ $("#empTable").DataTable({
         data: "items_summary"
     }]
 }), $("#productTable").DataTable({
-
-    processing: !0,
-    serverSide: !0,
+    processing: true,
+    serverSide: true,
     serverMethod: "post",
     ajax: {
         url: "app/ajax/product_data.php"
     },
-    columns: [{
-        data: "product_id"
-    }, {
-        data: "product_name"
-    }, {
-        data: "sell_price"
-    }, {
-        data: "action"
-    }]
+    columns: [
+        { data: "product_id" },
+        { data: "product_name" },
+        { data: "sell_price" },
+        { data: "action" }
+    ],
+    responsive: true,
+    paging: true,
+    searching: true,
+    info: false,
+
+    drawCallback: function (settings) {
+        // ambil data yang lagi ditampilkan
+        const api = this.api();
+        const data = api.rows({ page: 'current' }).data();
+        const $mobileCards = $("#mobileProductCards");
+
+        $mobileCards.empty(); // clear biar nggak dobel
+
+        data.each(function (row) {
+            const card = `
+              <div class="card-item">
+                <h4>${row.product_name}</h4>
+                <div class="meta">Harga: Rp ${row.sell_price}</div>
+                <div class="actions">${row.action}</div>
+              </div>
+            `;
+            $mobileCards.append(card);
+        });
+    }
 }), $("#stockManagementTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -705,7 +731,7 @@ $("#empTable").DataTable({
         {
             "data": "new_quantity"
         },
-        { 
+        {
             data: "difference",
             render: function (data, type, row) {
                 if (row.difference_raw > 0) {
@@ -723,33 +749,51 @@ $("#empTable").DataTable({
             "data": "created_at"
         },
     ]
-}),$("#newsTable").DataTable({
+}), $("#newsTable").DataTable({
     processing: !0,
     serverSide: !0,
     serverMethod: "post",
     ajax: {
-        url: "app/ajax/news_data.php"  // adjust the path to your PHP backend
+        url: "app/ajax/news_data.php" // adjust the path to your PHP backend
     },
-    columns: [
-        { data: "title" },         // news title
-        {data: "content"},
-        { data: "publish_date" },  // formatted publish date
-        { data: "created_at" },    // created datetime
-        {data: "action"}
+    columns: [{
+            data: "title"
+        }, // news title
+        {
+            data: "content"
+        },
+        {
+            data: "publish_date"
+        }, // formatted publish date
+        {
+            data: "created_at"
+        }, // created datetime
+        {
+            data: "action"
+        }
     ]
-}),$("#rewardListTable").DataTable({
+}), $("#rewardListTable").DataTable({
     processing: false,
     serverSide: false,
     serverMethod: "post",
     ajax: {
-        url: "app/ajax/reward_list_data.php"  // adjust the path to your PHP backend
+        url: "app/ajax/reward_list_data.php" // adjust the path to your PHP backend
     },
-    columns: [
-        { data: "no" },            // news id
-        { data: "nama_reward" },         // news title
-        {data: "periode_hadiah"},
-        { data: "role_id" },  // formatted publish date
-        { data: "jumlah_point" },    
+    columns: [{
+            data: "no"
+        }, // news id
+        {
+            data: "nama_reward"
+        }, // news title
+        {
+            data: "periode_hadiah"
+        },
+        {
+            data: "role_id"
+        }, // formatted publish date
+        {
+            data: "jumlah_point"
+        },
     ]
 }), $("#otherProductTable").DataTable({
     processing: !0,
@@ -1076,42 +1120,42 @@ $("#empTable").DataTable({
     }) : alert("Your data are save")
 })), $("#EditaddNewRowBtn").on("click", (function (a) {
     a.preventDefault(), editAddNewRow()
-})), $('#combinedForm').on('submit', function(e){
-      e.preventDefault();
+})), $('#combinedForm').on('submit', function (e) {
+    e.preventDefault();
 
-        let provName = $("#provinsi option:selected").text();
-        let kotaName = $("#kota option:selected").text();
+    let provName = $("#provinsi option:selected").text();
+    let kotaName = $("#kota option:selected").text();
 
-      const payload = {};
-      $('#combinedForm').find('input, select, textarea').each(function(){
-          const name = $(this).attr('name');
-          if(name && !name.endsWith("[]")){ 
-              payload[name] = $(this).val().trim();
-          }
-      });
+    const payload = {};
+    $('#combinedForm').find('input, select, textarea').each(function () {
+        const name = $(this).attr('name');
+        if (name && !name.endsWith("[]")) {
+            payload[name] = $(this).val().trim();
+        }
+    });
 
-      payload.products = [];
-      $('.product-row').each(function(){
-          const pid = $(this).find('.product-select').val();
-          const qty = $(this).find('.quantity-input').val();
-          if(pid && qty){
-              payload.products.push({
-                  product_id: pid,
-                  quantity: parseInt(qty)
-              });
-          }
-      });
+    payload.products = [];
+    $('.product-row').each(function () {
+        const pid = $(this).find('.product-select').val();
+        const qty = $(this).find('.quantity-input').val();
+        if (pid && qty) {
+            payload.products.push({
+                product_id: pid,
+                quantity: parseInt(qty)
+            });
+        }
+    });
 
-      // Validasi minimal 2 produk
-      let totalQty = payload.products.reduce((sum, p) => sum + p.quantity, 0);
-      if(totalQty < 2){
-          $('#formErrorArea').text("pendaftaran reseller harus membeli minimal 2 produk").show();
-          return;
-      }
-      $('#formErrorArea').hide();
+    // Validasi minimal 2 produk
+    let totalQty = payload.products.reduce((sum, p) => sum + p.quantity, 0);
+    if (totalQty < 2) {
+        $('#formErrorArea').text("pendaftaran reseller harus membeli minimal 2 produk").show();
+        return;
+    }
+    $('#formErrorArea').hide();
 
-      // Pesan konfirmasi
-      let confirmHtml = `
+    // Pesan konfirmasi
+    let confirmHtml = `
         <div style="text-align:left">
           <p><b>Nama:</b> ${payload.sup_name}</p>
           <p><b>NIK:</b> ${payload.sup_nik}</p>
@@ -1132,7 +1176,7 @@ $("#empTable").DataTable({
         </div>
       `;
 
-      Swal.fire({
+    Swal.fire({
         title: 'Konfirmasi Data',
         html: confirmHtml,
         icon: 'warning',
@@ -1142,48 +1186,50 @@ $("#empTable").DataTable({
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         width: 600
-      }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
-          // Submit via AJAX
-          $.ajax({
-              url: 'app/action/add_register_reseller.php',
-              type: 'POST',
-              data: { data: JSON.stringify(payload) },
-              dataType: 'text',
-              success: function(res){
-                  res = res.trim();
-                  if(res === 'yes'){
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Reseller berhasil didaftarkan dan penjualan berhasil.',
-                        timer: 2000,
-                        showConfirmButton: false
-                      }).then(() => {
-                          window.location.href = 'index.php?page=sell_order';
-                      });
-                    
-                  } else {
-                      Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
-                  }
-              },
-              error: function(xhr, status, error){
-                console.error(error);
-                $('#formErrorArea').text('Terjadi error server.').show();
-            }
-          });
-        }
-      });
+            // Submit via AJAX
+            $.ajax({
+                url: 'app/action/add_register_reseller.php',
+                type: 'POST',
+                data: {
+                    data: JSON.stringify(payload)
+                },
+                dataType: 'text',
+                success: function (res) {
+                    res = res.trim();
+                    if (res === 'yes') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Reseller berhasil didaftarkan dan penjualan berhasil.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = 'index.php?page=sell_order';
+                        });
 
-  });
-  let suppliarTable = $("#suppliarTable").DataTable({
+                    } else {
+                        Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    $('#formErrorArea').text('Terjadi error server.').show();
+                }
+            });
+        }
+    });
+
+});
+let suppliarTable = $("#suppliarTable").DataTable({
     processing: true,
     serverSide: true,
     serverMethod: "post",
     ajax: {
         url: "app/ajax/suppliar_data.php",
         data: function (d) {
-            d.roleFilter = $("#roleFilter").val() || ""; // kirim roleFilter
+            d.roleFilter = $("#roleFilter").val() || "";
         }
     },
     columns: [
@@ -1194,14 +1240,37 @@ $("#empTable").DataTable({
         { data: "role_id" },
         { data: "created_at" },
         { data: "action" }
-    ]
+    ],
+    drawCallback: function(settings) {
+    let api = this.api();
+    let data = api.rows({ page: 'current' }).data();
+
+    // kosongkan cards
+    $("#mobileCards").empty();
+
+    // render ulang card untuk tiap baris
+    data.each(function(row) {
+        let card = `
+<div class="card-item" style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px; margin-bottom:8px; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+    <div class="card-content" style="width:90%">
+        <h4 style="margin:0 0 4px 0; font-size:14px;">${row.name}</h4>
+        <div class="meta"><b>Member ID:</b> ${row.id}</div>
+        <div class="meta"><b>Alamat:</b> ${row.address}</div>
+        <div class="meta"><b>Kontak:</b> ${row.con_num}</div>
+        <div class="meta"><b>Level:</b> ${row.role_id}</div>
+        <div class="meta"><b>Tgl Daftar:</b> ${row.created_at}</div>
+    </div>
+    <div class="actions">
+        ${row.action}
+    </div>
+</div>
+        `;
+        $("#mobileCards").append(card);
+    });
+}
 });
 
 // ketika filter berubah → reload table
 $("#roleFilter").on("change", function () {
     suppliarTable.ajax.reload();
 });
-
-
-
-

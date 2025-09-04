@@ -126,30 +126,37 @@ foreach ($empRecords as $row) {
         "con_num"    => $row['con_num'],
         "role_id"    => getRoleName($row['role_id']),
         "created_at" => $row['create_at'],
-        "action"     => ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) ? '
-            <div class="btn-group" role="group" style="gap:4px;">
-                <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
-                   class="btn btn-primary btn-sm" 
-                   title="Edit">
-                   <i class="fas fa-edit"></i>
-                </a>
-                <button id="suppliarActive_btn" 
-                        data-id="' . $row['id'] . '" 
-                        data-status="' . $row['is_active'] . '"
-                        class="btn btn-warning btn-sm"
-                        title="' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '">
-                   <i class="fas ' . ($row['is_active'] == 1 ? 'fa-toggle-off' : 'fa-toggle-on') . '"></i> 
-                   ' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '
-                </button>
-                <form action="app/action/reset_password.php" method="post" style="display:inline;">
-                    <input type="hidden" name="username" value="' . $row['suppliar_code'] . '">
-                    <input type="hidden" name="nik_last6" value="' . substr($row['nik'], -6) . '">
-                    <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm(\'Yakin reset password ' . $row['name'] . '?\')">
-                        <i class="fas fa-key"></i> Reset
-                    </button>
-                </form>
-            </div>' : ''
+    "action" => ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) ? '
+<div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:center;">
+    <!-- Edit -->
+    <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
+       class="btn btn-primary btn-sm"
+       style="padding:3px 8px; font-size:11px; border-radius:5px; display:flex; align-items:center; justify-content:center;">
+       Edit
+    </a>
+    <!-- Suspend / Aktifkan -->
+    <button id="suppliarActive_btn" 
+            data-id="' . $row['id'] . '" 
+            data-status="' . $row['is_active'] . '"
+            class="btn btn-warning btn-sm"
+            style="padding:3px 8px; font-size:11px; border-radius:5px; display:flex; align-items:center; justify-content:center;"
+            title="' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '">
+       ' . ($row['is_active'] == 1 ? 'Suspend' : 'Aktifkan') . '
+    </button>
+    <!-- Reset Password -->
+    <form action="app/action/reset_password.php" method="post" style="display:inline;">
+        <input type="hidden" name="username" value="' . $row['suppliar_code'] . '">
+        <input type="hidden" name="nik_last6" value="' . substr($row['nik'], -6) . '">
+        <button type="submit" class="btn btn-danger btn-sm"
+            style="background:red; padding:3px 8px; color:white; font-size:11px !important; border-radius:5px; display:flex; align-items:center; justify-content:center;"
+            onclick="return confirm(\'Yakin reset password ' . $row['name'] . '?\')">
+            Reset
+        </button>
+    </form>
+</div>' : ''
+
+
+
     ];
 }
 

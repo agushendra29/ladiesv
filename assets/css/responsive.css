@@ -1,0 +1,47 @@
+/* ==============================
+   Responsive Fixes
+   ============================== */
+
+/* Mobile: max 768px */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100% !important;
+        position: absolute;
+        z-index: 1000;
+        height: auto;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .content-wrapper {
+        margin-left: 0 !important;
+        padding: 10px;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .table {
+        font-size: 12px;
+    }
+}
+
+/* Extra small: max 480px */
+@media (max-width: 480px) {
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    h1, h2, h3 {
+        font-size: 16px;
+    }
+}

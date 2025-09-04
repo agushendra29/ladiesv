@@ -3,56 +3,37 @@
   <section class="content">
     <div class="container-fluid">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
-          <h2 style="margin: 0; font-size: 26px; font-weight: 600; color: #222; user-select:none;">
+        <!-- Header -->
+        <div class="header-block">
+          <h2>
             📋 DAFTAR PENJUALAN
           </h2>
-          <a href="index.php?page=add_sell_order" style="
-               background-color: #0073ea;
-               color: #fff;
-               border-radius: 12px;
-               padding: 8px 20px;
-               font-weight: 600;
-               font-size: 12px;
-               text-decoration: none;
-               box-shadow: 0 4px 12px rgba(0,115,234,0.4);
-               transition: background-color 0.3s ease, box-shadow 0.3s ease;
-               display: flex;
-               align-items: center;
-               gap: 8px;
-               user-select:none;
-             " 
-             onmouseover="this.style.backgroundColor='#005bb5'; this.style.boxShadow='0 6px 18px rgba(0,91,181,0.5)'" 
-             onmouseout="this.style.backgroundColor='#0073ea'; this.style.boxShadow='0 4px 12px rgba(0,115,234,0.4)'">
-            <i class="fas fa-plus" style="font-size: 16px;"></i> Tambah Penjualan
+          <a href="index.php?page=add_sell_order" class="btn-add">
+            <i class="fas fa-plus"></i> Tambah Penjualan
           </a>
         </div>
 
-        <div class="table-responsive" style="overflow-x:auto;">
-          <table id="sellOrderTable" class="display dataTable text-center" style="
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-            background: #fff;
-            font-size: 12px !important;
-            min-width: 900px;
-          ">
-            <thead style="background-color: #2563eb; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
+        <!-- Controls (Show & Search) -->
+        <div class="table-controls">
+          <div id="sellOrderTable_length"></div>
+          <div id="sellOrderTable_filter"></div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+          <table id="sellOrderTable" class="display dataTable text-center stock-table">
+            <thead>
               <tr>
-                <th style="padding: 16px 20px; border-bottom: none; border-top-left-radius: 12px; font-size: 11px;">No Invoice</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">DiProses Oleh</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">DiPesan Oleh</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Total Bayar</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Tanggal Penjualan</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px; border-top-right-radius: 12px;">Produk</th>
+                <th>No Invoice</th>
+                <th>DiProses Oleh</th>
+                <th>DiPesan Oleh</th>
+                <th>Total Bayar</th>
+                <th>Tanggal Penjualan</th>
+                <th>Produk</th>
               </tr>
             </thead>
-
-            <tbody style="color: #374151; font-weight: 500;">
-              <!-- DataTables will inject rows here -->
+            <tbody>
+              <!-- DataTables inject rows -->
             </tbody>
           </table>
         </div>
@@ -62,20 +43,128 @@
 </div>
 
 <style>
-  #sellOrderTable tbody tr {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
+/* Header */
+.header-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.header-block h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  user-select: none;
+}
+.btn-add {
+  background-color: #0073ea;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,115,234,0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-add:hover {
+  background-color: #005bb5;
+  box-shadow: 0 6px 18px rgba(0,91,181,0.5);
+}
 
-  #sellOrderTable tbody tr:hover {
-    background-color: #eff6ff;
-    box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
-  }
+/* Table controls (Show & Search) */
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.table-controls label {
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.table-controls select,
+.table-controls input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
 
-  #sellOrderTable tbody tr td {
-    padding: 14px 22px;
-    vertical-align: middle;
+/* Table */
+.stock-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  background: #fff;
+  font-size: 12px !important;
+  min-width: 900px;
+}
+.stock-table thead {
+  background-color: #2563eb;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 10px !important;
+}
+.stock-table th {
+  font-size: 10px !important;
+  padding: 14px 20px;
+}
+.stock-table td {
+  padding: 14px 22px;
+  vertical-align: middle;
+  text-align: center;
+}
+#sellOrderTable tbody tr {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+#sellOrderTable tbody tr:hover {
+  background-color: #eff6ff;
+  box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-block h2 {
+    font-size: 16px;
   }
+  .btn-add {
+    width: 100%;
+    justify-content: center;
+  }
+  .table-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .stock-table {
+    font-size: 11px !important;
+    min-width: unset; /* biar bisa scroll */
+  }
+  .stock-table th {
+    font-size: 9px !important;
+    padding: 10px 12px;
+  }
+  .stock-table td {
+    font-size: 11px !important;
+    padding: 10px 12px;
+  }
+}
 </style>

@@ -2,7 +2,7 @@
 <?php require_once 'inc/sidebar.php'; ?>
 
 <!-- Content Wrapper. Contains page content -->
-<div id="main-content" style="margin-left:260px; padding-top:60px; padding:20px; min-height:100vh; background-color:#f1f5f9;">
+<div class="content-wrapper" style="padding:20px; background-color:#f1f5f9; min-height:100vh;">
   <?php 
         if (isset($_GET['page'])) {
           $page ='pages/' .$_GET['page'].'.php';
@@ -16,6 +16,7 @@
         }
   ?>
 </div>
+<!-- /.content-wrapper -->
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -24,3 +25,6 @@
 <!-- /.control-sidebar -->
 
 <?php require_once 'inc/footer.php'; ?>
+
+<!-- Responsive Sidebar Auto Collapse -->
+

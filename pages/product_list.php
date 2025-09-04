@@ -4,104 +4,196 @@
   <section class="content">
     <div class="container-fluid">
       <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
-          <h2 style="margin: 0; font-size: 26px; font-weight: 600; color: #222; user-select:none;">
-            📦 DAFTAR PRODUK
-          </h2>
+        <!-- Header -->
+        <div class="page-header-custom">
+          <h2>📦 DAFTAR PRODUK</h2>
           <?php if ($_SESSION['role_id'] <= 1 || $_SESSION['role_id'] == 10): ?>
-          <a href="index.php?page=add_product" style="
-               background-color: #0073ea;
-               color: #fff;
-               border-radius: 6px;
-               padding: 8px 20px;
-               font-weight: 600;
-               font-size: 12px;
-               text-decoration: none;
-               box-shadow: 0 4px 12px rgba(0,115,234,0.4);
-               transition: background-color 0.3s ease, box-shadow 0.3s ease;
-               display: flex;
-               align-items: center;
-               gap: 8px;
-               user-select:none;
-             " onmouseover="this.style.backgroundColor='#005bb5'; this.style.boxShadow='0 6px 18px rgba(0,91,181,0.5)'"
-            onmouseout="this.style.backgroundColor='#0073ea'; this.style.boxShadow='0 4px 12px rgba(0,115,234,0.4)'">
-            <i class="fas fa-plus" style="font-size: 14px;"></i> Tambah Produk
+          <a href="index.php?page=add_product" class="btn-custom">
+            <i class="fas fa-plus"></i> Tambah Produk
           </a>
           <?php endif; ?>
         </div>
 
-        <div class="table-responsive" style="overflow-x:auto;">
-          <table id="productTable" class="display dataTable text-center" style="
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-            background: #fff;
-            font-size: 11px !important;
-            min-width: 600px;
-          ">
-            <thead
-              style="background-color: #2563eb; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
+        <!-- Table untuk desktop -->
+        <div class="table-responsive">
+          <table id="productTable" class="display dataTable text-center custom-table">
+            <thead>
               <tr>
-                <th style="padding: 16px 20px; border-bottom: none; border-top-left-radius: 12px; font-size: 11px;">No</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Nama Produk</th>
-                <th style="padding: 16px 20px; border-bottom: none; font-size: 11px;">Harga</th>
-                <th style="padding: 16px 20px; border-bottom: none; border-top-right-radius: 12px; font-size: 11px;">Aksi</th>
+                <th>No</th>
+                <th>Nama Produk</th>
+                <th>Harga</th>
+                <th>Aksi</th>
               </tr>
             </thead>
-
-            <tbody style="color: #374151; font-weight: 500;">
-              <!-- Rows akan diisi dari server -->
+            <tbody>
+              <!-- Rows dari server -->
             </tbody>
           </table>
         </div>
+
+        <!-- Card view untuk mobile -->
+        <div id="mobileProductCards"></div>
       </div>
     </div>
   </section>
 </div>
 
 <style>
-  #productTable tbody tr {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
+/* Header */
+.page-header-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.page-header-custom h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: #222;
+  user-select: none;
+}
+.btn-custom {
+  background-color: #0073ea;
+  color: #fff;
+  border-radius: 12px;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 12px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,115,234,0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-custom:hover {
+  background-color: #005bb5;
+  box-shadow: 0 6px 18px rgba(0,91,181,0.5);
+}
 
-  #productTable tbody tr:hover {
-    background-color: #eff6ff;
-    box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
-  }
+/* Table */
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  background: #fff;
+  font-size: 11px !important;
+}
+.custom-table thead {
+  background-color: #2563eb;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 9px !important;
+}
+.custom-table th {
+  padding: 10px 14px;
+  line-height: 1.3;
+  font-size: 10px !important;
+  text-align:center !important; 
+}
+.custom-table td {
+  padding: 14px 22px;
+  vertical-align: middle;
+  text-align: center;
+}
+#productTable tbody tr {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+#productTable tbody tr:hover {
+  background-color: #eff6ff;
+  box-shadow: 0 6px 20px rgba(0,115,234,0.15);
+}
 
-  #productTable tbody tr td {
-    padding: 14px 22px;
-    vertical-align: middle;
-  }
+/* Mobile Cards */
+#mobileProductCards {
+  display: none;
+}
+#mobileProductCards .card-item {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+#mobileProductCards .card-item h4 {
+  font-size: 14px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+#mobileProductCards .card-item .meta {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 2px;
+}
+#mobileProductCards .card-item .actions {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-start;
+}
+#mobileProductCards .card-item .actions .btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
 
-  /* Button styling */
-  .btn-action {
-    background-color: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    user-select: none;
-    margin: 0 4px;
+/* Responsif */
+@media (max-width: 768px) {
+  .page-header-custom h2 {
+    font-size: 20px;
   }
-
-  .btn-action:hover {
-    background-color: #1d4ed8;
+  .btn-custom {
+    width: 100%;
+    justify-content: center;
   }
-
-  /* Container for action buttons */
-  .action-group {
+  .table-responsive {
+    visibility: hidden;
+    height: auto;
+    overflow: hidden;
+  }
+  #productTable thead, #productTable tbody { display: none; }
+  #mobileProductCards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  #mobileProductCards .card-item { width: 100%; max-width: 400px; }
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_paginate {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    margin-bottom: 12px;
   }
+  .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 300px; }
+}
 </style>
+
+<!-- jQuery & DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+

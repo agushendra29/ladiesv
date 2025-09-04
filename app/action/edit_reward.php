@@ -20,11 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'periode_hadiah_sampai' => $periode_hadiah_sampai,
                 'role_id'               => $role_id,
                 'jumlah_point'          => $jumlah_point,
-                'max_redeem'            => $max_redeem,
-                'updated_at'            => date('Y-m-d H:i:s')
+                'max_redeem'            => $max_redeem
             ];
 
-            $obj->update('rewards', $rewardData, ['id' => $id]);
+            echo "<script>console.log('jumlah_point:', " . json_encode($jumlah_point) . ");</script>";
+
+       $obj->update('rewards', 'id', $id, $rewardData);
 
             $pdo->commit();
             echo 'Reward berhasil diupdate.';
