@@ -1,7 +1,7 @@
-<!-- Content Wrapper. Contains page content  -->
-<div class="">
+<!-- Content Wrapper -->
+<div class="mb-5 mt-5">
   <section class="content">
-    <div style="padding:75px; max-width: 900px; margin:auto;">
+    <div style="max-width: 1000px; margin: auto;">
       <?php 
         if (isset($_GET['edit_id'])) {
           $edit_id = $_GET['edit_id'];
@@ -17,7 +17,7 @@
           if ($data) {
       ?>
 
-      <h2 style="font-size: 28px; font-weight: 700; color: #1e293b; margin-bottom: 32px; user-select:none;">
+      <h2 style="font-size: 24px !important; font-weight: 700; color: #1e293b; margin-bottom: 24px; user-select:none;">
         ✏️ Edit Anggota: <?=htmlspecialchars($data->suppliar_code)?>
       </h2>
 
@@ -31,37 +31,31 @@
         <input type="hidden" name="id" value="<?= htmlspecialchars($edit_id); ?>">
 
         <div>
-          <label for="name" style="font-weight: 600; color: #334155;">Nama Lengkap <span
-              style="color:#ef4444;">*</span></label>
+          <label for="name" style="font-weight: 600; color: #334155;">Nama Lengkap <span style="color:#ef4444;">*</span></label>
           <input type="text" id="name" name="name" value="<?= htmlspecialchars($data->name); ?>" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
         <div>
-          <label for="nik" style="font-weight: 600; color: #334155;">NIK (ID Number) <span
-              style="color:#ef4444;">*</span></label>
+          <label for="nik" style="font-weight: 600; color: #334155;">NIK (ID Number) <span style="color:#ef4444;">*</span></label>
           <input type="text" id="nik" name="nik" value="<?= htmlspecialchars($data->nik); ?>" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
         <div>
-          <label for="rekening" style="font-weight: 600; color: #334155;">No Rekening <span
-              style="color:#ef4444;">*</span></label>
+          <label for="rekening" style="font-weight: 600; color: #334155;">No Rekening <span style="color:#ef4444;">*</span></label>
           <input type="number" id="rekening" name="rekening" value="<?= htmlspecialchars($data->rekening); ?>" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
         <div>
-          <label for="sup_bank">Nama Akun Bank *</label>
-          <input type="text"
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"
-            value="<?= htmlspecialchars($data->nama_rekening); ?>" id="sup_name_bank" placeholder="Nama Akun Bank"
-            name="sup_name_bank" required>
+          <label for="sup_name_bank" style="font-weight: 600; color: #334155;">Nama Akun Bank *</label>
+          <input type="text" id="sup_name_bank" name="sup_name_bank" value="<?= htmlspecialchars($data->nama_rekening); ?>" required
+            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;" placeholder="Nama Akun Bank">
         </div>
 
         <div>
-          <label for="bank" style="font-weight: 600; color: #334155;">Nama Bank <span
-              style="color:#ef4444;">*</span></label>
+          <label for="sup_bank" style="font-weight: 600; color: #334155;">Nama Bank <span style="color:#ef4444;">*</span></label>
           <select id="sup_bank" name="bank" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background:white; cursor:pointer;">
             <option value="">-- Pilih Bank --</option>
@@ -72,18 +66,15 @@
           </select>
         </div>
 
-
         <div>
-          <label for="contact" style="font-weight: 600; color: #334155;">No Kontak <span
-              style="color:#ef4444;">*</span></label>
+          <label for="contact" style="font-weight: 600; color: #334155;">No Kontak <span style="color:#ef4444;">*</span></label>
           <input type="text" id="contact" name="contact" value="<?= htmlspecialchars($data->con_num); ?>" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
         <div>
           <label for="date_of_birth" style="font-weight: 600; color: #334155;">Tanggal Lahir</label>
-          <input type="date" id="date_of_birth" name="date_of_birth"
-            value="<?= htmlspecialchars($data->date_of_birth); ?>"
+          <input type="date" id="date_of_birth" name="date_of_birth" value="<?= htmlspecialchars($data->date_of_birth); ?>"
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
@@ -94,9 +85,7 @@
         </div>
 
         <div>
-          <label for="role" style="font-weight: 600; color: #334155;">Level Anggota <span
-              style="color:#ef4444;">*</span></label>
-
+          <label for="role" style="font-weight: 600; color: #334155;">Level Anggota <span style="color:#ef4444;">*</span></label>
           <select id="role" name="role" <?= ($_SESSION['role_id'] != 10) ? 'disabled' : 'required' ?>
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
             <option value="" disabled <?= empty($data->role_id) ? 'selected' : '' ?>>-- Pilih Level Anggota --</option>
@@ -107,92 +96,96 @@
             <option value="4" <?= $data->role_id == 4 ? 'selected' : '' ?>>Agen</option>
             <option value="5" <?= $data->role_id == 5 ? 'selected' : '' ?>>Reseller</option>
           </select>
-
           <?php if ($_SESSION['role_id'] != 10): ?>
-          <!-- Supaya value tetap terkirim ke server meski select disabled -->
           <input type="hidden" name="role" value="<?= $data->role_id ?>">
           <?php endif; ?>
         </div>
 
-        
-
         <div style="grid-column: 1 / -1;">
-          <label for="address_ktp" style="font-weight: 600; color: #334155;">Alamat (Diisi Sesuai KTP) <span
-              style="color:#ef4444;">*</span></label>
+          <label for="address_ktp" style="font-weight: 600; color: #334155;">Alamat (KTP) <span style="color:#ef4444;">*</span></label>
           <textarea id="address_ktp" name="address_ktp" rows="3" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address_ktp); ?></textarea>
         </div>
 
         <div style="grid-column: 1 / -1;">
-          <label for="address" style="font-weight: 600; color: #334155;">Alamat Pengiriman <span
-              style="color:#ef4444;">*</span></label>
+          <label for="address" style="font-weight: 600; color: #334155;">Alamat Pengiriman <span style="color:#ef4444;">*</span></label>
           <textarea id="address" name="address" rows="3" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address); ?></textarea>
         </div>
+
+        <!-- Provinsi -->
         <div>
-  <label for="provinsi" style="font-weight:600; color:#334155;">Provinsi <span style="color:#ef4444;">*</span></label>
-  <select id="provinsi" name="provinsi" required
-    style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
-    <option value="">-- Pilih Provinsi --</option>
-  </select>
-</div>
+          <label for="provinsi" style="font-weight:600; color:#334155;">Provinsi <span style="color:#ef4444;">*</span></label>
+          <select id="provinsi" name="provinsi" required
+            style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
+            <option value="">-- Pilih Provinsi --</option>
+          </select>
+        </div>
 
-<div>
-  <label for="kota" style="font-weight:600; color:#334155;">Kota / Kabupaten <span style="color:#ef4444;">*</span></label>
-  <select id="kota" name="kota" required
-    style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
-    <option value="">-- Pilih Kota / Kabupaten --</option>
-  </select>
-</div>
+        <!-- Kota -->
+        <div>
+          <label for="kota" style="font-weight:600; color:#334155;">Kota / Kabupaten <span style="color:#ef4444;">*</span></label>
+          <select id="kota" name="kota" required
+            style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
+            <option value="">-- Pilih Kota / Kabupaten --</option>
+          </select>
+        </div>
 
-        <div style="position: relative; margin-bottom: 16px;">
+        <!-- Kecamatan -->
+        <div>
+          <label for="kecamatan" style="font-weight:600; color:#334155;">Kecamatan <span style="color:#ef4444;">*</span></label>
+          <select id="kecamatan" name="kecamatan" required
+            style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
+            <option value="">-- Pilih Kecamatan --</option>
+          </select>
+        </div>
+
+        <!-- Password -->
+        <div style="position: relative;">
           <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>
           <input type="password" id="password" name="password"
             style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-          <span onclick="togglePassword('password', this)"
-            style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
+          <span onclick="togglePassword('password', this)" style="position: absolute; right: 12px; top:50%; transform: translateY(-50%); cursor: pointer; font-size: 14px; color: #475569;">
             👁
           </span>
         </div>
 
-        <div style="position: relative; margin-bottom: 16px;">
+        <div style="position: relative;">
           <label for="confirm_password" style="font-weight: 600; color: #334155;">Konfirmasi Password Baru</label>
           <input type="password" id="confirm_password" name="confirm_password"
             style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-          <span onclick="togglePassword('confirm_password', this)"
-            style="position: absolute; right: 12px; top: 45px; cursor: pointer; font-size: 14px; color: #475569;">
+          <span onclick="togglePassword('confirm_password', this)" style="position: absolute; right: 12px; top:50%; transform: translateY(-50%); cursor: pointer; font-size: 14px; color: #475569;">
             👁
           </span>
         </div>
-        <div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+
+        <!-- Buttons -->
+        <div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
           <button type="reset" style="
-          background-color: #ef4444;
-          color: white;
-          border: none;
-          border-radius: 12px;
-          padding: 14px 32px;
-          font-weight: 700;
-          font-size: 16px;
-          box-shadow: 0 4px 12px rgb(239 68 68 / 0.4);
-          cursor: pointer;
-          transition: background-color 0.3s ease;">
-            Reset
-          </button>
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgb(239 68 68 / 0.4);
+            cursor: pointer;
+            transition: 0.3s;">Reset</button>
 
           <button type="submit" style="
-          background-color: #2563eb;
-          color: white;
-          border: none;
-          border-radius: 12px;
-          padding: 14px 32px;
-          font-weight: 700;
-          font-size: 16px;
-          box-shadow: 0 4px 12px rgb(37 99 235 / 0.5);
-          cursor: pointer;
-          transition: background-color 0.3s ease;">
-            Update Data
-          </button>
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgb(37 99 235 / 0.5);
+            cursor: pointer;
+            transition: 0.3s;">Update Data</button>
         </div>
+
       </form>
 
       <?php
@@ -211,24 +204,24 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  function togglePassword(fieldId, el) {
-    const input = document.getElementById(fieldId);
-    if (input.type === "password") {
-      input.type = "text";
-      el.textContent = "🙈"; // ganti icon kalau sedang tampil
-    } else {
-      input.type = "password";
-      el.textContent = "👁"; // ganti icon kalau disembunyikan
-    }
+function togglePassword(fieldId, el) {
+  const input = document.getElementById(fieldId);
+  if(input.type === "password") {
+    input.type = "text"; el.textContent = "🙈";
+  } else {
+    input.type = "password"; el.textContent = "👁";
   }
-  document.addEventListener("DOMContentLoaded", function () {
+}
+
+document.addEventListener("DOMContentLoaded", function () {
   const provinsiSelect = document.getElementById("provinsi");
   const kotaSelect = document.getElementById("kota");
+  const kecamatanSelect = document.getElementById("kecamatan");
 
   const selectedProvinsi = "<?= htmlspecialchars($data->provinsi ?? '') ?>";
   const selectedKota = "<?= htmlspecialchars($data->kota ?? '') ?>";
+  const selectedKecamatan = "<?= htmlspecialchars($data->kecamatan ?? '') ?>";
 
-  // Load daftar provinsi
   fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
     .then(res => res.json())
     .then(data => {
@@ -240,20 +233,21 @@
         provinsiSelect.appendChild(option);
       });
 
-      if (selectedProvinsi) {
-        loadKota(selectedProvinsi, selectedKota);
-      }
+      if(selectedProvinsi) loadKota(selectedProvinsi, selectedKota);
     });
 
-  // Event saat ganti provinsi
-  provinsiSelect.addEventListener("change", function () {
+  provinsiSelect.addEventListener("change", function(){
     loadKota(this.value, null);
   });
 
-  // Load kota sesuai provinsi
-  function loadKota(provinsiId, selected = null) {
+  kotaSelect.addEventListener("change", function(){
+    loadKecamatan(this.value, selectedKecamatan);
+  });
+
+  function loadKota(provinsiId, selected=null){
     kotaSelect.innerHTML = '<option value="">-- Pilih Kota / Kabupaten --</option>';
-    if (!provinsiId) return;
+    kecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+    if(!provinsiId) return;
 
     fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinsiId}.json`)
       .then(res => res.json())
@@ -262,8 +256,26 @@
           let option = document.createElement("option");
           option.value = kota.id;
           option.textContent = kota.name;
-          if (kota.id == selected) option.selected = true;
+          if(kota.id == selected) option.selected = true;
           kotaSelect.appendChild(option);
+        });
+        if(selected) loadKecamatan(selected, selectedKecamatan);
+      });
+  }
+
+  function loadKecamatan(kotaId, selected=null){
+    kecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+    if(!kotaId) return;
+
+    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaId}.json`)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(kec => {
+          let option = document.createElement("option");
+          option.value = kec.id;
+          option.textContent = kec.name;
+          if(kec.id == selected) option.selected = true;
+          kecamatanSelect.appendChild(option);
         });
       });
   }

@@ -93,8 +93,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id) : 0;
    <link rel="stylesheet" href="assets/css/responsive.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
   <!-- DataTables -->
   <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
   <!-- Bootstrap Datepicker CSS -->
@@ -115,7 +114,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id) : 0;
   <style>
     body,
     html {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Open Sans', sans-serif;
       margin: 0;
       padding: 0;
     }

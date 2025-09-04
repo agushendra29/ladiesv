@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sup_address_ktp = trim($_POST['supaddressktp'] ?? '');
     $sup_provinsi  = trim($_POST['sup_provinsi'] ?? '');   // ✅ baru
     $sup_kota      = trim($_POST['sup_kota'] ?? '');       // ✅ baru
+      $sup_kecamatan      = trim($_POST['sup_kecamatan'] ?? '');       // ✅ baru
     $sup_akun      = trim($_POST['sup_name_bank'] ?? '');
     $user_id       = $_SESSION['user_id'] ?? null;
 
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (
         $sup_name && $sup_nik && $sup_rekening && $sup_bank && $birth_date && $sup_akun &&
         $sup_contact && $sup_email && $sup_role && $sup_password_plain && $sup_address &&
-        $sup_provinsi && $sup_kota   // ✅ wajib isi
+        $sup_provinsi && $sup_kota && $sup_kecamatan  // ✅ wajib isi
     ) {
         try {
             $sup_data = [
@@ -54,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'nama_rekening' => $sup_akun,
                 'provinsi'   => $sup_provinsi,   // ✅ simpan id provinsi
                 'kota'       => $sup_kota,       // ✅ simpan id kabupaten/kota
+                   'kecamatan'       => $sup_kecamatan,       // ✅ simpan id kabupaten/kota
                 'is_active'     => 1,
             ];
 

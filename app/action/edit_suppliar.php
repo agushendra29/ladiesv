@@ -19,12 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sup_akun   = trim($_POST['sup_name_bank'] ?? '');
     $provinsi_id   = $_POST['provinsi'] ?? '';
     $kota_id     = $_POST['kota'] ?? '';
+    $kecamatan = $_POST['kecamatan'] ?? '';
 
     // Validasi semua field wajib (sesuaikan kalau ada field opsional)
     if (
         empty($name) || empty($nik) || empty($rekening) || empty($bank) || empty($sup_akun) || 
         empty($address) || empty($address_ktp) || empty($contact) || 
-        empty($email) || empty($role_id)
+        empty($email) || empty($role_id) || empty($provinsi_id) || empty($kota_id) || empty($kecamatan)
     ) {
         echo "All required fields must be filled.";
         exit;
@@ -51,7 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'update_at'     => $update_at,
         'nama_rekening' => $sup_akun,
         'provinsi'   => $provinsi_id,
-        'kota'       => $kota_id
+        'kota'       => $kota_id,
+        'kecamatan' => $kecamatan
     ];
 
     $supRes = $obj->update('suppliar', 'id', $id, $supQuery);

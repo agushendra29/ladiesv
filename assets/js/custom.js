@@ -277,6 +277,7 @@ $("#empTable").DataTable({
 
     let provName = $("#sup_provinsi option:selected").text();
     let kotaName = $("#sup_kota option:selected").text();
+     let camatName = $("#sup_kecamatan option:selected").text();
 
     // Buat HTML konfirmasi
     let confirmHtml = `
@@ -289,6 +290,7 @@ $("#empTable").DataTable({
       <p><b>Alamat Domisili:</b> ${payload.supaddress || '-'}</p>
       <p><b>Provinsi:</b> ${provName || '-'}</p>
        <p><b>Kota:</b> ${kotaName || '-'}</p>
+           <p><b>Kecamatan:</b> ${camatName || '-'}</p>
       <p><b>Bank:</b> ${payload.sup_bank || '-'}</p>
       <p><b>Nama pada Bank:</b> ${payload.sup_name_bank || '-'}</p>
       <p><b>No. Rekening:</b> ${payload.sup_rekening || '-'}</p>
