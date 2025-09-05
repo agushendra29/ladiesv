@@ -5,9 +5,7 @@
       <div>
         <!-- Header -->
         <div class="header-block">
-          <h2>
-            📦 DAFTAR STOK PRODUK
-          </h2>
+          <h2>📦 DAFTAR STOK PRODUK</h2>
           <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
           <a href="index.php?page=add_stock_management" target="_blank" class="btn-add">
             <i class="fas fa-plus"></i> Tambah Stok
@@ -27,11 +25,12 @@
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- DataTables -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
+
+        <!-- Card view untuk mobile -->
+        <div id="mobileStockCards"></div>
       </div>
     </div>
 
@@ -39,14 +38,10 @@
     <!-- Riwayat Log Perubahan Stok -->
     <div class="container-fluid" style="margin-top: 20px;">
       <div class="log-block">
-        <!-- Header -->
         <div class="header-block">
-          <h2>
-            📝 RIWAYAT PERUBAHAN STOK
-          </h2>
+          <h2>📝 RIWAYAT PERUBAHAN STOK</h2>
         </div>
 
-        <!-- Table Log -->
         <div class="table-responsive" style="overflow-x:auto;">
           <table id="stockLogsTable" class="display dataTable text-center stock-table">
             <thead>
@@ -61,11 +56,12 @@
                 <th>Tanggal</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- DataTables -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
+
+        <!-- Card view untuk mobile -->
+        <div id="mobileLogCards"></div>
       </div>
     </div>
     <?php endif; ?>
@@ -76,13 +72,13 @@
 /* Header block */
 .header-block {
   display: flex;
-  flex-direction: column; /* selalu 1 baris 1 baris */
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 24px;
 }
 .header-block h2 {
   margin: 0;
-  font-size: 20px;   /* kecilin judul */
+  font-size: 20px;
   font-weight: 600;
   color: #222;
   user-select: none;
@@ -107,7 +103,7 @@
   box-shadow: 0 6px 18px rgba(0,91,181,0.5);
 }
 
-/* Table styling seragam */
+/* Table styling */
 .stock-table {
   width: 100%;
   border-collapse: separate;
@@ -127,52 +123,87 @@
   letter-spacing: 0.04em;
   font-size: 10px !important;
 }
-.stock-table th {
-  font-size:10px !important;
-}
-.stock-table td {
-  padding: 12px 18px;
-  vertical-align: middle;
-  text-align: center;
-}
+.stock-table th { font-size:10px !important; }
+.stock-table td { padding: 12px 18px; vertical-align: middle; text-align: center; }
 .stock-table tbody tr {
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 .stock-table tbody tr:hover {
   background-color: #eff6ff;
-  box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
+  box-shadow: 0 6px 20px rgba(0,115,234,0.15);
 }
 
-/* Block untuk log */
-.log-block {
+/* Card views */
+#mobileStockCards, #mobileLogCards {
+  display: none;
+}
+#mobileStockCards .card-item, #mobileLogCards .card-item {
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-  padding: 24px 24px 32px;
-  min-height: 420px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+#mobileStockCards .card-item h4, #mobileLogCards .card-item h4 {
+  font-size: 14px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+#mobileStockCards .card-item .meta, #mobileLogCards .card-item .meta {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 2px;
+}
+#mobileStockCards .card-item .actions, #mobileLogCards .card-item .actions {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-start;
+}
+#mobileStockCards .card-item .actions .btn, #mobileLogCards .card-item .actions .btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 /* Responsif */
 @media (max-width: 768px) {
-  .header-block h2 {
-    font-size: 16px; /* lebih kecil di mobile */
+  .header-block h2 { font-size: 16px; }
+  .btn-add { width: 100%; justify-content: center; }
+  .stock-table { font-size: 11px !important; min-width: unset; }
+  .stock-table th { font-size: 9px !important; }
+  .stock-table td { font-size: 11px !important; }
+
+  /* Hide table, show cards */
+  #stockManagementTable thead, #stockManagementTable tbody,
+  #stockLogsTable thead, #stockLogsTable tbody { display: none; }
+  #mobileStockCards, #mobileLogCards { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 12px; }
+
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_paginate,
+  .dataTables_wrapper .dataTables_length {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 8px 0;
+      gap: 8px;
+      font-size: 12px;
   }
-  .btn-add {
-    width: 100%;
-    justify-content: center;
-  }
-  .stock-table {
-    font-size: 11px !important;
-    min-width: unset; /* biar bisa scroll responsif */
-  }
-  .stock-table th {
-    font-size: 9px !important;
-  }
-  .stock-table td {
-    font-size: 11px !important;
-  }
+  .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 300px; }
 }
 </style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+

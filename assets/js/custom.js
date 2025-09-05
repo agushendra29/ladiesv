@@ -277,7 +277,7 @@ $("#empTable").DataTable({
 
     let provName = $("#sup_provinsi option:selected").text();
     let kotaName = $("#sup_kota option:selected").text();
-     let camatName = $("#sup_kecamatan option:selected").text();
+    let camatName = $("#sup_kecamatan option:selected").text();
 
     // Buat HTML konfirmasi
     let confirmHtml = `
@@ -663,11 +663,18 @@ $("#empTable").DataTable({
     ajax: {
         url: "app/ajax/product_data.php"
     },
-    columns: [
-        { data: "product_id" },
-        { data: "product_name" },
-        { data: "sell_price" },
-        { data: "action" }
+    columns: [{
+            data: "product_id"
+        },
+        {
+            data: "product_name"
+        },
+        {
+            data: "sell_price"
+        },
+        {
+            data: "action"
+        }
     ],
     responsive: true,
     paging: true,
@@ -677,7 +684,9 @@ $("#empTable").DataTable({
     drawCallback: function (settings) {
         // ambil data yang lagi ditampilkan
         const api = this.api();
-        const data = api.rows({ page: 'current' }).data();
+        const data = api.rows({
+            page: 'current'
+        }).data();
         const $mobileCards = $("#mobileProductCards");
 
         $mobileCards.empty(); // clear biar nggak dobel
@@ -685,32 +694,64 @@ $("#empTable").DataTable({
         data.each(function (row) {
             const card = `
               <div class="card-item">
+              <div class="row pl-3">
+              <div style="flex:1;">
                 <h4>${row.product_name}</h4>
-                <div class="meta">Harga: Rp ${row.sell_price}</div>
+                <div class="meta">${row.sell_price}</div>
+                </div>
+                <div style="flex:1;text-align:center;">
                 <div class="actions">${row.action}</div>
+                </div>
+                </div>
               </div>
             `;
             $mobileCards.append(card);
         });
     }
 }), $("#stockManagementTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/stock_management_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "product_name"
-    }, {
-        data: "suppliar_name"
-    }, {
-        data: "stock"
-    }, {
-        data: "action"
-    }]
+processing: !0,
+serverSide: !0,
+serverMethod: "post",
+ajax: {
+    url: "app/ajax/stock_management_data.php"
+},
+columns: [{
+    data: "id"
+}, {
+    data: "product_name"
+}, {
+    data: "suppliar_name"
+}, {
+    data: "stock"
+}, {
+    data: "action"
+}],
+drawCallback: function (settings) {
+    const api = this.api();
+    const data = api.rows({
+        page: 'current'
+    }).data();
+    const $mobileCards = $("#mobileStockCards");
+
+    $mobileCards.empty(); // clear biar nggak dobel
+
+    // render card view untuk mobile
+    data.each(function (row) {
+        const card = `
+                <div class="card-item">
+                <h4>${row.product_name}</h4>
+                <div class="meta">Suppliar: ${row.suppliar_name}</div>
+                <div class="meta">Stock: ${row.stock}</div>
+               <div class="actions d-flex" style="gap:6px;">
+          <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input" style="width:60px;" data-id="${row.stock_id}">
+          <button type="button" class="btn btn-success btn-sm stock-apply-add" data-id="${row.stock_id}"><i class="fas fa-plus"></i></button>
+          <button type="button" class="btn btn-danger btn-sm stock-apply-reduce" data-id="${row.stock_id}"><i class="fas fa-minus"></i></button>
+        </div>
+                </div>
+            `;
+        $mobileCards.append(card);
+    });
+}
 }), $("#stockLogsTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -1234,25 +1275,40 @@ let suppliarTable = $("#suppliarTable").DataTable({
             d.roleFilter = $("#roleFilter").val() || "";
         }
     },
-    columns: [
-        { data: "id" },
-        { data: "name" },
-        { data: "address" },
-        { data: "con_num" },
-        { data: "role_id" },
-        { data: "created_at" },
-        { data: "action" }
+    columns: [{
+            data: "id"
+        },
+        {
+            data: "name"
+        },
+        {
+            data: "address"
+        },
+        {
+            data: "con_num"
+        },
+        {
+            data: "role_id"
+        },
+        {
+            data: "created_at"
+        },
+        {
+            data: "action"
+        }
     ],
-    drawCallback: function(settings) {
-    let api = this.api();
-    let data = api.rows({ page: 'current' }).data();
+    drawCallback: function (settings) {
+        let api = this.api();
+        let data = api.rows({
+            page: 'current'
+        }).data();
 
-    // kosongkan cards
-    $("#mobileCards").empty();
+        // kosongkan cards
+        $("#mobileCards").empty();
 
-    // render ulang card untuk tiap baris
-    data.each(function(row) {
-        let card = `
+        // render ulang card untuk tiap baris
+        data.each(function (row) {
+            let card = `
 <div class="card-item" style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px; margin-bottom:8px; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
     <div class="card-content" style="width:90%">
         <h4 style="margin:0 0 4px 0; font-size:14px;">${row.name}</h4>
@@ -1267,9 +1323,9 @@ let suppliarTable = $("#suppliarTable").DataTable({
     </div>
 </div>
         `;
-        $("#mobileCards").append(card);
-    });
-}
+            $("#mobileCards").append(card);
+        });
+    }
 });
 
 // ketika filter berubah → reload table

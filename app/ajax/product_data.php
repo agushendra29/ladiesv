@@ -17,16 +17,10 @@ $searchArray = array();
 $searchQuery = " ";
 if($searchValue != ''){
    $searchQuery = " AND (product_id LIKE :product_id or 
-        product_name LIKE :product_name OR 
-        brand_name LIKE :brand_name OR 
-        catagory_name LIKE :catagory_name OR 
-        product_source LIKE :product_source ) ";
+        product_name LIKE :product_name ) ";
    $searchArray = array( 
         'product_id'=>"%$searchValue%", 
-        'product_name'=>"%$searchValue%",
-        'brand_name'=>"%$searchValue%",
-        'catagory_name'=>"%$searchValue%",
-        'product_source'=>"%$searchValue%"
+        'product_name'=>"%$searchValue%"
    );
 }
 

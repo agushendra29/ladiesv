@@ -38,6 +38,7 @@
   </section>
 </div>
 
+<!-- CSS -->
 <style>
 /* Header */
 .page-header-custom {
@@ -160,32 +161,21 @@
 
 /* Responsif */
 @media (max-width: 768px) {
-  .page-header-custom h2 {
-    font-size: 20px;
-  }
-  .btn-custom {
-    width: 100%;
-    justify-content: center;
-  }
-  .table-responsive {
-    visibility: hidden;
-    height: auto;
-    overflow: hidden;
-  }
-  #productTable thead, #productTable tbody { display: none; }
-  #mobileProductCards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 12px;
-  }
+  .page-header-custom h2 { font-size: 20px; }
+  .btn-custom { width: 100%; justify-content: center; }
+  /* sembunyikan isi tabel tapi biarkan wrapper DataTables tampil */
+  #productTable thead tr, #productTable tbody tr td { display: none; }
+  #mobileProductCards { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 12px; }
   #mobileProductCards .card-item { width: 100%; max-width: 400px; }
   .dataTables_wrapper .dataTables_filter,
-  .dataTables_wrapper .dataTables_paginate {
+  .dataTables_wrapper .dataTables_paginate,
+  .dataTables_wrapper .dataTables_length {
     display: flex;
     justify-content: center;
-    margin-bottom: 12px;
+    flex-wrap: wrap;
+    margin: 8px 0;
+    gap: 8px;
+    font-size: 12px;
   }
   .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 300px; }
 }
@@ -195,5 +185,4 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
 

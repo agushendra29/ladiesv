@@ -105,11 +105,12 @@ foreach ($empRecords as $row) {
         "stock" => $row['stock'],
         "action" => $_SESSION['role_id'] == 10 ? '
             <div class="d-flex align-items-center" style="gap: 6px; max-width: 200px;">
-                <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input" style="width: 60px;" data-id="' . $row['id'] . '">
-                <button type="button" id="stock-apply-add" class="btn btn-success btn-sm stock-apply-add" data-id="' . $row['id'] . '"><i class="fas fa-plus"></i></button>
-                <button type="button" id="stock-apply-reduce" class="btn btn-danger btn-sm stock-apply-reduce" data-id="' . $row['id'] . '"><i class="fas fa-minus"></i></button>
+                <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input-m" style="width: 60px;" data-id="' . $row['id'] . '">
+                <button type="button" id="stock-apply-add" class="btn btn-success btn-sm stock-apply-add-m" data-id="' . $row['id'] . '"><i class="fas fa-plus"></i></button>
+                <button type="button" id="stock-apply-reduce" class="btn btn-danger btn-sm stock-apply-reduce-m" data-id="' . $row['id'] . '"><i class="fas fa-minus"></i></button>
             </div>
         ' : "",
+        "stock_id" => $row['id']
     );
 }
 

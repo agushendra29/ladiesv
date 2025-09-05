@@ -653,6 +653,9 @@ $(document).on("click", "#newsDelete_btn", function (e) {
     const input = $('.stock-input[data-id="' + id + '"]');
     const val = parseInt(input.val()) || 0;
 
+    console.log(val);
+  
+
     if (val <= 0) {
         alert('Masukkan nilai lebih besar dari 0.');
         return;
@@ -679,6 +682,65 @@ $(document).on("click", "#newsDelete_btn", function (e) {
 }), $(document).on('click', '.stock-apply-reduce', function() {
     const id = $(this).data('id');
     const input = $('.stock-input[data-id="' + id + '"]');
+    const val = parseInt(input.val()) || 0;
+
+    if (val <= 0) {
+        alert('Masukkan nilai lebih besar dari 0.');
+        return;
+    }
+
+    $.ajax({
+        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+        method: 'POST',
+        data: { id: id, change: -val },
+        success: function(res) {
+      if (res.status) {
+        alert('Success: ' + res.message);
+        input.val(0);
+          $('#stockManagementTable').DataTable().ajax.reload();
+        // reload table or update UI here if needed
+      } else {
+        alert('Error: ' + res.message);
+      }
+    },
+    error: function() {
+      alert('Terjadi kesalahan pada server.');
+    }
+    });
+}),$(document).on('click', '.stock-apply-add-m', function() {
+    const id = $(this).data('id');
+    const input = $('.stock-input-m[data-id="' + id + '"]');
+    const val = parseInt(input.val()) || 0;
+
+    console.log(val);
+  
+
+    if (val <= 0) {
+        alert('Masukkan nilai lebih besar dari 0.');
+        return;
+    }
+
+    $.ajax({
+        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+        method: 'POST',
+        data: { id: id, change: val },
+        success: function(res) {
+      if (res.status) {
+        alert('Success: ' + res.message);
+        input.val(0);
+          $('#stockManagementTable').DataTable().ajax.reload();
+        // reload table or update UI here if needed
+      } else {
+        alert('Error: ' + res.message);
+      }
+    },
+    error: function() {
+      alert('Terjadi kesalahan pada server.');
+    }
+    });
+}), $(document).on('click', '.stock-apply-reduce-m', function() {
+    const id = $(this).data('id');
+    const input = $('.stock-input-m[data-id="' + id + '"]');
     const val = parseInt(input.val()) || 0;
 
     if (val <= 0) {

@@ -51,17 +51,24 @@ $breadcrumbText = makeBreadcrumb($actual_link);
 /**
  * Fungsi hitung total point dari transaction_histories
  */
-function getTotalPoints($suppliar_id) {
+function getTotalPoints($suppliar_id, $role_id) {
     global $pdo;
 
+    // Default query untuk semua role kecuali 5
     $sql = "
         SELECT 
             COALESCE(SUM(CASE WHEN is_refund = 0 THEN quantity ELSE 0 END), 0) AS total_penjualan,
             COALESCE(SUM(CASE WHEN is_refund = 1 THEN quantity ELSE 0 END), 0) AS total_refund
         FROM transaction_histories
         WHERE suppliar_id = :suppliar_id
-          AND type = 'penjualan'
     ";
+
+    // Jika role 5, hitung untuk penjualan dan pembelian
+    if ($role_id == 5) {
+        $sql .= " AND type IN ('penjualan', 'pembelian')";
+    } else {
+        $sql .= " AND type = 'penjualan'";
+    }
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':suppliar_id' => $suppliar_id]);
@@ -71,8 +78,9 @@ function getTotalPoints($suppliar_id) {
     return max(0, $totalPoints);
 }
 
-// Hitung total point suppliar login saat ini
-$totalPoint = $distributor_id ? getTotalPoints($distributor_id) : 0;
+// Contoh penggunaan
+$role_id = $_SESSION['role_id'] ?? 0;
+$totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
 ?>
 
 <!DOCTYPE html>
