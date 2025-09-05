@@ -1,4 +1,4 @@
-<div style="padding-top:52px; background-color: #f6f7fb;">
+<div style="padding-top:52px; padding-bottom:52px; background-color: #f6f7fb;">
   <!-- Stok Produk Page -->
   <section class="content">
     <div class="container-fluid">
@@ -30,7 +30,9 @@
         </div>
 
         <!-- Card view untuk mobile -->
+      <?php if ($_SESSION['role_id'] == 10): ?>
         <div id="mobileStockCards"></div>
+      <?php endif; ?>
       </div>
     </div>
 
@@ -199,6 +201,7 @@
       margin: 8px 0;
       gap: 8px;
       font-size: 12px;
+      text-align:center;
   }
   .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 300px; }
 }

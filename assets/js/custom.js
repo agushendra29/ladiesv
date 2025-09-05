@@ -635,7 +635,27 @@ $("#empTable").DataTable({
         data: "order_date"
     }, {
         data: "items_summary"
-    }]
+    }],drawCallback: function (settings) {
+        const api = this.api();
+        const data = api.rows({ page: "current" }).data();
+        const $mobileCards = $("#mobileSellOrders");
+
+        $mobileCards.empty();
+
+        data.each(function (row) {
+            const card = `
+                <div class="sell-card">
+                    <h4>🧾 Invoice: ${row.invoice_number}</h4>
+                    <p><strong>Distributor:</strong> ${row.distributor_name}</p>
+                    <p><strong>Pelanggan:</strong> ${row.customer_name}</p>
+                    <p><strong>Total Bayar:</strong> ${row.net_total}</p>
+                    <p><strong>Tanggal:</strong> ${row.order_date}</p>
+                    <p><strong>Produk:</strong><br> ${row.items_summary}</p>
+                </div>
+            `;
+            $mobileCards.append(card);
+        });
+    }
 }), $("#refundOrderTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -791,7 +811,31 @@ drawCallback: function (settings) {
         {
             "data": "created_at"
         },
-    ]
+    ],drawCallback: function (settings) {
+        const api = this.api();
+        const data = api.rows({ page: 'current' }).data();
+        const $mobileCards = $("#mobileLogCards"); // container card mobile
+
+        $mobileCards.empty();
+
+        data.each(function (row) {
+            const diffColor = row.difference_raw > 0 ? "green" : (row.difference_raw < 0 ? "red" : "gray");
+
+            const card = `
+                <div class="card-item">
+                    <h4>${row.product_name}</h4>
+                    <div class="meta">Distributor: ${row.suppliar_name}</div>
+                    <div class="meta">Aksi: ${row.action_type}</div>
+                    <div class="meta">Qty Lama: ${row.old_quantity}</div>
+                    <div class="meta">Qty Baru: ${row.new_quantity}</div>
+                    <div class="meta">Perubahan: <span style="color:${diffColor}; font-weight:bold;">${row.difference}</span></div>
+                    <div class="meta">Diubah Oleh: ${row.changed_by}</div>
+                    <div class="meta">Tanggal: ${row.created_at}</div>
+                </div>
+            `;
+            $mobileCards.append(card);
+        });
+    }
 }), $("#newsTable").DataTable({
     processing: !0,
     serverSide: !0,

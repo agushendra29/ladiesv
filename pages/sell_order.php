@@ -1,4 +1,4 @@
-<div style="padding-top:52px; background-color: #f6f7fb;">
+<div style="padding-top:52px; padding-bottom:52px; background-color: #f6f7fb;">
   <!-- Sell Order Page -->
   <section class="content">
     <div class="container-fluid">
@@ -37,6 +37,10 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Mobile Sell Orders Cards -->
+<div id="mobileSellOrders" class="mobile-cards"></div>
+
       </div>
     </div>
   </section>
@@ -165,6 +169,39 @@
   .stock-table td {
     font-size: 11px !important;
     padding: 10px 12px;
+  }
+}
+
+.mobile-cards {
+  display: none;
+  margin-top: 15px;
+}
+.sell-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  font-size: 13px;
+}
+.sell-card h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+.sell-card p {
+  margin: 4px 0;
+  color: #444;
+}
+
+/* Hanya tampilkan cards di mobile */
+@media (max-width: 768px) {
+  #sellOrderTable {
+    display: none; /* sembunyikan tabel DataTables */
+  }
+  #mobileSellOrders {
+    display: block;
   }
 }
 </style>
