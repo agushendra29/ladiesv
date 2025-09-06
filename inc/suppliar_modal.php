@@ -40,7 +40,7 @@
           </div>
 
           <div class="form-group">
-            <label for="sup_name_bank">Nama Akun Bank *</label>
+            <label for="sup_name_bank">Nama Pada Rek Bank *</label>
             <input type="text" class="form-control" id="sup_name_bank" name="sup_name_bank" placeholder="Nama Akun Bank" required>
           </div>
 
@@ -51,7 +51,7 @@
           </div>
           <div class="form-group">
             <label for="birth_date">Tanggal Lahir</label>
-            <input type="date" class="form-control" id="birth_date" name="birth_date">
+            <input type="text" class="form-control" id="birth_date" name="birth_date" placeholder="dd-mm-yyyy" maxlength="10">
           </div>
 
           <!-- Email & Role -->
@@ -59,21 +59,16 @@
             <label for="sup_email">Email</label>
             <input type="email" class="form-control" id="sup_email" name="sup_email" placeholder="Email">
           </div>
+          <!-- Provinsi, Kota & Kecamatan -->
+             <div class="form-group">
+            <label for="supaddressktp">Alamat KTP</label>
+            <textarea id="supaddressktp" name="supaddressktp" placeholder="Alamat sesuai KTP"></textarea>
+          </div>
           <div class="form-group">
-            <label for="sup_role">Level Anggota *</label>
-            <select class="form-control" id="sup_role" name="sup_role" required>
-              <option value="">-- Pilih Level Anggota --</option>
-              <?php if ($_SESSION['role_id'] == 10): ?>
-              <option value="10">Super Admin</option>
-              <option value="1">Head Office</option>
-              <?php endif; ?>
-              <option value="2">Head Distributor</option>
-              <option value="3">Distributor</option>
-              <option value="4">Agen</option>
-            </select>
+            <label for="supaddress">Alamat Domisili</label>
+            <textarea id="supaddress" name="supaddress" placeholder="Alamat pengiriman"></textarea>
           </div>
 
-          <!-- Provinsi, Kota & Kecamatan -->
           <div class="form-group">
             <label for="sup_provinsi">Provinsi *</label>
             <select id="sup_provinsi" name="sup_provinsi" required class="form-control">
@@ -94,15 +89,19 @@
           </div>
 
           <!-- Alamat berdampingan -->
-            <div class="form-group">
-              <label for="supaddressktp">Alamat KTP</label>
-              <textarea id="supaddressktp" name="supaddressktp" placeholder="Alamat sesuai KTP"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="supaddress">Alamat Pengiriman</label>
-              <textarea id="supaddress" name="supaddress" placeholder="Alamat pengiriman"></textarea>
-            </div>
-
+          <div class="form-group">
+            <label for="sup_role">Level Anggota *</label>
+            <select class="form-control" id="sup_role" name="sup_role" required>
+              <option value="">-- Pilih Level Anggota --</option>
+              <?php if ($_SESSION['role_id'] == 10): ?>
+              <option value="10">Super Admin</option>
+              <option value="1">Head Office</option>
+              <?php endif; ?>
+              <option value="2">Head Distributor</option>
+              <option value="3">Distributor</option>
+              <option value="4">Agen</option>
+            </select>
+          </div>
           <!-- Tombol -->
           <div class="form-actions">
             <button type="reset" class="btn btn-reset">Reset</button>
@@ -122,8 +121,6 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
-
-
 
 /* Label & input */
 .form-group label {
@@ -183,8 +180,7 @@
 
 /* Responsif mobile */
 @media (max-width: 768px) {
-  .form-grid,
-  .address-wrapper {
+  .form-grid {
     grid-template-columns: 1fr;
   }
   .form-actions {
@@ -193,15 +189,39 @@
   }
 }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+const birthInput = document.getElementById('birth_date');
+
+// Auto-format tanggal dd-mm-yyyy saat mengetik
+birthInput.addEventListener('input', function() {
+    let val = this.value.replace(/\D/g, ''); // hapus non-angka
+    if(val.length > 2 && val.length <= 4) {
+        val = val.slice(0,2) + '-' + val.slice(2);
+    } else if(val.length > 4) {
+        val = val.slice(0,2) + '-' + val.slice(2,4) + '-' + val.slice(4,8);
+    }
+    this.value = val;
+});
+
+// Validasi tanggal saat submit
+document.getElementById('adsuppliarForm').addEventListener('submit', function(e) {
+    const dateInput = birthInput.value.trim();
+    const datePattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+    if(dateInput && !datePattern.test(dateInput)) {
+        e.preventDefault();
+        Swal.fire('Error','Format tanggal salah! Gunakan dd-mm-yyyy','error');
+    }
+});
+
 // Load daftar provinsi
 fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
   .then(res => res.json())
   .then(provinces => {
-    let provSelect = document.getElementById("sup_provinsi");
+    const provSelect = document.getElementById("sup_provinsi");
     provinces.forEach(prov => {
-      let opt = document.createElement("option");
+      const opt = document.createElement("option");
       opt.value = prov.id;
       opt.textContent = prov.name;
       provSelect.appendChild(opt);
@@ -210,47 +230,48 @@ fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
 
 // Load kabupaten/kota saat provinsi dipilih
 document.getElementById("sup_provinsi").addEventListener("change", function() {
-  let provID = this.value;
-  let kotaSelect = document.getElementById("sup_kota");
-  kotaSelect.innerHTML = "<option value='' disabled selected>-- Pilih Kota/Kabupaten --</option>";
-  kotaSelect.disabled = true;
-  document.getElementById("sup_kecamatan").innerHTML = "<option value='' disabled selected>-- Pilih Kecamatan --</option>";
-  document.getElementById("sup_kecamatan").disabled = true;
+    const provID = this.value;
+    const kotaSelect = document.getElementById("sup_kota");
+    kotaSelect.innerHTML = "<option value='' disabled selected>-- Pilih Kota/Kabupaten --</option>";
+    kotaSelect.disabled = true;
+    const kecSelect = document.getElementById("sup_kecamatan");
+    kecSelect.innerHTML = "<option value='' disabled selected>-- Pilih Kecamatan --</option>";
+    kecSelect.disabled = true;
 
-  if(provID) {
-    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provID}.json`)
-      .then(res => res.json())
-      .then(regencies => {
-        regencies.forEach(kab => {
-          let opt = document.createElement("option");
-          opt.value = kab.id;
-          opt.textContent = kab.name;
-          kotaSelect.appendChild(opt);
-        });
-        kotaSelect.disabled = false;
-      });
-  }
+    if(provID) {
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provID}.json`)
+          .then(res => res.json())
+          .then(regencies => {
+              regencies.forEach(kab => {
+                  const opt = document.createElement("option");
+                  opt.value = kab.id;
+                  opt.textContent = kab.name;
+                  kotaSelect.appendChild(opt);
+              });
+              kotaSelect.disabled = false;
+          });
+    }
 });
 
 // Load kecamatan saat kota dipilih
 document.getElementById("sup_kota").addEventListener("change", function() {
-  let kotaID = this.value;
-  let kecSelect = document.getElementById("sup_kecamatan");
-  kecSelect.innerHTML = "<option value='' disabled selected>-- Pilih Kecamatan --</option>";
-  kecSelect.disabled = true;
+    const kotaID = this.value;
+    const kecSelect = document.getElementById("sup_kecamatan");
+    kecSelect.innerHTML = "<option value='' disabled selected>-- Pilih Kecamatan --</option>";
+    kecSelect.disabled = true;
 
-  if(kotaID) {
-    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaID}.json`)
-      .then(res => res.json())
-      .then(districts => {
-        districts.forEach(kec => {
-          let opt = document.createElement("option");
-          opt.value = kec.id;
-          opt.textContent = kec.name;
-          kecSelect.appendChild(opt);
-        });
-        kecSelect.disabled = false;
-      });
-  }
+    if(kotaID) {
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaID}.json`)
+          .then(res => res.json())
+          .then(districts => {
+              districts.forEach(kec => {
+                  const opt = document.createElement("option");
+                  opt.value = kec.id;
+                  opt.textContent = kec.name;
+                  kecSelect.appendChild(opt);
+              });
+              kecSelect.disabled = false;
+          });
+    }
 });
 </script>

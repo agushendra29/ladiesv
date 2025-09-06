@@ -18,12 +18,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sup_akun      = trim($_POST['sup_name_bank'] ?? '');
     $user_id       = $_SESSION['user_id'] ?? null;
 
-    if (!empty($_POST['birth_date'])) {
-        $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
+$birth_date = null;
+if (!empty($_POST['birth_date'])) {
+    // Ambil input dd-mm-yyyy
+    $input_date = trim($_POST['birth_date']);
+    
+    // Cek format dd-mm-yyyy
+    if (preg_match('/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$/', $input_date, $matches)) {
+        // Ubah menjadi Y-m-d untuk database
+        $day   = $matches[1];
+        $month = $matches[2];
+        $year  = $matches[3];
+        $birth_date = "$year-$month-$day"; // format Y-m-d
     } else {
-        $birth_date = null;
+        echo "Format tanggal salah! Gunakan dd-mm-yyyy.";
+        exit;
     }
-
+}
     $name_prefix = substr(preg_replace('/[^A-Za-z]/', '', $sup_name), 0, 3);
     $dob_format  = $birth_date ? date('dmY', strtotime($birth_date)) : '';
     $sup_password_plain = strtolower($name_prefix) . $dob_format;

@@ -36,7 +36,7 @@
 
         <div class="form-group">
           <label for="birth_date">Tanggal Lahir</label>
-          <input type="date" id="birth_date" name="birth_date">
+          <input type="text" id="birth_date" name="birth_date">
         </div>
 
         <div class="form-group">

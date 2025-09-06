@@ -74,8 +74,10 @@
 
         <div>
           <label for="date_of_birth" style="font-weight: 600; color: #334155;">Tanggal Lahir</label>
-          <input type="date" id="date_of_birth" name="date_of_birth" value="<?= htmlspecialchars($data->date_of_birth); ?>"
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+        <input type="text" id="date_of_birth" name="date_of_birth" 
+       value="<?= $data->date_of_birth ? date('d-m-Y', strtotime($data->date_of_birth)) : '' ?>" 
+       placeholder="dd-mm-yyyy"
+       style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
         <div>
