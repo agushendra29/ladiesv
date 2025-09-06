@@ -4,60 +4,45 @@
     <div class="container-fluid">
       <div>
         <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-          <h2 style="margin: 0; font-size: 18px; font-weight: 600; color: #222; user-select:none;">
-            📦 DAFTAR PEMESANAN
-          </h2>
+        <div class="header-block">
+          <h2>📦 DAFTAR PEMESANAN</h2>
           <?php if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10): ?>
-          <a href="index.php?page=add_purchase_order" style="
-              background-color: #0073ea;
-              color: #fff;
-              border-radius: 6px;
-              padding: 6px 14px;
-              font-weight: 600;
-              font-size: 11px;
-              text-decoration: none;
-              box-shadow: 0 2px 8px rgba(0,115,234,0.35);
-              transition: all 0.3s ease;
-              display: flex;
-              align-items: center;
-              gap: 6px;
-              user-select:none;
-            "
-            onmouseover="this.style.backgroundColor='#005bb5'; this.style.boxShadow='0 4px 12px rgba(0,91,181,0.45)'"
-            onmouseout="this.style.backgroundColor='#0073ea'; this.style.boxShadow='0 2px 8px rgba(0,115,234,0.35)'">
-            <i class="fas fa-plus" style="font-size: 11px;"></i> Tambah Pemesanan
+          <a href="index.php?page=add_purchase_order" class="btn-add">
+            <i class="fas fa-plus"></i> Tambah Pemesanan
           </a>
           <?php endif; ?>
         </div>
 
-        <!-- Table -->
-        <div class="card" style="border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-          <div class="card-body" style="padding: 14px;">
-            <div class="table-responsive">
-              <table id="purchaseOrderTable" class="display nowrap" style="width:100%;">
-                <thead style="background-color: #2563eb; color: #fff; text-transform: uppercase;">
-                  <tr>
-                    <th>No Invoice</th>
-                    <th>Nama Pemesan</th>
-                    <th>Total Bayar</th>
-                    <th>Status</th>
-                    <th>Produk</th>
-                    <th>Dibuat Pada</th>
-                    <th>Disetujui Pada</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- data dari server -->
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <!-- Controls (Show & Search) -->
+        <div class="table-controls">
+          <div id="purchaseOrderTable_length"></div>
+          <div id="purchaseOrderTable_filter"></div>
         </div>
 
-        <!-- Modal Approve -->
-        <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <!-- Table -->
+        <div class="table-responsive">
+          <table id="purchaseOrderTable" class="display dataTable text-center po-table">
+            <thead>
+              <tr>
+                <th>No Invoice</th>
+                <th>Nama Pemesan</th>
+                <th>Total Bayar</th>
+                <th>Status</th>
+                <th>Produk</th>
+                <th>Dibuat Pada</th>
+                <th>Disetujui Pada</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- DataTables inject rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div id="mobilePurchaseOrders" class="mobile-cards"></div>
+ <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="font-size: 12px;">
 
@@ -100,78 +85,178 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 </div>
-
-<!-- DataTables & SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <style>
-  #purchaseOrderTable thead th {
-    font-size: 10px !important;
-    padding: 10px 12px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
+/* Header */
+.header-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.header-block h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  user-select: none;
+}
+.btn-add {
+  background-color: #0073ea;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,115,234,0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-add:hover {
+  background-color: #005bb5;
+  box-shadow: 0 6px 18px rgba(0,91,181,0.5);
+}
 
-  #purchaseOrderTable tbody tr {
-    background-color: #fff;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    transition: 0.3s;
-  }
+/* Table controls (Show & Search) */
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.table-controls label {
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.table-controls select,
+.table-controls input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 13px;
+}
 
-  #purchaseOrderTable tbody tr:hover {
-    background-color: #f3f8ff;
-    box-shadow: 0 3px 10px rgba(0, 115, 234, 0.1);
-  }
+/* Table */
+.po-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  background: #fff;
+  font-size: 12px !important;
+  min-width: 1000px;
+}
+.po-table thead {
+  background-color: #2563eb;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 10px !important;
+}
+.po-table th {
+  font-size: 10px !important;
+  padding: 14px 20px;
+}
+.po-table td {
+  padding: 14px 20px;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 12px !important;
+  color: #374151;
+}
+#purchaseOrderTable tbody tr {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+#purchaseOrderTable tbody tr:hover {
+  background-color: #eff6ff;
+  box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
+}
 
-  #purchaseOrderTable tbody td {
-    padding: 8px 12px;
-    vertical-align: middle;
-    font-size: 11px;
-    color: #374151;
-  }
+/* Status badge */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.status-pending { background-color: #fef3c7; color: #b45309; }
+.status-approved { background-color: #d1fae5; color: #059669; }
+.status-rejected { background-color: #fee2e2; color: #dc2626; }
 
-  .status-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 10px;
-    text-transform: uppercase;
-  }
+/* Button */
+.btn-detail {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-detail:hover { background-color: #1d4ed8; }
 
-  .status-pending {
-    background-color: #fef3c7;
-    color: #b45309;
-  }
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .header-block h2 { font-size: 16px; }
+  .btn-add { width: 100%; justify-content: center; }
+  .table-controls { flex-direction: column; align-items: flex-start; }
+  .po-table { font-size: 11px !important; min-width: unset; }
+  .po-table th { font-size: 9px !important; padding: 10px 12px; }
+  .po-table td { font-size: 11px !important; padding: 10px 12px; }
+}
 
-  .status-approved {
-    background-color: #d1fae5;
-    color: #059669;
-  }
+.mobile-cards {
+  display: none;
+  margin-top: 15px;
+}
+.po-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  font-size: 13px;
+}
+.po-card h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+.po-card p {
+  margin: 4px 0;
+  color: #444;
+}
 
-  .status-rejected {
-    background-color: #fee2e2;
-    color: #dc2626;
+/* Hanya tampilkan cards di mobile */
+@media (max-width: 768px) {
+  #purchaseOrderTable {
+    display: none; /* sembunyikan tabel DataTables */
   }
-
-  .btn-detail {
-    background-color: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: 0.3s;
+  #mobilePurchaseOrders {
+    display: block;
   }
-
-  .btn-detail:hover {
-    background-color: #1d4ed8;
-  }
+}
 </style>

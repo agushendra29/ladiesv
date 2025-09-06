@@ -137,7 +137,16 @@ foreach ($empRecords as $row) {
     }
 
     $rowData = array(
-        "id" => $row['invoice_number'] ?: $row['po_id'],
+        "id" => $row['invoice_number'] !=="-"
+    ? '
+        <a href="app/invoice/nota_pembelian.php?id='.$row['invoice_number'].'" 
+           class="btn btn-sm btn-outline-primary"
+           style="padding:6px 10px; border-radius:6px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px; text-decoration:none;"
+           title="Download Invoice">
+           <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
+        </a>
+      '
+    : '<span style="color:#6c757d; font-size:13px;">-</span>',
         "suppliar_id" => $row['suppliar_name'],
         "total_amount" => 'Rp ' . number_format($row['total_amount'], 0, ',', '.'),
         "status" => strtoupper($row['status']),

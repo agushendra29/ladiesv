@@ -100,7 +100,12 @@ foreach ($records as $row) {
     }
        $itemsSummary = str_replace('||', '<br>', $row['items_summary']);
     $data[] = [
-        "invoice_number"   => $row['invoice_number'],
+"invoice_number"   =>  '<a href="app/invoice/po_pdf.php?id='.$row['id'].'" 
+   class="btn btn-sm btn-outline-primary"
+   style="padding:6px 12px; border-radius:8px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px;"
+   download>
+   <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
+</a>',
         "customer_name"    => $row['customer_name'] . ' - ' . getSuppliarCode($row['customer_id']),
         "distributor_name" => $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']),
         "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),

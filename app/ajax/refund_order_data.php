@@ -7,8 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ? ($_POST['suppliar_id'] ?? 'all') 
                     : $_SESSION['distributor_id'];
 
-    $type       = $_POST['type'] ?? 'all';
-
+    $type   = $_POST['type'] ?? 'all';
     $page   = isset($_POST['page']) ? (int)$_POST['page'] : 1;
     $limit  = 10;
     $offset = ($page - 1) * $limit;
@@ -47,35 +46,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $totalPages = ceil($totalData / $limit);
 
     // ========== Ambil Data ==========
-   $dataSql = "
-    SELECT th.invoice_number,
-           th.type,
-           th.created_at,
-           th.suppliar_id,
-           th.customer_id,
-           th.is_refund,
-           th.tanggal_refund,
-           s1.name AS suppliar_name,
-           s2.name AS customer_name,
-           s2.suppliar_code AS customer_code,
-           GROUP_CONCAT(CONCAT(p.product_name, '; (qty: ', 
-                 CASE 
-                    WHEN th.type = 'refund' 
-                    THEN CONCAT('-', th.quantity) 
-                    ELSE th.quantity 
-                 END, 
-           ')') SEPARATOR '<br>') AS products,
-           GROUP_CONCAT(th.note SEPARATOR ' | ') AS notes
-    FROM transaction_histories th
-    LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
-    LEFT JOIN suppliar s2 ON th.customer_id = s2.id
-    LEFT JOIN products p  ON th.product_id = p.id
-    $whereSQL
-    GROUP BY th.invoice_number
-    ORDER BY th.created_at DESC
-    LIMIT :offset, :limit
-";
-
+    $dataSql = "
+        SELECT th.invoice_number,
+               th.type,
+               th.created_at,
+               th.suppliar_id,
+               th.customer_id,
+               th.is_refund,
+               th.tanggal_refund,
+               s1.name AS suppliar_name,
+               s2.name AS customer_name,
+               s2.suppliar_code AS customer_code,
+               GROUP_CONCAT(CONCAT(p.product_name, '; (qty: ', 
+                     CASE 
+                        WHEN th.type = 'refund' 
+                        THEN CONCAT('-', th.quantity) 
+                        ELSE th.quantity 
+                     END, 
+               ')') SEPARATOR '<br>') AS products,
+               GROUP_CONCAT(th.note SEPARATOR ' | ') AS notes
+        FROM transaction_histories th
+        LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
+        LEFT JOIN suppliar s2 ON th.customer_id = s2.id
+        LEFT JOIN products p  ON th.product_id = p.id
+        $whereSQL
+        GROUP BY th.invoice_number
+        ORDER BY th.created_at DESC
+        LIMIT :offset, :limit
+    ";
 
     $stmt = $pdo->prepare($dataSql);
     foreach ($params as $key => $val) {
@@ -83,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
     $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-
     $stmt->execute();
     $res = $stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -96,24 +93,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         : "Penjualan Pribadi";
 
             echo "<tr>
-                <td>{$dateFormatted}</td>
-                <td>{$data->invoice_number}</td>
-                <td>{$data->type}</td>
-                <td>{$customer}</td>
-                <td>{$data->products}</td>
-                <td>" . htmlspecialchars($data->notes) . "</td>
-                <td>";
+                <td data-label='Sales Date'>{$dateFormatted}</td>
+                <td data-label='Invoice Number'>{$data->invoice_number}</td>
+                <td data-label='Tipe'>{$data->type}</td>
+                <td data-label='Kepada'>{$customer}</td>
+                <td data-label='Produk'>{$data->products}</td>
+                <td data-label='Keterangan'>" . htmlspecialchars($data->notes) . "</td>
+                <td data-label='Aksi'>";
 
             // === tombol refund / cancel refund ===
             if ($data->is_refund == 1) {
                 echo "<button class='cancel-refund-btn' 
-                            style='background:orange;color:white;border:solid 1px orange;border-radius:5px;'
+                            style='background:orange;color:white;border:solid 1px orange;border-radius:5px;padding:5px 10px;'
                             data-invoice='{$data->invoice_number}'>
                         Cancel Refund
                       </button>";
             } else {
                 echo "<button class='refund-btn' 
-                            style='background:red;color:white;border:solid 1px red;border-radius:5px;'
+                            style='background:red;color:white;border:solid 1px red;border-radius:5px;padding:5px 10px;'
                             data-invoice='{$data->invoice_number}'>
                         Refund
                       </button>";
@@ -126,14 +123,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // ========== Pagination ==========
-    echo '<tr><td colspan="7" style="text-align:center;">';
-    echo '<nav><ul class="pagination justify-content-center" style="margin-top:15px;">';
-    for ($p = 1; $p <= $totalPages; $p++) {
-        $activeClass = ($p == $page) ? 'active' : '';
-        echo '<li class="page-item ' . $activeClass . '">';
-        echo '<a href="#" class="page-link" data-page="' . $p . '">' . $p . '</a>';
-        echo '</li>';
-    }
-    echo '</ul></nav>';
-    echo '</td></tr>';
+  echo '<tr><td colspan="7" style="text-align:center;">';
+echo '<div class="pagination-wrapper">'; // ⬅️ wrapper baru
+echo '<nav><ul class="pagination justify-content-center" style="margin-top:15px;">';
+for ($p = 1; $p <= $totalPages; $p++) {
+    $activeClass = ($p == $page) ? 'active' : '';
+    echo '<li class="page-item ' . $activeClass . '">';
+    echo '<a href="#" class="page-link" data-page="' . $p . '">' . $p . '</a>';
+    echo '</li>';
 }
+echo '</ul></nav>';
+echo '</div>'; // ⬅️ tutup wrapper
+echo '</td></tr>';
+}
+?>
+
+<style>
+    @media (max-width: 768px) {
+    .pagination-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    .pagination {
+        display: inline-flex;
+        flex-wrap: nowrap;
+    }
+
+    .pagination .page-item {
+        flex: 0 0 auto;
+    }
+}
+   /* Mobile card view */
+@media (max-width: 768px) {
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        background: transparent !important; /* hilangkan background */
+    }
+
+    table thead {
+        display: none;
+    }
+
+    table, 
+    table tbody, 
+    table tr, 
+    table td {
+        display: block;
+        width: 100%;
+        background: transparent !important;
+    }
+
+    table tbody tr {
+        margin-bottom: 16px;        /* jarak antar card */
+        background: #fff !important;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 12px 14px;
+    }
+
+    table tbody tr:hover {
+        background: #fff !important; /* tidak berubah saat hover */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    }
+
+    table tbody tr td {
+        border: none !important;
+        padding: 6px 8px;
+        text-align: left !important;
+    }
+
+    table tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        color: #2563eb;
+        margin-bottom: 2px;
+        font-size: 12px;
+    }
+}
+
+</style>

@@ -126,13 +126,24 @@ foreach ($newsRecords as $row) {
         "content" => '<div class="content-cell">' . htmlspecialchars(limitContent($row['content'])) . '</div>',
         "publish_date" => date('d M Y', strtotime($row['publish_date'])),
         "created_at" => date('d M Y', strtotime($row['created_at'])),
-        "action" => '
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="index.php?page=edit_news&&edit_id='.$row['id'].'" class="btn btn-secondary btn-sm rounded-0" id="memberEdit_btn"><i class="fas fa-edit"></i></a>
-            <button type="button" id="newsDelete_btn" class="btn btn-danger btn-sm rounded-0 ml-2" data-id="'.$row['id'].'"><i class="fas fa-trash-alt"></i></button>
-            '.$publishButton.'
-          </div>
-        '
+      "action" => '
+  <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
+    <a href="index.php?page=edit_news&&edit_id='.$row['id'].'" 
+       class="btn-action btn-blue">
+       Edit
+    </a>
+
+    <button type="button" 
+            id="newsDelete_btn" 
+            class="btn-action btn-red" 
+            data-id="'.$row['id'].'">
+      Hapus
+    </button>
+
+    '.$publishButton.'
+  </div>
+',
+
     );
 }
 

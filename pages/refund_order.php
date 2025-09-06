@@ -259,15 +259,6 @@
 
     cb(start, end);
 
-    // Load stock monitoring
-    function loadStockMonitoring(suppliar_id) {
-        $.post('app/ajax/refund_order_data.php', {
-            suppliar_id: suppliar_id
-        }, function (data) {
-            $("#refund_order_data_res").html(data);
-        });
-    }
-
     // Search sales report + stock monitoring
     $(document).on('click', '#search_refund', function (event) {
         event.preventDefault();
@@ -281,7 +272,7 @@
         }, function (data) {
             $("#refund_order_data_res").html(data);
         });
-        loadStockMonitoring(customer);
+        loadSalesReport(1);
     });
 
     // Pagination

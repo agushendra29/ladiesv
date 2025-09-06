@@ -2,7 +2,7 @@
 $products = $obj->all('products'); 
 ?>
 
-<div>
+<div class="pb-5">
   <!-- Header -->
   <section class="content">
     <div class="container-fluid mt-5">
@@ -229,6 +229,63 @@ $products = $obj->all('products');
   background-color: #0073ea;
   color: white;
   border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .product-row .col-md-6,
+  .product-row .col-md-3 {
+    width: 100% !important;
+    max-width: 100%;
+    flex: 0 0 100%;
+    margin-bottom: 12px;
+  }
+
+  .product-row label {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .product-row input,
+  .product-row select,
+  .select2-container--default .select2-selection--single {
+    font-size: 14px;
+    height: 46px !important; /* lebih tinggi agar enak diklik */
+  }
+
+  #addProductRow {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  #grandTotal {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .row.mt-4 .col-md-6.offset-md-3.text-center {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .row.mt-4 .col-md-6.offset-md-3.text-center button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 18px !important;
+    text-align: center;
+  }
+
+  .container-fluid.mt-5 {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }
 </style>
 

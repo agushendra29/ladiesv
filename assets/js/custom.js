@@ -218,9 +218,17 @@ $("#empTable").DataTable({
                     type: "POST",
                     data: $("#purchaseOrderForm").serialize(),
                     success: function (res) {
-                        Swal.fire("Berhasil!", "Purchase Order berhasil disimpan", "success");
-                        $("#purchaseOrderForm")[0].reset();
-                        $("#productRows").html(""); // reset rows
+                         Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Purchase order berhasil ditambahkan.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                        
+
                     },
                     error: function () {
                         Swal.fire("Error!", "Terjadi kesalahan saat menyimpan.", "error");
@@ -615,7 +623,33 @@ $("#empTable").DataTable({
         data: "approved_at"
     }, {
         data: "action"
-    }]
+    }],drawCallback: function (settings) {
+        let api = this.api();
+        let rows = api.rows({ page: 'current' }).data();
+        let container = $("#mobilePurchaseOrders");
+        container.empty();
+
+        rows.each(function (row) {
+            let statusClass = "";
+            if (row.status.toLowerCase() === "pending") statusClass = "status-pending";
+            else if (row.status.toLowerCase() === "approved") statusClass = "status-approved";
+            else if (row.status.toLowerCase() === "rejected") statusClass = "status-rejected";
+
+            let card = `
+              <div class="po-card">
+                <h4>${row.id}</h4>
+                <p><strong>Pemesan:</strong> ${row.suppliar_id}</p>
+                <p><strong>Total:</strong> Rp ${row.total_amount}</p>
+                <p><strong>Status:</strong> <span class="status-badge ${statusClass}">${row.status}</span></p>
+                <p><strong>Produk:</strong> ${row.items_summary}</p>
+                <p><strong>Dibuat:</strong> ${row.created_at}</p>
+                <p><strong>Disetujui:</strong> ${row.approved_at ? row.approved_at : "-"}</p>
+                <div style="margin-top:8px;">${row.action}</div>
+              </div>
+            `;
+            container.append(card);
+        });
+    }
 }), $("#sellOrderTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -645,7 +679,7 @@ $("#empTable").DataTable({
         data.each(function (row) {
             const card = `
                 <div class="sell-card">
-                    <h4>🧾 Invoice: ${row.invoice_number}</h4>
+                    <h4>${row.invoice_number}</h4>
                     <p><strong>Distributor:</strong> ${row.distributor_name}</p>
                     <p><strong>Pelanggan:</strong> ${row.customer_name}</p>
                     <p><strong>Total Bayar:</strong> ${row.net_total}</p>
@@ -677,57 +711,57 @@ $("#empTable").DataTable({
         data: "items_summary"
     }]
 }), $("#productTable").DataTable({
-    processing: true,
-    serverSide: true,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/product_data.php"
+processing: true,
+serverSide: true,
+serverMethod: "post",
+ajax: {
+    url: "app/ajax/product_data.php"
+},
+columns: [{
+        data: "product_id"
     },
-    columns: [{
-            data: "product_id"
-        },
-        {
-            data: "product_name"
-        },
-        {
-            data: "sell_price"
-        },
-        {
-            data: "action"
-        }
-    ],
-    responsive: true,
-    paging: true,
-    searching: true,
-    info: false,
-
-    drawCallback: function (settings) {
-        // ambil data yang lagi ditampilkan
-        const api = this.api();
-        const data = api.rows({
-            page: 'current'
-        }).data();
-        const $mobileCards = $("#mobileProductCards");
-
-        $mobileCards.empty(); // clear biar nggak dobel
-
-        data.each(function (row) {
-            const card = `
-              <div class="card-item">
-              <div class="row pl-3">
-              <div style="flex:1;">
-                <h4>${row.product_name}</h4>
-                <div class="meta">${row.sell_price}</div>
-                </div>
-                <div style="flex:1;text-align:center;">
-                <div class="actions">${row.action}</div>
-                </div>
-                </div>
-              </div>
-            `;
-            $mobileCards.append(card);
-        });
+    {
+        data: "product_name"
+    },
+    {
+        data: "sell_price"
+    },
+    {
+        data: "action"
     }
+],
+responsive: true,
+paging: true,
+searching: true,
+info: false,
+
+drawCallback: function (settings) {
+    // ambil data yang lagi ditampilkan
+    const api = this.api();
+    const data = api.rows({
+        page: 'current'
+    }).data();
+    const $mobileCards = $("#mobileProductCards");
+
+    $mobileCards.empty(); // clear biar nggak dobel
+
+    data.each(function (row) {
+        const card = `
+            <div class="card-item">
+            <div class="row pl-3">
+            <div style="flex:1;">
+            <h4>${row.product_name}</h4>
+            <div class="meta">${row.sell_price}</div>
+            </div>
+            <div style="flex:1;text-align:center;">
+            <div class="actions">${row.action}</div>
+            </div>
+            </div>
+            </div>
+        `;
+        $mobileCards.append(card);
+    });
+}
 }), $("#stockManagementTable").DataTable({
 processing: !0,
 serverSide: !0,
@@ -858,7 +892,23 @@ drawCallback: function (settings) {
         {
             data: "action"
         }
-    ]
+    ], drawCallback: function(settings) {
+        const api = this.api();
+        const data = api.rows({ page: 'current' }).data();
+        const $mobileCards = $("#mobileNewsCards");
+        $mobileCards.empty();
+        data.each(function(row) {
+            const card = `
+              <div class="card-item">
+                <h4>${row.title}</h4>
+                <div class="meta">${row.publish_date} | ${row.created_at}</div>
+                <div class="meta">${row.content}</div>
+                <div class="actions">${row.action}</div>
+              </div>
+            `;
+            $mobileCards.append(card);
+        });
+    }
 }), $("#rewardListTable").DataTable({
     processing: false,
     serverSide: false,
