@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'sell_price_d'   => $price_d,
                 'sell_price_a'   => $price_a,
                 'sell_price_r'   => $price_r,
-                'added_by'       => $user_id
+                'added_by'       => $user_id,
+                'is_active' => 1
             ];
 
             $result = $obj->create('products', $data);

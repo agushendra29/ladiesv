@@ -60,6 +60,7 @@ $totalRecordwithFilter = $stmt->fetch()['allcount'];
 $sqlFetch = "
     SELECT suppliar_id, customer_id, i.*,
         u2.name AS distributor_name,
+        u2.role_id AS distributor_role,
         GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR '||') AS items_summary
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
@@ -99,6 +100,11 @@ foreach ($records as $row) {
         continue;
     }
        $itemsSummary = str_replace('||', '<br>', $row['items_summary']);
+         if ($row['distributor_role'] == 1 || $row['distributor_role'] == 10) {
+        $distributorDisplay = "Head Office";
+    } else {
+        $distributorDisplay = $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']);
+    }
     $data[] = [
 "invoice_number"   =>  '<a href="app/invoice/po_pdf.php?id='.$row['id'].'" 
    class="btn btn-sm btn-outline-primary"
@@ -107,7 +113,7 @@ foreach ($records as $row) {
    <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
 </a>',
         "customer_name"    => $row['customer_name'] . ' - ' . getSuppliarCode($row['customer_id']),
-        "distributor_name" => $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']),
+        "distributor_name" => $distributorDisplay,
         "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),
         "order_date"       => $row['order_date'],
         "items_summary"    => $itemsSummary,

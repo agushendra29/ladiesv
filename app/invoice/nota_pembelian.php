@@ -19,6 +19,7 @@ $stmt = $pdo->prepare("
         th.jenis_pengiriman,
         th.is_refund,
         s1.name AS suppliar_name,
+        s1.role_id AS role_id,
         s2.name AS customer_name,
         p.product_name,
         th.quantity
@@ -61,7 +62,7 @@ $pdf->Cell(50,8,'Tanggal:',0,0);
 $pdf->Cell(100,8,date('d-m-Y H:i', strtotime($header['created_at'])),0,1);
 
 $pdf->Cell(50,8,'Distributor:',0,0);
-$pdf->Cell(100,8,$header['suppliar_name'],0,1);
+$pdf->Cell(100,8,$header['role_id'] == 10 || $header['role_id'] == 1 ? 'Head Office' : $header['suppliar_name'],0,1);
 
 $pdf->Cell(50,8,'Customer:',0,0);
 $pdf->Cell(100,8,$header['customer_name'],0,1);

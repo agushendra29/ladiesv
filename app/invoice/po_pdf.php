@@ -12,7 +12,9 @@ $id = intval($_GET['id']);
 $sql = "
     SELECT i.*, 
            u1.name AS suppliar_name, u1.suppliar_code AS suppliar_code,
-           u2.name AS customer_name, u2.suppliar_code AS customer_code
+           u2.name AS customer_name, u2.suppliar_code AS customer_code,
+		   u1.role_id AS role_id,
+		   u2.address AS address
     FROM invoice i
     LEFT JOIN suppliar u1 ON i.suppliar_id = u1.id
     LEFT JOIN suppliar u2 ON i.customer_id = u2.id
@@ -50,11 +52,21 @@ $pdf->Ln(5);
 
 // Info Invoice
 $pdf->SetFont('Arial','',12);
-$pdf->Cell(100,8,"Invoice #: " . $invoice['invoice_number'],0,0);
-$pdf->Cell(0,8,"Tanggal: " . date('d/m/Y', strtotime($invoice['order_date'])),0,1);
+// Invoice #
+$pdf->Cell(0,8,"Invoice #: " . $invoice['invoice_number'],0,1);
 
-$pdf->Cell(100,8,"Distributor: " . $invoice['suppliar_name'] . " (" . $invoice['suppliar_code'] . ")",0,1);
-$pdf->Cell(100,8,"Customer: " . $invoice['customer_name'] . " (" . $invoice['customer_code'] . ")",0,1);
+// Tanggal + Alamat jadi 1 kolom
+$pdf->Cell(0,8,"Tanggal: " . date('d/m/Y', strtotime($invoice['order_date'])),0,1);
+$pdf->MultiCell(0,8,"Alamat: " . $invoice['address'],0,1); 
+
+// Distributor + Customer jadi 1 kolom
+$invoiceBasedRole = ($invoice['role_id'] == 1 || $invoice['role_id'] == 10) 
+    ? 'Distributor: Head Office' 
+    : "Distributor: " . $invoice['suppliar_name'] . " (" . $invoice['suppliar_code'] . ")";
+$pdf->Cell(0,8,$invoiceBasedRole,0,1);
+$pdf->Cell(0,8,"Customer: " . $invoice['customer_name'] . " (" . $invoice['customer_code'] . ")",0,1);
+
+
 $pdf->Ln(5);
 
 // Header tabel

@@ -331,7 +331,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
           </a>
 
           <div id="profileDropdownMenu" class="dropdown-menu-custom" aria-labelledby="profileDropdown" role="menu">
-            <a href="index.php?page=suppliar_edit&&edit_id=<?= $_SESSION['distributor_id'] ?>" class="dropdown-item-custom" role="menuitem" tabindex="-1">
+            <a href="index.php?page=profile" class="dropdown-item-custom" role="menuitem" tabindex="-1">
               <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">person</i> Profile
             </a>
             <div class="dropdown-divider-custom" role="separator"></div>

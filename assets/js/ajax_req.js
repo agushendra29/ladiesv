@@ -791,6 +791,35 @@ $(document).on("click", "#newsDelete_btn", function (e) {
             window.location.reload();
         }
     });
+}),$(document).on('click', '.toggle-active', function() {
+    var id = $(this).data('id');
+    var action = $(this).text().trim() === 'Active' ? 'deactivate' : 'activate';
+
+    var confirmMsg = (action === 'activate') 
+        ? "Apakah kamu yakin ingin mengaktifkan produk ini?" 
+        : "Apakah kamu yakin ingin menonaktifkan produk ini?";
+
+    if (!confirm(confirmMsg)) {
+        return; // batal
+    }
+
+    $.ajax({
+        url: 'app/action/active_product.php',
+        type: 'POST',
+        data: { id: id, action: action },
+        success: function(response) {
+            var res = JSON.parse(response);
+            if (res.status === 'success') {
+                alert('Status berhasil diupdate!');
+                $('#productTable').DataTable().ajax.reload(null, false); 
+            } else {
+                alert('Gagal update status');
+            }
+        },
+        error: function() {
+            alert('Terjadi kesalahan pada server.');
+        }
+    });
 }),$(document).on('click', '.newsTogglePublish_btn', function() {
     var id = $(this).data('id');
     var action = $(this).data('action');

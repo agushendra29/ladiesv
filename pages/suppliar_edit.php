@@ -49,7 +49,7 @@
         </div>
 
         <div>
-          <label for="sup_name_bank" style="font-weight: 600; color: #334155;">Nama Akun Bank *</label>
+          <label for="sup_name_bank" style="font-weight: 600; color: #334155;">Nama pada Rek Bank *</label>
           <input type="text" id="sup_name_bank" name="sup_name_bank" value="<?= htmlspecialchars($data->nama_rekening); ?>" required
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;" placeholder="Nama Akun Bank">
         </div>
@@ -214,6 +214,18 @@ function togglePassword(fieldId, el) {
     input.type = "password"; el.textContent = "👁";
   }
 }
+const bi = document.getElementById('date_of_birth');
+  bi.addEventListener('input', function() {
+    let val = this.value.replace(/\D/g, ''); // hapus non-angka
+    if(val.length > 2 && val.length <= 4) {
+        val = val.slice(0,2) + '-' + val.slice(2);
+    } else if(val.length > 4) {
+        val = val.slice(0,2) + '-' + val.slice(2,4) + '-' + val.slice(4,8);
+    }
+    this.value = val;
+});
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   const provinsiSelect = document.getElementById("provinsi");

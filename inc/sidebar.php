@@ -34,6 +34,7 @@
         </a>
       </li>
       <?php endif; ?>
+      <?php if($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 2 || $_SESSION['role_id'] == 3 || $_SESSION['role_id'] == 4 || $_SESSION['role_id'] == 10) ?>
       <li style="margin-bottom: 6px; position: relative;">
         <input type="checkbox" id="user-menu-toggle" style="display:none;">
         <label for="user-menu-toggle" style="
@@ -49,6 +50,7 @@
           <i class="fas fa-angle-down" style="margin-left:auto; font-size:16px; transition: transform 0.3s ease;" id="produk-arrow"></i>
         </label>
         <ul id="user-submenu" style="list-style: none; padding-left: 24px; margin: 8px 0 0 0; display: none;">
+             <?php if ($roleId == 1 || $roleId == 10 || $roleId == 2): ?>
           <li style="margin-bottom: 6px;">
             <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
               display: block; font-size: 14px !important; font-weight: 500;
@@ -60,6 +62,7 @@
               Anggota
             </a>
           </li>
+          <?php endif ?>
             <?php if ($roleId != 5): ?>
            <li style="margin-bottom: 6px;">
             <a href="index.php?page=add_register_reseller" class="nav-link <?php echo $actual_link=='add_register_reseller'?'active':'';?>" style="
@@ -69,7 +72,7 @@
               transition: background-color 0.25s ease, color 0.25s ease;
             " onmouseover="this.style.backgroundColor='#e0e7ff'; this.style.color='#2563eb';"
               onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'add_register_reseller') ? '#2563eb' : '#4b5563' ?>'">
-              Pendaftaran Reseller
+              Reseller
             </a>
           </li>
           <?php endif ?>
@@ -82,7 +85,7 @@
               transition: background-color 0.25s ease, color 0.25s ease;
             " onmouseover="this.style.backgroundColor='#e0e7ff'; this.style.color='#2563eb';"
               onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'distributor_management') ? '#2563eb' : '#4b5563' ?>'">
-              Manajemen Distributor
+              HD Sponsorisasi
             </a>
           </li>
           <?php endif ?>
@@ -132,6 +135,7 @@
       </li>
 
       <!-- Penjualan -->
+          <?php if ($roleId !=5): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=sell_order" class="nav-link <?php echo $actual_link=='sell_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -146,6 +150,7 @@
           <span>Penjualan</span>
         </a>
       </li>
+      <?php endif ?>
 
       <!-- Pemesanan -->
        
@@ -168,7 +173,7 @@
 
       <!-- Proses Refund -->
        
-      <?php if ($roleId <=1 || $roleId == 10): ?>
+      <?php if ($roleId == 10): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=refund_order" class="nav-link <?php echo $actual_link=='refund_order'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -180,7 +185,7 @@
         " onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.color='#2563eb';"
           onmouseout="this.style.backgroundColor=''; this.style.color='<?= ($actual_link == 'refund_order') ? '#2563eb' : '#374151' ?>'">
           <i class="material-symbols-outlined" style="font-size:22px;">restart_alt</i>
-          <span>Proses Refund</span>
+          <span>Cancel Invoice</span>
         </a>
       </li>
       

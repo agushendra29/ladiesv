@@ -780,7 +780,9 @@ columns: [{
 }, {
     data: "action"
 }],
+
 drawCallback: function (settings) {
+    
     const api = this.api();
     const data = api.rows({
         page: 'current'
@@ -791,16 +793,22 @@ drawCallback: function (settings) {
 
     // render card view untuk mobile
     data.each(function (row) {
+        let actions = "";
+        if (row.role_id == 10) {
+            actions = `
+                <div class="actions d-flex" style="gap:6px;">
+                  <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input" style="width:60px;" data-id="${row.stock_id}">
+                  <button type="button" class="btn btn-success btn-sm stock-apply-add" data-id="${row.stock_id}"><i class="fas fa-plus"></i></button>
+                  <button type="button" class="btn btn-danger btn-sm stock-apply-reduce" data-id="${row.stock_id}"><i class="fas fa-minus"></i></button>
+                </div>
+            `;
+        }
         const card = `
                 <div class="card-item">
                 <h4>${row.product_name}</h4>
                 <div class="meta">Suppliar: ${row.suppliar_name}</div>
                 <div class="meta">Stock: ${row.stock}</div>
-               <div class="actions d-flex" style="gap:6px;">
-          <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input" style="width:60px;" data-id="${row.stock_id}">
-          <button type="button" class="btn btn-success btn-sm stock-apply-add" data-id="${row.stock_id}"><i class="fas fa-plus"></i></button>
-          <button type="button" class="btn btn-danger btn-sm stock-apply-reduce" data-id="${row.stock_id}"><i class="fas fa-minus"></i></button>
-        </div>
+                ${actions}
                 </div>
             `;
         $mobileCards.append(card);

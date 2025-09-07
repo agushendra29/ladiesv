@@ -86,7 +86,7 @@ function getStockProduct($pid) {
 
         <div class="form-row">
           <div class="form-col">
-            <label for="sup_name_bank">Nama Akun Bank *</label>
+            <label for="sup_name_bank">Nama pada Rek Bank *</label>
             <input type="text" id="sup_name_bank" name="sup_name_bank" required>
           </div>
           <div class="form-col">
@@ -98,7 +98,7 @@ function getStockProduct($pid) {
         <div class="form-row">
           <div class="form-col">
             <label for="birth_date">Tanggal Lahir *</label>
-            <input type="date" id="birth_date" name="birth_date" required>
+            <input type="text" id="dob" name="dob" required placeholder="dd-mm-yyyy">
           </div>
           <div class="form-col">
             <label for="sup_email">Email *</label>
@@ -122,7 +122,7 @@ function getStockProduct($pid) {
 
         <div class="form-row">
           <div class="form-col-full">
-            <label for="supaddress">Alamat Pengiriman</label>
+            <label for="supaddress">Alamat Domisili</label>
             <textarea id="supaddress" name="supaddress" rows="3"></textarea>
           </div>
         </div>
@@ -276,6 +276,17 @@ createProductRow();
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  const binput = document.getElementById('dob');
+  binput.addEventListener('input', function() {
+    let val = this.value.replace(/\D/g, ''); // hapus non-angka
+    if(val.length > 2 && val.length <= 4) {
+        val = val.slice(0,2) + '-' + val.slice(2);
+    } else if(val.length > 4) {
+        val = val.slice(0,2) + '-' + val.slice(2,4) + '-' + val.slice(4,8);
+    }
+    this.value = val;
+});
+
   const provSelect = document.getElementById("provinsi");
   const kotaSelect = document.getElementById("kota");
   const kecSelect = document.getElementById("kecamatan");

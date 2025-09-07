@@ -12,7 +12,7 @@
 		 		$query = array(
 		 			'password' => $password
 		 		);
-		 		$res = $obj->update('user','id',$user_id,$query);
+		 		$res = $obj->update('user','suppliar_code',$user_id,$query);
 		 		if ($res) {
 		 			echo "yes";
 		 		}else{

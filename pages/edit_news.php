@@ -138,7 +138,7 @@
       body: formData
     })
     .then(res => res.text())
-    .then(res => {
+  .then(res => {
       if(res.trim() === "yes"){
         alert("Berita berhasil diperbarui!");
         window.location.href = "index.php?page=news";

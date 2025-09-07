@@ -30,9 +30,7 @@
         </div>
 
         <!-- Card view untuk mobile -->
-      <?php if ($_SESSION['role_id'] == 10): ?>
         <div id="mobileStockCards"></div>
-      <?php endif; ?>
       </div>
     </div>
 

@@ -156,6 +156,9 @@
                                 $all_customer = $obj->all('suppliar');
                                 $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R', 10 => 'SA'];
                                 foreach ($all_customer as $customer) {
+                                    if ($customer->role_id == 1 && $customer->suppliar_code != '000001') {
+            continue;
+        }
                                   $roleLabel = isset($roleMap[$customer->role_id]) ? $roleMap[$customer->role_id] : $customer->role_id;
                                   echo '<option value="'.$customer->id.'">'.$customer->name.' - '.$roleLabel.'-'.$customer->suppliar_code.'</option>';
                                 }

@@ -23,8 +23,21 @@ try {
      $kecamatan   = trim($payload['kecamatan']);
     $sup_address_ktp = trim($payload['supaddressktp']);
     $sup_akun      = trim($payload['sup_name_bank']);
-    $birth_date    = !empty($payload['birth_date']) ? date('Y-m-d', strtotime($payload['birth_date'])) : null;
+    $birth_input   = trim($payload['dob'] ?? '');
     $user_id       = $_SESSION['user_id'] ?? null;
+
+
+     $birth_date = null;
+    if(!empty($birth_input)){
+        if(preg_match('/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$/', $birth_input, $matches)){
+            $day = $matches[1];
+            $month = $matches[2];
+            $year = $matches[3];
+            $birth_date = "$year-$month-$day"; // simpan ke DB format Y-m-d
+        } else {
+            throw new Exception('Format tanggal salah! Gunakan dd-mm-yyyy.');
+        }
+    }
 
     if(!preg_match('/^[0-9]{16}$/', $sup_nik)) throw new Exception('NIK harus 16 digit angka.');
     if(!$sup_name || !$sup_rekening || !$sup_bank || !$birth_date || !$sup_akun || !$sup_contact || !$sup_email || !$sup_role || !$sup_address){

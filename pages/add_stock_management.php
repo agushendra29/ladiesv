@@ -40,15 +40,24 @@
             <div class="col-md-12" style="margin-bottom: 24px;">
               <label for="p_suppliar" style="font-weight: 600; display: block; margin-bottom: 8px;">Distributor / Agen *</label>
               <select name="p_suppliar" id="p_suppliar" style="width: 100%; border: 1px solid #ccc; border-radius: 12px; padding: 12px;">
-                <?php 
-                  $all_sup = $obj->all('suppliar');
-                  foreach ($all_sup as $catagory) {
-                    $roleName = ($catagory->role_id == 3) ? 'Distributor' :
-                                (($catagory->role_id == 4) ? 'Agen' :
-                                (($catagory->role_id == 2) ? 'Head Distributor' : 'HO'));
-                    echo "<option value='{$catagory->id}' data-role-id='{$catagory->role_id}'>{$roleName} - {$catagory->name}</option>";
-                  }
-                ?>
+               <?php 
+      $all_sup = $obj->all('suppliar');
+      foreach ($all_sup as $catagory) {
+        // filter hanya role_id 1,2,3,4,5
+        if (in_array($catagory->role_id, [1,2,3,4])) {
+          // role_id 1 → hanya suppliar_code 000001
+          if ($catagory->role_id == 1 && $catagory->suppliar_code !== '000001') {
+            continue;
+          }
+
+          $roleName = ($catagory->role_id == 3) ? 'Distributor' :
+                      (($catagory->role_id == 4) ? 'Agen' :
+                      (($catagory->role_id == 2) ? 'Head Distributor' : 'Head Office'));
+
+          echo "<option value='{$catagory->id}' data-role-id='{$catagory->role_id}'>{$roleName} - {$catagory->name} ({$catagory->suppliar_code})</option>";
+        }
+      }
+    ?>
               </select>
             </div>
           </div>

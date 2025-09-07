@@ -23,6 +23,7 @@ $products = $obj->all('products');
                   <option disabled selected>Pilih produk</option>
                   <?php foreach ($products as $product): ?>
                     <?php
+                      if ($product->is_active != 1) continue;
     $role_id = $_SESSION['role_id'];
     $price = 0;
 
