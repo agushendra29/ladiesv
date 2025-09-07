@@ -59,10 +59,10 @@ if ($Ouser->is_login() != false) {
           <label class="form-check-label" for="remember" style="font-size:13px; color:#555;">Remember me</label>
         </div>
 
-        <button type="submit" name="admin_login" class="btn w-100" style="background-color:#0073ea; color:#fff; font-weight:600; border-radius:12px; height:44px; font-size:15px; transition: all 0.3s;">Login</button>
+        <button type="submit" name="admin_login" class="btn w-100" style="background-color:#EB4F7D; color:#fff; font-weight:600; border-radius:12px; height:44px; font-size:15px; transition: all 0.3s;">Login</button>
       </form>
       <div class="text-center mt-3">
-        <a href="reset.php" style="font-size:13px; color:#0073ea; font-weight:600; text-decoration:none;">Lupa password? </a>
+        <a href="reset.php" style="font-size:13px; color:#EB4F7D; font-weight:600; text-decoration:none;">Lupa password? </a>
       </div>
     </div>
   </div>

@@ -23,7 +23,7 @@ if (!$news) {
 <style>
   .news-detail-wrapper {
     padding: 80px 20px;
-    background-color: #f6f7fb;
+    background-color: white;
   }
   .news-detail-container {
     background: white;
@@ -54,7 +54,7 @@ if (!$news) {
   .btn-back {
     display: inline-block;
     margin-top: 30px;
-    background: #0073ea;
+    background: #EB4F7D;
     color: white;
     padding: 10px 18px;
     border-radius: 8px;

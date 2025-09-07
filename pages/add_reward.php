@@ -1,4 +1,4 @@
-<div style="margin-bottom:75px; background-color: #f6f7fb;">
+<div style="margin-bottom:75px; background-color: white;">
   <section class="content">
     <div class="container-fluid" style="margin-top: 50px;">
       <div>
@@ -77,7 +77,7 @@
               </button>
 
               <button type="submit" style="
-                background-color: #0073ea;
+                background-color: #EB4F7D;
                 color: white;
                 border: none;
                 border-radius: 8px;

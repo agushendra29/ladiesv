@@ -1,4 +1,4 @@
-<div style="padding-top:52px; padding-bottom:52px; background-color: #f6f7fb;">
+<div style="padding-top:52px; padding-bottom:52px; background-color: white;">
   <!-- Sell Order Page -->
   <section class="content">
     <div class="container-fluid">
@@ -62,7 +62,7 @@
   user-select: none;
 }
 .btn-add {
-  background-color: #0073ea;
+  background-color: #EB4F7D;
   color: #fff;
   border-radius: 10px;
   padding: 8px 18px;
@@ -118,7 +118,7 @@
   min-width: 900px;
 }
 .stock-table thead {
-  background-color: #2563eb;
+  background-color: #EEA0A0;
   color: #fff;
   text-transform: uppercase;
   font-weight: 600;

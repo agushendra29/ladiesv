@@ -32,7 +32,7 @@
 
     <div class="form-col" style="display:flex; align-items:flex-end; min-width:120px;">
       <button type="button" id="addChildBtn" 
-              style="padding:12px 24px; background-color:#2563eb; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:600; width:100%;">
+              style="padding:12px 24px; background-color:#EEA0A0; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:600; width:100%;">
         Add
       </button>
     </div>

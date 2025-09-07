@@ -95,7 +95,7 @@
   }
   .responsive-form input:focus,
   .responsive-form textarea:focus {
-    border-color: #2563eb;
+    border-color: #EEA0A0;
     outline: none;
   }
 
@@ -119,7 +119,7 @@
     transition: transform 0.2s ease;
   }
   .btn-red { background-color: #ef4444; color: #fff; }
-  .btn-blue { background-color: #2563eb; color: #fff; }
+  .btn-blue { background-color: #EEA0A0; color: #fff; }
   .btn-red:hover,
   .btn-blue:hover { transform: translateY(-2px); }
   @media(max-width: 600px){

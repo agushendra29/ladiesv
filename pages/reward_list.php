@@ -1,4 +1,4 @@
-<div style="padding-top:52px; background-color: #f6f7fb;">
+<div style="padding-top:52px; background-color: white;">
   <section class="content">
     <div class="container-fluid">
 
@@ -9,7 +9,7 @@
         </h2>
         <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
         <a href="index.php?page=add_reward" style="
-              background-color: #0073ea;
+              background-color: #EB4F7D;
               color: #fff;
               border-radius: 12px;
               padding: 8px 20px;
@@ -67,7 +67,7 @@
           min-width: 900px;
         ">
           <thead
-            style="background-color: #2563eb; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
+            style="background-color: #EEA0A0; color: #fff; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; font-size: 11px;">
             <tr>
               <th style="padding: 16px 20px; border-bottom: none; border-top-left-radius: 12px; font-size: 11px;">No
               </th>

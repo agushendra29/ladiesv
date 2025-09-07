@@ -199,7 +199,7 @@ echo '</td></tr>';
         content: attr(data-label);
         font-weight: 600;
         display: block;
-        color: #2563eb;
+        color: #EEA0A0;
         margin-bottom: 2px;
         font-size: 12px;
     }

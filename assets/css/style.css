@@ -158,8 +158,8 @@ body.sidebar-collapse .content-wrapper {
 /* --- Sidebar umum --- */
 .sidebar {
   width: 260px;
-  background-color: #d2eeff;
-  color: #374151;
+  background-color: #F7CECE;
+  color: #D92765;
   height: 100vh;
   position: fixed;
   top: 57px; left: 0;
@@ -264,7 +264,7 @@ body.sidebar-collapse .content-wrapper {
 /* Fokus untuk Choices */
 .is-focused .choices__inner,
 .is-open .choices__inner {
-    border-color: #2563eb !important;
+    border-color: #EEA0A0 !important;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
 }
 

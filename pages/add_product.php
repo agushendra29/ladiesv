@@ -81,7 +81,7 @@
                 onmouseout="this.style.backgroundColor='#f44336'">Reset</button>
 
               <button type="submit" style="
-                background-color: #0073ea;
+                background-color: #EB4F7D;
                 color: white;
                 border: none;
                 border-radius: 8px;

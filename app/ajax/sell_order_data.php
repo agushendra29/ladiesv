@@ -68,7 +68,7 @@ $sqlFetch = "
     LEFT JOIN products p ON d.pid = p.id
     WHERE 1 {$whereExtra} {$searchQuery}
     GROUP BY i.id
-    ORDER BY {$columnName} {$columnSortOrder}
+  ORDER BY i.id DESC 
     LIMIT :limit OFFSET :offset
 ";
 $stmt = $pdo->prepare($sqlFetch);

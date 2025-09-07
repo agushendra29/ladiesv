@@ -54,20 +54,26 @@ $breadcrumbText = makeBreadcrumb($actual_link);
 function getTotalPoints($suppliar_id, $role_id) {
     global $pdo;
 
-    // Default query untuk semua role kecuali 5
-    $sql = "
-        SELECT 
-            COALESCE(SUM(CASE WHEN is_refund = 0 THEN quantity ELSE 0 END), 0) AS total_penjualan,
-            COALESCE(SUM(CASE WHEN is_refund = 1 THEN quantity ELSE 0 END), 0) AS total_refund
-        FROM transaction_histories
-        WHERE suppliar_id = :suppliar_id
-    ";
-
-    // Jika role 5, hitung untuk penjualan dan pembelian
     if ($role_id == 5) {
-        $sql .= " AND type IN ('penjualan', 'pembelian')";
+        // Role 5 → lihat customer_id, hitung pembelian & penjualan
+        $sql = "
+            SELECT 
+                COALESCE(SUM(CASE WHEN is_refund = 0 THEN quantity ELSE 0 END), 0) AS total_penjualan,
+                COALESCE(SUM(CASE WHEN is_refund = 1 THEN quantity ELSE 0 END), 0) AS total_refund
+            FROM transaction_histories
+            WHERE customer_id = :suppliar_id
+              AND type IN ('penjualan', 'pembelian')
+        ";
     } else {
-        $sql .= " AND type = 'penjualan'";
+        // Role lain → lihat suppliar_id, hanya penjualan
+        $sql = "
+            SELECT 
+                COALESCE(SUM(CASE WHEN is_refund = 0 THEN quantity ELSE 0 END), 0) AS total_penjualan,
+                COALESCE(SUM(CASE WHEN is_refund = 1 THEN quantity ELSE 0 END), 0) AS total_refund
+            FROM transaction_histories
+            WHERE suppliar_id = :suppliar_id
+              AND type = 'penjualan'
+        ";
     }
 
     $stmt = $pdo->prepare($sql);
@@ -75,6 +81,8 @@ function getTotalPoints($suppliar_id, $role_id) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $totalPoints = ($row['total_penjualan'] ?? 0) - ($row['total_refund'] ?? 0);
+
+    // Jangan sampai minus
     return max(0, $totalPoints);
 }
 
@@ -163,7 +171,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     }
     .nav-link:hover {
       background-color: #f3f4f6;
-      color: #2563eb;
+      color: #EEA0A0;
     }
     .user-info {
       text-align: right;
@@ -216,7 +224,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       display: flex;
       align-items: center;
       padding: 10px 16px;
-      color: #2563eb;
+      color: #EEA0A0;
       font-weight: 600;
       font-size: 15px;
       text-decoration: none;
@@ -256,7 +264,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     transition: all 0.2s;
 }
 .dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #2563eb;
+    border-color: #EEA0A0;
     box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
 }
 
@@ -290,14 +298,14 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     transition: all 0.2s;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #2563eb;
+    background-color: #EEA0A0;
     color: #fff !important;
-    border-color: #2563eb;
+    border-color: #EEA0A0;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     background-color: #e0e7ff;
-    color: #2563eb !important;
-    border-color: #2563eb;
+    color: #EEA0A0 !important;
+    border-color: #EEA0A0;
 }
 
   </style>

@@ -176,7 +176,7 @@
             transition: 0.3s;">Reset</button>
 
           <button type="submit" style="
-            background-color: #2563eb;
+            background-color: #EEA0A0;
             color: white;
             border: none;
             border-radius: 12px;

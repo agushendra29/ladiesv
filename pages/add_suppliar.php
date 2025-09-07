@@ -169,7 +169,7 @@
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
-      border-color: #2563eb;
+      border-color: #EEA0A0;
     }
 
     .form-group.full-width {
@@ -203,7 +203,7 @@
     }
 
     .btn-submit {
-      background-color: #2563eb;
+      background-color: #EEA0A0;
       color: white;
       border: none;
       border-radius: 12px;

@@ -177,11 +177,11 @@ label { font-size: 14px; font-weight: 500; margin-bottom: 8px; display:block; }
 input, select, textarea { width: 100%; padding: 14px 16px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 14px; box-sizing: border-box; margin-bottom: 16px; }
 textarea { resize: vertical; }
 #formErrorArea { color: #b91c1c; margin-bottom: 20px; background-color: #fee2e2; padding: 14px; border-radius: 10px; }
-a#addProductBtn { background: #0073ea; color:#fff; border-radius:10px; padding:10px 18px; display:inline-block; margin:12px 0; cursor:pointer; text-decoration:none; font-weight:500; }
+a#addProductBtn { background: #EB4F7D; color:#fff; border-radius:10px; padding:10px 18px; display:inline-block; margin:12px 0; cursor:pointer; text-decoration:none; font-weight:500; }
 a#addProductBtn:hover { background:#005bb5; }
 
 #productRows table { width: 100%; border-collapse: collapse; margin-top:12px; font-size:14px; }
-#productRows thead { background:#2563eb; color:#fff; font-size:13px; }
+#productRows thead { background:#EEA0A0; color:#fff; font-size:13px; }
 #productRows th, #productRows td { padding:12px; border-bottom:1px solid #e5e7eb; text-align:center; }
 #productRows td { background:#fff; }
 
@@ -189,7 +189,7 @@ a#addProductBtn:hover { background:#005bb5; }
 .btn-reset { background:#ef4444; color:#fff; padding:14px 28px; border:none; border-radius:12px; margin-right:14px; cursor:pointer; font-weight:500; }
 .btn-reset:hover { background:#dc2626; }
 .btn-submit { background:#3b82f6; color:#fff; padding:14px 28px; border:none; border-radius:12px; cursor:pointer; font-weight:500; }
-.btn-submit:hover { background:#2563eb; }
+.btn-submit:hover { background:#EEA0A0; }
 
 .form-row { display: flex; flex-wrap: wrap; gap:16px; margin-bottom:0; }
 .form-col { flex: 1 1 48%; min-width: 200px; }

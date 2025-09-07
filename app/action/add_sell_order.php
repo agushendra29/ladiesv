@@ -19,7 +19,7 @@ try {
             throw new Exception('Payload JSON tidak valid.');
         }
 
-        $customer_id  = isset($payload['buyer']) && $payload['buyer'] !== '' ? (int)$payload['buyer'] : 0;
+        $customer_id  = isset($payload['buyerId']) && $payload['buyerId'] !== '' ? (int)$payload['buyerId'] : 0;
         $buyer_manual = isset($payload['buyerName']) ? trim($payload['buyerName']) : '';
         $products     = isset($payload['products']) && is_array($payload['products']) ? $payload['products'] : [];
     } else {

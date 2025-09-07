@@ -1,4 +1,4 @@
-<div style="padding-top:52px; background-color: #f6f7fb;">
+<div style="padding-top:52px; background-color: white;">
   <!-- Purchase Order Page -->
   <section class="content">
     <div class="container-fluid">
@@ -106,7 +106,7 @@
   user-select: none;
 }
 .btn-add {
-  background-color: #0073ea;
+  background-color: #EB4F7D;
   color: #fff;
   border-radius: 10px;
   padding: 8px 18px;
@@ -162,7 +162,7 @@
   min-width: 1000px;
 }
 .po-table thead {
-  background-color: #2563eb;
+  background-color: #EEA0A0;
   color: #fff;
   text-transform: uppercase;
   font-weight: 600;
@@ -206,7 +206,7 @@
 
 /* Button */
 .btn-detail {
-  background-color: #2563eb;
+  background-color: #EEA0A0;
   color: #fff;
   border: none;
   border-radius: 6px;

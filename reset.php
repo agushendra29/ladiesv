@@ -49,11 +49,11 @@ if ($Ouser->is_login() != false) {
                  style="height:44px; border-radius:10px; font-size:14px; border:1px solid #d0d7de;">
         </div>
 
-        <button type="submit" name="reset_password" class="btn w-100" style="background-color:#0073ea; color:#fff; font-weight:600; border-radius:12px; height:44px; font-size:15px; transition: all 0.3s;">Reset Password</button>
+        <button type="submit" name="reset_password" class="btn w-100" style="background-color:#EB4F7D; color:#fff; font-weight:600; border-radius:12px; height:44px; font-size:15px; transition: all 0.3s;">Reset Password</button>
       </form>
 
       <div class="text-center mt-3">
-        <a href="login.php" style="font-size:13px; color:#0073ea; font-weight:600; text-decoration:none;">← Kembali ke Login</a>
+        <a href="login.php" style="font-size:13px; color:#EB4F7D; font-weight:600; text-decoration:none;">← Kembali ke Login</a>
       </div>
     </div>
   </div>

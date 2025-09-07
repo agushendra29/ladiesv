@@ -1,193 +1,151 @@
 <style>
-  /* Reset & base */
+  /* Base */
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f8f9fa;
+    background: #f5f7fb;
     color: #333;
+    line-height: 1.5;
   }
 
   section.content {
-    min-height: 80vh;
-    padding: 2.5rem 1rem;
+    min-height: 85vh;
+    padding: 2.5rem 1.5rem;
   }
 
-  h3 {
+  h3.section-title {
     font-weight: 700;
-    color: #222;
-    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  /* Card style */
-  .card-custom {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    padding: 1.5rem;
-    margin-bottom: 2.5rem;
+  /* News Section */
+  .news-scroll {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scroll-snap-type: x mandatory;
+  }
+  .news-scroll::-webkit-scrollbar {
+    height: 8px;
+  }
+  .news-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
   }
 
-  /* Grid layout for news */
-  .news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.25rem;
-  }
-
-  /* News card */
   .news-card {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
+    flex: 0 0 320px;
     background: #fff;
-    transition: transform 0.2s ease;
-  }
-
-  .news-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .news-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  .news-content {
-    padding: 1rem;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-  }
-
-  .news-content h5 {
-    font-weight: 600;
-    font-size: 1.125rem;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-    color: #222;
-  }
-
-  .news-content h6 {
-    font-size: 0.875rem;
-    color: #777;
-    margin: 0 0 1rem 0;
-    font-weight: 500;
-  }
-
-  .news-content p {
-    flex-grow: 1;
-    font-size: 0.875rem;
-    color: #444;
-    margin: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
+    transition: transform .25s ease, box-shadow .25s ease;
+    scroll-snap-align: start;
+  }
+  .news-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  }
+
+  .news-icon {
+    background: linear-gradient(135deg, #EE6C6C, #3A7BDA);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 110px;
+    font-size: 42px;
+    color: white;
+  }
+
+  .news-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .news-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #1e3a8a;
+  }
+  .news-meta {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+  }
+  .news-excerpt {
+    font-size: 0.9rem;
+    color: #374151;
+    margin-bottom: 1rem;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .read-more-btn {
+    margin-top: auto;
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: white;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .read-more-btn:hover {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
   }
 
   /* Info boxes */
   .info-boxes {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+    margin-top: 2rem;
   }
-
   .info-box {
-    flex: 1 1 280px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
+    border-radius: 16px;
+    padding: 1.5rem;
     color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform .25s ease;
   }
-
+  .info-box:hover {
+    transform: translateY(-4px);
+  }
   .info-box .info-box-text {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     font-weight: 600;
   }
-
-  .info-box .info-box-number {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-top: 0.25rem;
+  .info-box .sell,
+  .info-box .buy {
+    margin-top: .75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: block;
   }
-
-  .info-box-icon {
-    font-size: 2.5rem;
-    opacity: 0.8;
-  }
-
-  .bg-danger {
-    background-color: #e55353;
-  }
-
-  .bg-success {
-    background-color: #4caf50;
-  }
+  .sell { color: #ffe4e6; }
+  .buy { color: #d1fae5; }
 
   .bg-cards-1 {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
   }
-
   .bg-cards-2 {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  }
-
-  /* Sell / Buy labels inside info-boxes */
-  .sell,
-  .buy {
-    display: block;
-    font-weight: 600;
-    font-size: 1.125rem;
-    margin-top: 0.5rem;
-  }
-
-  .sell {
-    color: #ffe9e9;
-  }
-
-  .buy {
-    color: #d2f7f1;
-  }
-
-  /* Table styling */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  thead {
-    background-color: #343a40;
-    color: white;
-  }
-
-  thead th {
-    padding: 0.75rem 1rem;
-    text-align: center;
-    font-weight: 600;
-  }
-
-  tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-
-  tbody td {
-    padding: 0.75rem 1rem;
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  /* Responsive */
-  @media(max-width: 768px) {
-    .info-boxes {
-      flex-direction: column;
-    }
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
   }
 </style>
 
@@ -196,17 +154,16 @@
     <div class="container-fluid">
 
       <!-- News Section -->
-      <!-- News Section -->
       <div class="news-section">
         <h3 class="section-title">📰 Latest News</h3>
         <div class="news-scroll">
           <?php 
-      $stmt = $pdo->prepare("SELECT * FROM news WHERE is_active = 1 ORDER BY publish_date DESC");
-      $stmt->execute();
-      $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
-      if($newsList):
-        foreach($newsList as $news):
-    ?>
+            $stmt = $pdo->prepare("SELECT * FROM news WHERE is_active = 1 ORDER BY publish_date DESC");
+            $stmt->execute();
+            $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
+            if($newsList):
+              foreach($newsList as $news):
+          ?>
           <div class="news-card">
             <div class="news-icon">
               <i class="fas fa-newspaper"></i>
@@ -216,162 +173,103 @@
               <span class="news-meta">
                 <?= htmlspecialchars($news->category) ?> | <?= date('d M Y', strtotime($news->publish_date)) ?>
               </span>
-              <p class="news-excerpt">
-                <?= nl2br(htmlspecialchars($news->content)) ?>
-              </p>
-              <a href="index.php?page=news_detail&id=<?= $news->id ?>" 
-   class="read-more-btn">
-  Read More
-</a>
+              <p class="news-excerpt"><?= nl2br(htmlspecialchars($news->content)) ?></p>
+              <a href="index.php?page=news_detail&id=<?= $news->id ?>" class="read-more-btn">Read More</a>
             </div>
           </div>
           <?php endforeach; else: ?>
-          <p class="no-news">Belum ada berita yang tersedia.</p>
+            <p class="no-news">Belum ada berita yang tersedia.</p>
           <?php endif; ?>
         </div>
       </div>
 
       <!-- Statistik Boxes -->
+      <div class="info-boxes">
+        <!-- Today -->
+        <div class="info-box bg-cards-1">
+          <h2 class="info-box-text">Today</h2>
+          <span class="sell">
+            Sell:
+    <?php
+$start = (new DateTime('today'))->format('Y-m-d 00:00:00');
+$end   = (new DateTime('tomorrow'))->format('Y-m-d 00:00:00');
+$suppliar_id = $_SESSION['distributor_id'] ?? 0;
 
-      <!-- Today & Monthly Sell/Buy -->
-      <div class="mb-4">
-        <div class="info-boxes">
-          <div class="info-box bg-cards-1" role="region" aria-label="Today's Sales and Purchases">
-            <div class="text-center text-white">
-              <h2 class="info-box-text">Today</h2>
-              <span class="sell">Sell:
-                <?php 
-                  $today = date('Y-m-d');
-                  $stmt = $pdo->prepare("SELECT SUM(`net_total`) FROM `invoice` WHERE `order_date` = :today");
-                  $stmt->execute(['today' => $today]);
-                  $res = $stmt->fetch(PDO::FETCH_NUM);
-                  echo $res[0] ?? '0';
-                ?>
-              </span>
-            </div>
-          </div>
+$sqlDetail = "
+  SELECT p.product_name, SUM(t.quantity) AS total_sold
+  FROM transaction_histories t
+  JOIN products p ON p.id = t.product_id
+  WHERE t.created_at >= :start
+    AND t.type = 'penjualan'
+    AND COALESCE(t.is_refund, 0) = 0
+    AND t.suppliar_id = :sid
+  GROUP BY t.product_id, p.product_name
+  ORDER BY p.product_name ASC
+";
+$stmt2 = $pdo->prepare($sqlDetail);
+$stmt2->execute([
+  'start' => $start,
+  'sid'   => $suppliar_id
+]);
+$rows = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-          <div class="info-box bg-cards-2" role="region" aria-label="Monthly Sales and Purchases">
-            <div class="text-center text-white">
-              <h2 class="info-box-text">Monthly</h2>
-              <span class="sell">Sell:
-                <?php 
-                  $start_date = date('Y-m-01');
-                  $end_date = date('Y-m-t');
-                  $stmt = $pdo->prepare("SELECT SUM(`net_total`) FROM `invoice` WHERE `order_date` BETWEEN :start AND :end");
-                  $stmt->execute(['start' => $start_date, 'end' => $end_date]);
-                  $res = $stmt->fetch(PDO::FETCH_NUM);
-                  echo $res[0] ?? '0';
-                ?>
-              </span>
-            </div>
-          </div>
+if ($rows) {
+  echo "<ul>";
+  foreach ($rows as $r) {
+    echo "<li>" .htmlspecialchars($r['product_name']) . " : " . (int)$r['total_sold'] . " pcs</li>";
+  }
+  echo "</ul>";
+} else {
+  echo "<i>Tidak ada penjualan hari ini</i>";
+}
+?>
+
+
+          </span>
+        </div>
+
+        <!-- Monthly -->
+        <div class="info-box bg-cards-2">
+          <h2 class="info-box-text">Monthly</h2>
+          <span class="sell">
+            Sell:
+             <?php
+$start = date('Y-m-01 00:00:00'); // awal bulan
+$end   = date('Y-m-t 23:59:59');  // akhir bulan
+$suppliar_id = $_SESSION['distributor_id'] ?? 0;
+$sqlDetail = "
+  SELECT p.product_name, SUM(t.quantity) AS total_sold
+  FROM transaction_histories t
+  JOIN products p ON p.id = t.product_id
+    WHERE t.created_at BETWEEN :start AND :end
+    AND t.type = 'penjualan'
+    AND COALESCE(t.is_refund, 0) = 0
+    AND t.suppliar_id = :sid
+  GROUP BY t.product_id, p.product_name
+  ORDER BY p.product_name ASC
+";
+$stmt2 = $pdo->prepare($sqlDetail);
+$stmt2->execute([
+  'start' => $start,
+  'end'   => $end,
+  'sid'   => $suppliar_id
+]);
+$rows = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+if ($rows) {
+  echo "<ul>";
+  foreach ($rows as $r) {
+    echo "<li>" .htmlspecialchars($r['product_name']) . " : " . (int)$r['total_sold'] . " pcs</li>";
+  }
+  echo "</ul>";
+} else {
+  echo "<i>Tidak ada penjualan dakan bulan ini</i>";
+}
+?>
+          </span>
         </div>
       </div>
-
-      <!-- Factory Product Stock Alert -->
-      
 
     </div>
   </section>
 </div>
-
-<style>
-  .news-section {
-  margin-bottom: 2rem;
-}
-.section-title {
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #222;
-}
-
-/* Scroll container */
-.news-scroll {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
-}
-.news-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-.news-scroll::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
-}
-
-/* Card */
-.news-card {
-  flex: 0 0 300px; /* lebar card */
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease;
-  scroll-snap-align: start;
-}
-.news-card:hover {
-  transform: translateY(-4px);
-}
-.news-icon {
-  background: linear-gradient(135deg, #2563eb, #1e4fbf);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
-  font-size: 40px;
-  color: white;
-}
-.news-body {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.news-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  color: #2563eb;
-}
-.news-meta {
-  font-size: 0.85rem;
-  color: #777;
-  margin-bottom: 0.75rem;
-  display: block;
-}
-.news-excerpt {
-  font-size: 0.9rem;
-  color: #444;
-  margin: 0 0 1rem 0;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.read-more-btn {
-  margin-top: auto;
-  background: #f97316;
-  color: white;
-  text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-align: center;
-  transition: background 0.3s ease;
-}
-.read-more-btn:hover {
-  background: #1e4fbf;
-}
-.no-news {
-  color: #666;
-}
-
-</style>

@@ -25,7 +25,7 @@
 
 /* Tombol */
 .btn-custom {
-  background-color: #0073ea;
+  background-color: #EB4F7D;
   color: #fff;
   border-radius: 12px;
   padding: 8px 20px;
@@ -78,7 +78,7 @@
   font-size: 11px !important;
 }
 .custom-table thead {
-  background-color: #2563eb;
+  background-color: #EEA0A0;
   color: #fff;
   text-transform: uppercase;
   font-weight: 700;
@@ -160,33 +160,45 @@
 }
 </style>
 </head>
-<div style="padding-top:52px; margin-bottom:50px; background-color: #f6f7fb;">
+<div style="padding-top:52px; margin-bottom:50px; background-color: white;">
 
 <section class="content">
   <div>
     <div>
       <!-- Header -->
-      <div class="page-header-custom">
-        <h2>📋 DAFTAR ANGGOTA</h2>
-        <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
-        <button type="button" data-toggle="modal" data-target=".suppliarModal" class="btn-custom">
-          <i class="fas fa-plus"></i> Tambah Anggota
-        </button>
-        <?php endif; ?>
-      </div>
+     <!-- Header -->
+<div class="page-header-custom">
+  <h2>
+    📋 
+    <?php if ($_SESSION['role_id'] == 4 || $_SESSION['role_id'] == 5): ?>
+      DAFTAR DISTRIBUTOR
+    <?php else: ?>
+      DAFTAR ANGGOTA
+    <?php endif; ?>
+  </h2>
 
-      <!-- Filter -->
-      <div class="filter-wrapper">
-        <label for="roleFilter" style="margin-bottom: 0px;">Filter Role:</label>
-        <select id="roleFilter">
-          <option value="">Semua</option>
-          <option value="1">HO</option>
-          <option value="2">Head Distributor</option>
-          <option value="3">Distributor</option>
-          <option value="4">Agen</option>
-          <option value="5">Reseller</option>
-        </select>
-      </div>
+  <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
+    <button type="button" data-toggle="modal" data-target=".suppliarModal" class="btn-custom">
+      <i class="fas fa-plus"></i> Tambah Anggota
+    </button>
+  <?php endif; ?>
+</div>
+
+<!-- Filter (hanya tampil jika bukan role 4 & 5) -->
+<?php if ($_SESSION['role_id'] != 4 && $_SESSION['role_id'] != 5): ?>
+  <div class="filter-wrapper">
+    <label for="roleFilter" style="margin-bottom: 0px;">Filter Role:</label>
+    <select id="roleFilter">
+      <option value="">Semua</option>
+      <option value="1">HO</option>
+      <option value="2">Head Distributor</option>
+      <option value="3">Distributor</option>
+      <option value="4">Agen</option>
+      <option value="5">Reseller</option>
+    </select>
+  </div>
+<?php endif; ?>
+
 
       <!-- Table desktop -->
       <div class="table-responsive">

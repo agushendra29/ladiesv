@@ -31,6 +31,9 @@ if ($_SESSION['role_id'] == 10) {
 } elseif ($_SESSION['role_id'] == 4) {
     // Agen -> hanya lihat distributor
     $searchQuery = " WHERE role_id = 3 AND is_active = 1";
+} elseif ($_SESSION['role_id'] == 5) {
+    // Agen -> hanya lihat distributor
+    $searchQuery = " WHERE role_id IN (2,3,4) AND is_active = 1";
 } else {
     // Default fallback -> hanya lihat yang aktif
     $searchQuery = " WHERE is_active = 1";
@@ -73,7 +76,10 @@ if ($_SESSION['role_id'] == 10) {
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 AND is_active = 1");
 } elseif ($_SESSION['role_id'] == 4) {
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id = 3 AND is_active = 1");
-} else {
+} elseif ($_SESSION['role_id'] == 5) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id IN (2,3,4) AND is_active = 1");
+} 
+else {
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE is_active = 1");
 }
 $stmt->execute();
@@ -104,7 +110,7 @@ $empRecords = $stmt->fetchAll();
 function getRoleName($role_id) {
     switch ($role_id) {
         case 1: return 'HO';
-        case 2: return 'HD';
+        case 2: return $_SESSION['role_id'] !== 1 && $_SESSION['role_id'] !== 10  ? 'D' : 'HD';
         case 3: return 'D';
         case 4: return 'A';
         case 5: return 'R';
@@ -112,6 +118,7 @@ function getRoleName($role_id) {
         default: return '-';
     }
 }
+
 function setActive($isActive) {
     return $isActive == 0 ? " (Suspend)" : "";
 }

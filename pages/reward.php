@@ -1,4 +1,4 @@
-<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: #f6f7fb;">
+<div class="content-wrapper" style="margin-top:75px; margin-bottom:75px; background-color: white;">
   <!-- Anggota List Page -->
   <section class="content">
     <div class="container-fluid" style="margin-top: 40px;">

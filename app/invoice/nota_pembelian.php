@@ -61,10 +61,10 @@ $pdf->Cell(100,8,$header['invoice_number'],0,1);
 $pdf->Cell(50,8,'Tanggal:',0,0);
 $pdf->Cell(100,8,date('d-m-Y H:i', strtotime($header['created_at'])),0,1);
 
-$pdf->Cell(50,8,'Distributor:',0,0);
+$pdf->Cell(50,8,'Pengirim:',0,0);
 $pdf->Cell(100,8,$header['role_id'] == 10 || $header['role_id'] == 1 ? 'Head Office' : $header['suppliar_name'],0,1);
 
-$pdf->Cell(50,8,'Customer:',0,0);
+$pdf->Cell(50,8,'Pemesan:',0,0);
 $pdf->Cell(100,8,$header['customer_name'],0,1);
 
 $pdf->Cell(50,8,'Jenis Transaksi:',0,0);

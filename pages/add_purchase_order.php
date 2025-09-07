@@ -57,7 +57,7 @@ $products = $obj->all('products');
           <!-- Tombol tambah produk -->
           <div class="mb-4">
             <button type="button" id="addProductRow" style="
-              background-color:#0073ea;
+              background-color:#EB4F7D;
               color:white;
               border:none;
               border-radius:8px;
@@ -90,7 +90,7 @@ $products = $obj->all('products');
                 Reset
               </button>
 
-              <button type="submit" style="background-color:#0073ea;color:white;border:none;border-radius:8px;padding:10px 20px;font-weight:600;font-size:14px;transition:background-color 0.3s ease;" 
+              <button type="submit" style="background-color:#EB4F7D;color:white;border:none;border-radius:8px;padding:10px 20px;font-weight:600;font-size:14px;transition:background-color 0.3s ease;" 
                 onmouseover="this.style.backgroundColor='#005bb5'" 
                 onmouseout="this.style.backgroundColor='#0073ea'">
                 Submit PO
@@ -187,11 +187,11 @@ $products = $obj->all('products');
 
 /* Hover + focus efek */
 .select2-container--default .select2-selection--single:hover {
-  border-color: #0073ea;
+  border-color: #EB4F7D;
 }
 
 .select2-container--default.select2-container--open .select2-selection--single {
-  border-color: #0073ea;
+  border-color: #EB4F7D;
   box-shadow: 0 0 0 2px rgba(0,115,234,0.2);
 }
 
@@ -227,7 +227,7 @@ $products = $obj->all('products');
 
 /* Hover option */
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #0073ea;
+  background-color: #EB4F7D;
   color: white;
   border-radius: 6px;
 }

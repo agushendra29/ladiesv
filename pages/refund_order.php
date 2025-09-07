@@ -69,7 +69,7 @@
     }
 
     table thead {
-        background-color: #2563eb;
+        background-color: #EEA0A0;
         color: #fff;
         text-transform: uppercase;
         font-weight: 600;

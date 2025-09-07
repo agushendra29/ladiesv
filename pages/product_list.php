@@ -1,5 +1,5 @@
 <!-- Content Wrapper -->
-<div style="padding-top:52px;background-color: #f6f7fb;">
+<div style="padding-top:52px;background-color: white;">
   <!-- Product List Page -->
   <section class="content">
     <div class="container-fluid">
@@ -57,7 +57,7 @@
   user-select: none;
 }
 .btn-custom {
-  background-color: #0073ea;
+  background-color: #EB4F7D;
   color: #fff;
   border-radius: 12px;
   padding: 8px 20px;
@@ -88,7 +88,7 @@
   font-size: 11px !important;
 }
 .custom-table thead {
-  background-color: #2563eb;
+  background-color: #EEA0A0;
   color: #fff;
   text-transform: uppercase;
   font-weight: 700;
