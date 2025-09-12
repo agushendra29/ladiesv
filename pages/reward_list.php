@@ -38,14 +38,7 @@
       <div class="table-responsive">
         <table id="rewardListPlain" class="display dataTable text-center reward-table">
           <thead>
-            <tr style="font-size:12px !important;">
-              <th>Nama Hadiah</th>
-              <th>Periode Penjualan</th>
-              <th>Total Point</th>
-              <th>Maksimal Redeem</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
+          
           <tbody id="reward_list_res">
             <tr>
               <td colspan="7" class="no-data">Pilih tab untuk melihat data.</td>
@@ -120,7 +113,7 @@
   transition: all 0.3s ease;
 }
 .btn-add-reward:hover {
-  background-color: #005bb5;
+  background-color: #d92765;
   box-shadow: 0 6px 18px rgba(0,91,181,0.5);
 }
 
@@ -147,10 +140,9 @@
   border-color: #a3c4f3;
 }
 .reward-tab.active {
-  background: #006eff;
+  background: #d92765;
   color: #fff;
-  border-color: #006eff;
-  box-shadow: 0 3px 6px rgba(0, 110, 255, 0.2);
+  border-color: #d92765;
 }
 
 /* TABLE REWARD */

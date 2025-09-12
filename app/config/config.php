@@ -3,16 +3,19 @@
 date_default_timezone_set("Asia/Kolkata");
 
 // define the site root
-define('SITE_ROOT', 'https://naturalhealthindo.com/ample/');
+define('SITE_ROOT', 'http://localhost/ample/');
+
+
+
 // Database Information
 // Database Hostname
 define('DATABASE_HOST','localhost');
 // Database Username
-define('DATABASE_USER','naturalh_admin');
+define('DATABASE_USER','root');
 // Database Name
-define('DATABASE_NAME', 'naturalh_ample');
+define('DATABASE_NAME', 'ample');
 // Database DB_PASS
-define('DATABASE_PASS','b!Nu$14n');
+define('DATABASE_PASS','');
 
 
  ?>

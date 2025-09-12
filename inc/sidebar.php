@@ -263,7 +263,7 @@
             </a>
           </li>
           <?php endif ?>
-            <?php if ($roleId <= 2): ?>
+          <?php if ($roleId == 2): ?>
           <li style="margin-bottom: 6px;">
             <a href="index.php?page=distributor_report" class="nav-link <?php echo $actual_link=='distributor_report'?'active':'';?>" style="
               display: block; font-size: 14px !important; font-weight: 500;

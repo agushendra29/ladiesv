@@ -60,7 +60,7 @@
                 <tr>
                   <td><input type="text" class="form-control" name="rewards[0][nama_reward]" required></td>
                   <td><input type="number" class="form-control" name="rewards[0][jumlah_point]" min="0" required></td>
-                  <td><input type="number" class="form-control" name="rewards[0][max_redeem]" min="0" required></td>
+                  <td><input type="number" value="0" class="form-control" name="rewards[0][max_redeem]" min="0" required></td>
                   <td class="text-center">
                     <button type="button" class="btn btn-outline-danger btn-xs remove-reward">✖</button>
                   </td>
@@ -146,7 +146,7 @@ document.getElementById("addRewardItem").addEventListener("click", function(){
   row.innerHTML = `
     <td><input type="text" class="form-control" name="rewards[${rewardIndex}][nama_reward]" required></td>
     <td><input type="number" class="form-control" name="rewards[${rewardIndex}][jumlah_point]" min="0" required></td>
-    <td><input type="number" class="form-control" name="rewards[${rewardIndex}][max_redeem]" min="0" required></td>
+    <td><input type="number" class="form-control" name="rewards[${rewardIndex}][max_redeem]" min="0" value="0" required></td>
     <td class="text-center">
       <button type="button" class="btn btn-outline-danger btn-xs remove-reward">✖</button>
     </td>
@@ -162,3 +162,5 @@ document.addEventListener("click", function(e){
   }
 });
 </script>
+
+

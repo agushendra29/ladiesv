@@ -196,12 +196,12 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     }
 
     .profile-icon {
+      color:#EEA0A0;
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      border: 2px solid #007bff;
+      border: 2px solid;
       background-color: #e9f2ff;
-      color: #007bff;
       font-size: 24px;
       display: flex;
       align-items: center;

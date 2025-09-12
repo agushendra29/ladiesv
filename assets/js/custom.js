@@ -579,6 +579,33 @@ $("#editRewardForm").submit(function (e) {
         }
     }
 
+    // Fungsi bantu konversi dd-mm-yyyy ke Date object
+    function parseDate(str) {
+        let parts = str.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+
+    let rs = parseDate(reward_start),
+        re = parseDate(reward_end),
+        rds = parseDate(redeem_start),
+        rde = parseDate(redeem_end);
+
+    // Validasi logika tanggal
+    if (re < rs) {
+        Swal.fire({ icon: "error", title: "Error", text: "Periode Reward Sampai tidak boleh lebih kecil dari Periode Reward Dari.", confirmButtonText: "OK" });
+        return;
+    }
+
+    if (rds < rs) {
+        Swal.fire({ icon: "error", title: "Error", text: "Periode Penukaran Dari tidak boleh lebih kecil dari Periode Reward Dari.", confirmButtonText: "OK" });
+        return;
+    }
+
+    if (rde < rds) {
+        Swal.fire({ icon: "error", title: "Error", text: "Periode Penukaran Sampai tidak boleh lebih kecil dari Periode Penukaran Dari.", confirmButtonText: "OK" });
+        return;
+    }
+
     // Validasi reward items
     let validItems = true;
     let rows = $("#rewardTable tbody tr");
@@ -639,10 +666,6 @@ $("#editRewardForm").submit(function (e) {
                             timer: 2000,
                             showConfirmButton: data.status !== "success"
                         });
-                        if (data.status === "success") {
-                            $("#addRewardForm")[0].reset();
-                            $("#rewardTable tbody").html(""); // clear reward list
-                        }
                     } catch (e) {
                         Swal.fire({
                             icon: "error",

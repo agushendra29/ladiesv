@@ -18,6 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // --- Parse tanggal dengan format yang benar
+    $reward_start_dt = DateTime::createFromFormat('d-m-Y', $reward_start);
+    $reward_end_dt   = DateTime::createFromFormat('d-m-Y', $reward_end);
+    $redeem_start_dt = DateTime::createFromFormat('d-m-Y', $redeem_start);
+    $redeem_end_dt   = DateTime::createFromFormat('d-m-Y', $redeem_end);
+
+    if (!$reward_start_dt || !$reward_end_dt || !$redeem_start_dt || !$redeem_end_dt) {
+        http_response_code(400);
+        echo json_encode(['status'=>'error','message'=>'Format tanggal tidak valid. Gunakan dd-mm-yyyy']);
+        exit;
+    }
+
     try {
         $pdo->beginTransaction();
 
@@ -33,26 +45,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE event_name = :orig_name AND role_id = :orig_role
         ")->execute([
             ':event_name' => $event_name,
-            ':phd'        => date('Y-m-d', strtotime(str_replace('-', '/', $reward_start))),
-            ':phs'        => date('Y-m-d', strtotime(str_replace('-', '/', $reward_end))),
-            ':rs'         => date('Y-m-d', strtotime(str_replace('-', '/', $redeem_start))),
-            ':re'         => date('Y-m-d', strtotime(str_replace('-', '/', $redeem_end))),
+            ':phd'        => $reward_start_dt->format('Y-m-d'),
+            ':phs'        => $reward_end_dt->format('Y-m-d'),
+            ':rs'         => $redeem_start_dt->format('Y-m-d'),
+            ':re'         => $redeem_end_dt->format('Y-m-d'),
             ':role_id'    => $role_id,
             ':orig_name'  => $original_event_name,
             ':orig_role'  => $original_role_id,
         ]);
 
         // --- 2) Kumpulkan ID lama & ID kiriman
-        $oldIds = $pdo->prepare("SELECT id FROM rewards WHERE event_name = ? AND role_id = ?");
-        $oldIds->execute([$event_name, $role_id]);
-        $oldIds = $oldIds->fetchAll(PDO::FETCH_COLUMN);
+        $oldIdsStmt = $pdo->prepare("SELECT id FROM rewards WHERE event_name = ? AND role_id = ?");
+        $oldIdsStmt->execute([$event_name, $role_id]);
+        $oldIds = $oldIdsStmt->fetchAll(PDO::FETCH_COLUMN);
 
         $postedIds = [];
         foreach ($rewards as $r) {
             if (!empty($r['id'])) $postedIds[] = (int)$r['id'];
         }
 
-        // --- 3) Hapus reward yang dihapus user (tidak ada di POST)
+        // --- 3) Hapus reward yang dihapus user
         if (!empty($oldIds)) {
             $deleteIds = array_diff($oldIds, $postedIds);
             if (!empty($deleteIds)) {
@@ -92,10 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $insertItem->execute([
                     ':event_name' => $event_name,
                     ':nama'       => $nama,
-                    ':phd'        => date('Y-m-d', strtotime(str_replace('-', '/', $reward_start))),
-                    ':phs'        => date('Y-m-d', strtotime(str_replace('-', '/', $reward_end))),
-                    ':rs'         => date('Y-m-d', strtotime(str_replace('-', '/', $redeem_start))),
-                    ':re'         => date('Y-m-d', strtotime(str_replace('-', '/', $redeem_end))),
+                    ':phd'        => $reward_start_dt->format('Y-m-d'),
+                    ':phs'        => $reward_end_dt->format('Y-m-d'),
+                    ':rs'         => $redeem_start_dt->format('Y-m-d'),
+                    ':re'         => $redeem_end_dt->format('Y-m-d'),
                     ':role_id'    => $role_id,
                     ':point'      => $point,
                     ':max'        => $max,

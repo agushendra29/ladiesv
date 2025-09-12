@@ -160,7 +160,7 @@
 }
 </style>
 </head>
-<div style="padding-top:52px; margin-bottom:50px; background-color: white;">
+<div style="padding-top:52px; margin-bottom:50px;">
 
 <section class="content">
   <div>
