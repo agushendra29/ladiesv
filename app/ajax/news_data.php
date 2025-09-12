@@ -102,7 +102,7 @@ foreach ($newsRecords as $row) {
             data-id="'.$row['id'].'"
             data-action="publish"
             style="
-                background-color: #3b82f6;
+                background-color: #ef4444;
                 color: #fff;
                 font-size: 12px;
                 font-weight: 600;
@@ -114,7 +114,7 @@ foreach ($newsRecords as $row) {
                 transition: all 0.3s ease;
             "
             onmouseover="this.style.backgroundColor=\'#EEA0A0\'; this.style.boxShadow=\'0 3px 8px rgba(37,99,235,0.4)\'"
-            onmouseout="this.style.backgroundColor=\'#3b82f6\'; this.style.boxShadow=\'0 2px 6px rgba(59,130,246,0.3)\'"
+            onmouseout="this.style.backgroundColor=\'#ef4444\'; this.style.boxShadow=\'0 2px 6px rgba(59,130,246,0.3)\'"
         >
             ✅ Publish
         </button>';

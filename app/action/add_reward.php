@@ -2,40 +2,53 @@
 require_once '../init.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama_reward           = trim($_POST['nama_reward'] ?? '');
-    $periode_hadiah_dari   = trim($_POST['periode_hadiah_dari'] ?? '');
-    $periode_hadiah_sampai = trim($_POST['periode_hadiah_sampai'] ?? '');
-    $role_id               = trim($_POST['role_id'] ?? '');
-    $jumlah_point          = trim($_POST['jumlah_point'] ?? '');
-    $max_redeem = trim($_POST['max_redeem'] ?? '');
+    $event_name     = trim($_POST['event_name'] ?? '');
+    $reward_start   = trim($_POST['reward_start'] ?? '');
+    $reward_end     = trim($_POST['reward_end'] ?? '');
+    $redeem_start   = trim($_POST['redeem_start'] ?? '');
+    $redeem_end     = trim($_POST['redeem_end'] ?? '');
+    $role_id        = trim($_POST['role_id'] ?? '');
+    $rewards        = $_POST['rewards'] ?? [];
 
-    if ($nama_reward !== '' && $periode_hadiah_dari !== '' && $periode_hadiah_sampai !== '' && $role_id !== '' && $jumlah_point !== '') {
+    if ($event_name && $reward_start && $reward_end && $redeem_start && $redeem_end && $role_id && !empty($rewards)) {
         try {
             $pdo->beginTransaction();
 
-            $rewardData = [
-                'nama_reward'           => $nama_reward,
-                'periode_hadiah_dari'   => $periode_hadiah_dari,
-                'periode_hadiah_sampai' => $periode_hadiah_sampai,
-                'role_id'               => $role_id,
-                'jumlah_point'          => $jumlah_point,
-                'max_redeem' => $max_redeem,
-                'created_at'            => date('Y-m-d H:i:s'),
-                'is_active' => 1 
-            ];
+            $stmt = $pdo->prepare("
+                INSERT INTO rewards 
+                (event_name, nama_reward, periode_hadiah_dari, periode_hadiah_sampai, redeem_start, redeem_end, role_id, jumlah_point, max_redeem, created_at, is_active)
+                VALUES 
+                (:event_name, :nama_reward, :periode_hadiah_dari, :periode_hadiah_sampai, :redeem_start, :redeem_end, :role_id, :jumlah_point, :max_redeem, NOW(), 1)
+            ");
 
-            $obj->create('rewards', $rewardData);
+            foreach ($rewards as $reward) {
+                if (!empty($reward['nama_reward']) && isset($reward['jumlah_point'])) {
+                    $stmt->execute([
+                        ':event_name'          => $event_name,
+                        ':nama_reward'         => trim($reward['nama_reward']),
+                        ':periode_hadiah_dari' => date('Y-m-d', strtotime(str_replace('-', '/', $reward_start))),
+                        ':periode_hadiah_sampai'=> date('Y-m-d', strtotime(str_replace('-', '/', $reward_end))),
+                        ':redeem_start'        => date('Y-m-d', strtotime(str_replace('-', '/', $redeem_start))),
+                        ':redeem_end'          => date('Y-m-d', strtotime(str_replace('-', '/', $redeem_end))),
+                        ':role_id'             => $role_id,
+                        ':jumlah_point'        => (int)$reward['jumlah_point'],
+                        ':max_redeem'          => (int)($reward['max_redeem'] ?? 0),
+                    ]);
+                }
+            }
 
             $pdo->commit();
-            echo 'Reward berhasil disimpan.';
+            echo json_encode(['status' => 'success', 'message' => 'Reward berhasil disimpan']);
         } catch (Exception $e) {
             $pdo->rollBack();
-            echo 'Gagal menyimpan reward: ' . $e->getMessage();
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan: ' . $e->getMessage()]);
         }
     } else {
-        echo 'Silakan lengkapi semua field.';
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Silakan lengkapi semua field.']);
     }
 } else {
     http_response_code(405);
-    echo 'Method not allowed';
+    echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
 }

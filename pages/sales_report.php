@@ -150,12 +150,12 @@
               <label class="fw-bold">Produk</label>
               <select id="productFilter" class="form-select custom-select-lg">
                 <option value="all">- All -</option>
-                <?php 
+                <!-- <?php 
       $all_products = $obj->all('products');
       foreach ($all_products as $p) {
         echo '<option value="'.$p->id.'">'.$p->product_name.'</option>';
       }
-    ?>
+    ?> -->
               </select>
             </div>
 

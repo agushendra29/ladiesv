@@ -30,13 +30,7 @@
           </div>
           <div class="form-group">
             <label for="sup_bank">Nama Bank *</label>
-            <select class="form-control" id="sup_bank" name="sup_bank" required>
-              <option value="">-- Pilih Bank --</option>
-              <option value="BCA">BCA</option>
-              <option value="BRI">BRI</option>
-              <option value="BNI">BNI</option>
-              <option value="MANDIRI">MANDIRI</option>
-            </select>
+         <input type="text" id="sup_bank" name="sup_bank" placeholder="Nama Bank">
           </div>
 
           <div class="form-group">

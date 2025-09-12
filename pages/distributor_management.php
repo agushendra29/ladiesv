@@ -11,7 +11,7 @@
         <?php
         $heads = $obj->allCondition('suppliar',  'role_id = ?', [2]);
         foreach ($heads as $head) {
-            echo "<option value='{$head->id}' data-code='{$head->suppliar_code}'>{$head->name}</option>";
+            echo "<option value='{$head->id}' data-code='{$head->suppliar_code}'>{$head->name} - {$head->suppliar_code} </option>";
         }
         ?>
       </select>
@@ -24,7 +24,7 @@
         <?php
         $childs = $obj->allCondition('suppliar',  'role_id = ? AND parent_id IS NULL', [3]);
         foreach ($childs as $child) {
-            echo "<option value='{$child->id}' data-code='{$child->suppliar_code}'>{$child->name}</option>";
+            echo "<option value='{$child->id}' data-code='{$child->suppliar_code}'>{$child->name} - {$child->suppliar_code}</option>";
         }
         ?>
       </select>

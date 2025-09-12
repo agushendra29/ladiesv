@@ -20,7 +20,7 @@ if ($_SESSION['role_id'] == 10) {
     $searchQuery = " WHERE 1=1 ";
 } elseif ($_SESSION['role_id'] == 1) {
     // HO -> lihat semua kecuali HO & Super Admin
-    $searchQuery = " WHERE role_id NOT IN (1,10)";
+    $searchQuery = " WHERE role_id NOT IN (1, 10)";
 } elseif ($_SESSION['role_id'] == 2) {
     // HD -> lihat supplier child-nya (anak dari distributor_id ini) yang aktif
     $searchQuery = " WHERE parent_id = :parent_id AND is_active = 1";
@@ -68,7 +68,7 @@ if ($searchValue != '') {
 if ($_SESSION['role_id'] == 10) {
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar");
 } elseif ($_SESSION['role_id'] == 1) {
-    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id NOT IN (1,10)");
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE role_id NOT IN (1, 10)");
 } elseif ($_SESSION['role_id'] == 2) {
     $stmt = $pdo->prepare("SELECT COUNT(*) AS allcount FROM suppliar WHERE parent_id = :parent_id AND is_active = 1");
     $stmt->bindValue(':parent_id', (int)$_SESSION['distributor_id'], PDO::PARAM_INT);
@@ -110,7 +110,7 @@ $empRecords = $stmt->fetchAll();
 function getRoleName($role_id) {
     switch ($role_id) {
         case 1: return 'HO';
-        case 2: return $_SESSION['role_id'] !== 1 && $_SESSION['role_id'] !== 10  ? 'D' : 'HD';
+        case 2: return $_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10  ? 'HD' : 'D';
         case 3: return 'D';
         case 4: return 'A';
         case 5: return 'R';
@@ -132,8 +132,8 @@ foreach ($empRecords as $row) {
         "address"    => $row['address'],
         "con_num"    => $row['con_num'],
         "role_id"    => getRoleName($row['role_id']),
-        "created_at" => $row['create_at'],
-    "action" => ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) ? '
+        "created_at" => $_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10 ?  $row['create_at'] : '-',
+  "action" => (($_SESSION['role_id'] == 1 && $row['role_id'] > 1 && $row['role_id'] < 10) || $_SESSION['role_id'] == 10) ? '
 <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:center;">
     <!-- Edit -->
     <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
@@ -159,10 +159,17 @@ foreach ($empRecords as $row) {
             onclick="return confirm(\'Yakin reset password ' . $row['name'] . '?\')">
             Reset
         </button>
-    </form>
-</div>' : ''
-
-
+    </form>'
+    . 
+    // Tombol upgrade reseller -> muncul kalau role_id == 5
+    ($row['role_id'] == 5 ? '
+    <button class="btn btn-success btn-sm upgrade-btn"
+            data-id="' . $row['id'] . '" 
+            data-name="' . htmlspecialchars($row['name']) . '"
+            style="padding:3px 8px; font-size:11px; border-radius:5px;">
+        Upgrade
+    </button>' : '') .
+'</div>' : ''
 
     ];
 }

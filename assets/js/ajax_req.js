@@ -72,29 +72,29 @@ $("#editCatForm").submit(function (e) {
         }
       );
   }),
- $("#editSuppliarForm").submit(function (e) {
-  e.preventDefault();
-  var password = $("#password").val();
-  var confirmPassword = $("#confirm_password").val();
+  $("#editSuppliarForm").submit(function (e) {
+    e.preventDefault();
+    var password = $("#password").val();
+    var confirmPassword = $("#confirm_password").val();
 
-  // Validasi konfirmasi password
-  if (password !== "" && password !== confirmPassword) {
-    Swal.fire("Error", "Password baru dan konfirmasi password tidak sama!", "error");
-    return false; // hentikan submit
-  }
+    // Validasi konfirmasi password
+    if (password !== "" && password !== confirmPassword) {
+      Swal.fire("Error", "Password baru dan konfirmasi password tidak sama!", "error");
+      return false; // hentikan submit
+    }
 
-  var t = $("#editSuppliarForm").serialize();
+    var t = $("#editSuppliarForm").serialize();
 
-  // ubah string query jadi object
-  var payload = {};
-  t.split("&").forEach(function (item) {
-    var parts = item.split("=");
-    payload[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
-  });
+    // ubah string query jadi object
+    var payload = {};
+    t.split("&").forEach(function (item) {
+      var parts = item.split("=");
+      payload[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
+    });
 
-  console.log(payload);
+    console.log(payload);
 
-  let confirmHtml = `
+    let confirmHtml = `
     <div style="text-align:left">
       <p><b>Nama:</b> ${payload.name || '-'}</p>
       <p><b>NIK:</b> ${payload.nik || '-'}</p>
@@ -113,29 +113,29 @@ $("#editCatForm").submit(function (e) {
     </div>
   `;
 
-  Swal.fire({
-    title: "Konfirmasi Perubahan",
-    html: confirmHtml,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Ya, Simpan",
-    cancelButtonText: "Batal"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        type: "POST",
-        url: "app/action/edit_suppliar.php",
-        data: t,
-        success: function (e) {
-          Swal.fire("Sukses", e, "success");
-        },
-        error: function () {
-          Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");
-        }
-      });
-    }
-  });
-}),
+    Swal.fire({
+      title: "Konfirmasi Perubahan",
+      html: confirmHtml,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Simpan",
+      cancelButtonText: "Batal"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "app/action/edit_suppliar.php",
+          data: t,
+          success: function (e) {
+            Swal.fire("Sukses", e, "success");
+          },
+          error: function () {
+            Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");
+          }
+        });
+      }
+    });
+  }),
   $(document).on("click", "#suppliarDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
@@ -153,47 +153,46 @@ $("#editCatForm").submit(function (e) {
         }
       );
   }),
-   $(document).on("click", "#suppliarActive_btn", function (e) {
-  e.preventDefault();
-  let delete_id = $(this).data("id");
-  let current_status = $(this).data("status"); // ambil status aktif/tidak
-  let new_status = current_status == 1 ? 0 : 1; // toggle status
+  $(document).on("click", "#suppliarActive_btn", function (e) {
+    e.preventDefault();
+    let delete_id = $(this).data("id");
+    let current_status = $(this).data("status"); // ambil status aktif/tidak
+    let new_status = current_status == 1 ? 0 : 1; // toggle status
 
-  let confirmMsg = current_status == 1 
-    ? "Are you sure you want to suspend this item?" 
-    : "Are you sure you want to activate this item?";
+    let confirmMsg = current_status == 1 ?
+      "Are you sure you want to suspend this item?" :
+      "Are you sure you want to activate this item?";
 
-  if (confirm(confirmMsg)) {
-    $.post(
-      "app/action/active_suppliar.php",
-      {
-        delete_id: delete_id,
-        active_data: "active_data",
-        new_status: new_status
-      },
-      function (res) {
-        if (res === "true") {
-          alert(current_status == 1 ? "Data suspended successfully" : "Data activated successfully");
-          location.reload();
-        } else {
-          alert(res);
+    if (confirm(confirmMsg)) {
+      $.post(
+        "app/action/active_suppliar.php", {
+          delete_id: delete_id,
+          active_data: "active_data",
+          new_status: new_status
+        },
+        function (res) {
+          if (res === "true") {
+            alert(current_status == 1 ? "Data suspended successfully" : "Data activated successfully");
+            location.reload();
+          } else {
+            alert(res);
+          }
         }
-      }
-    );
-  }
-}),$("#editRewardForm").submit(function (e) {
-  e.preventDefault();
+      );
+    }
+  }), $("#editRewardForm").submit(function (e) {
+    e.preventDefault();
 
-  var t = $("#editRewardForm").serialize();
+    var t = $("#editRewardForm").serialize();
 
-  // ubah string query jadi object
-  var payload = {};
-  t.split("&").forEach(function (item) {
-    var parts = item.split("=");
-    payload[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
-  });
+    // ubah string query jadi object
+    var payload = {};
+    t.split("&").forEach(function (item) {
+      var parts = item.split("=");
+      payload[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
+    });
 
-  let confirmHtml = `
+    let confirmHtml = `
     <div style="text-align:left">
       <p><b>Nama Reward:</b> ${payload.nama_reward || '-'}</p>
       <p><b>Role:</b> ${$("#role_id option:selected").text() || '-'}</p>
@@ -209,63 +208,66 @@ $("#editCatForm").submit(function (e) {
     </div>
   `;
 
-  Swal.fire({
-    title: "Konfirmasi Perubahan",
-    html: confirmHtml,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Ya, Simpan",
-    cancelButtonText: "Batal"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        type: "POST",
-        url: "app/action/edit_reward.php", // file proses update reward
-        data: t,
-        success: function (res) {
-          Swal.fire("Sukses", "Reward berhasil diubah", "success").then(() => {
-            window.location.href = "index.php?page=reward_list";
-          });
-        },
-        error: function () {
-          Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");
-        }
-      });
-    }
-  });
-}),
-$(document).on('click', '.hideReward, .unhideReward', function() {
+    Swal.fire({
+      title: "Konfirmasi Perubahan",
+      html: confirmHtml,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Simpan",
+      cancelButtonText: "Batal"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "app/action/edit_reward.php", // file proses update reward
+          data: t,
+          success: function (res) {
+            Swal.fire("Sukses", "Reward berhasil diubah", "success").then(() => {
+              window.location.href = "index.php?page=reward_list";
+            });
+          },
+          error: function () {
+            Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");
+          }
+        });
+      }
+    });
+  }),
+  $(document).on('click', '.hideReward, .unhideReward', function () {
     var btn = $(this);
     var id = btn.data('id');
     var status = btn.data('status');
 
     Swal.fire({
-        title: 'Konfirmasi',
-        text: status == 1 ? "Tampilkan reward ini?" : "Sembunyikan reward ini?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Batal'
+      title: 'Konfirmasi',
+      text: status == 1 ? "Tampilkan reward ini?" : "Sembunyikan reward ini?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
     }).then((result) => {
-        if (result.isConfirmed) {
-            $.post('app/action/reward_toogle.php', { id: id, status: status }, function(res) {
-                Swal.fire('Sukses', res, 'success').then(() => {
-                    location.reload(); // refresh halaman agar status tombol berubah
-                });
-            }).fail(function() {
-                Swal.fire('Error', 'Terjadi kesalahan saat mengubah status', 'error');
-            });
-        }
+      if (result.isConfirmed) {
+        $.post('app/action/reward_toogle.php', {
+          id: id,
+          status: status
+        }, function (res) {
+          Swal.fire('Sukses', res, 'success').then(() => {
+            location.reload(); // refresh halaman agar status tombol berubah
+          });
+        }).fail(function () {
+          Swal.fire('Error', 'Terjadi kesalahan saat mengubah status', 'error');
+        });
+      }
     });
-}),
-$(document).on("click", "#newsDelete_btn", function (e) {
+  }),
+  $(document).on("click", "#newsDelete_btn", function (e) {
     e.preventDefault(),
       ($delete_id = $(this).data("id")),
       confirm("Are You sure want to delete this item?") &&
       $.post(
         "app/action/delete_news.php", {
           delete_id: $delete_id,
-             delete_data: "delete_data",
+          delete_data: "delete_data",
         },
         function (e) {
           "true" == e
@@ -516,7 +518,7 @@ $(document).on("click", "#newsDelete_btn", function (e) {
 
     // tampilkan konfirmasi SweetAlert
     Swal.fire({
-        title: "Approve Purchase Order?",
+      title: "Approve Purchase Order?",
       html: `
   <div style="text-align:left; font-size:14px; line-height:1.6; font-family:Arial, sans-serif;">
     <table style="width:100%; border-collapse:collapse;">
@@ -555,33 +557,33 @@ $(document).on("click", "#newsDelete_btn", function (e) {
     </ul>
   </div>
 `,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Approve",
-        cancelButtonText: "Batal"
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Approve",
+      cancelButtonText: "Batal"
     }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: "POST",
-                url: "app/action/approve_purchase_order.php",
-                data: $("#approveForm").serialize(),
-                success: function (response) {
-                    if (response.status === true) {
-                        Swal.fire("Berhasil!", "Purchase Order berhasil di-approve.", "success");
-                        $("#approveModal").modal("hide");
-                        $("#approveForm")[0].reset();
-                        $("#purchaseOrderTable").DataTable().ajax.reload();
-                    } else {
-                        Swal.fire("Gagal!", response.message, "error");
-                    }
-                },
-                error: function () {
-                    Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server.", "error");
-                },
-            });
-        }
+      if (result.isConfirmed) {
+        $.ajax({
+          type: "POST",
+          url: "app/action/approve_purchase_order.php",
+          data: $("#approveForm").serialize(),
+          success: function (response) {
+            if (response.status === true) {
+              Swal.fire("Berhasil!", "Purchase Order berhasil di-approve.", "success");
+              $("#approveModal").modal("hide");
+              $("#approveForm")[0].reset();
+              $("#purchaseOrderTable").DataTable().ajax.reload();
+            } else {
+              Swal.fire("Gagal!", response.message, "error");
+            }
+          },
+          error: function () {
+            Swal.fire("Error!", "Terjadi kesalahan saat menghubungi server.", "error");
+          },
+        });
+      }
     });
-}),
+  }),
   $(document).on("click", ".btn-approve", function () {
     const orderId = $(this).data("id");
     const suppliarId = $(this).data("suppliar-id");
@@ -607,17 +609,17 @@ $(document).on("click", "#newsDelete_btn", function (e) {
       });
     }
   }),
-   $(document).on('click', '.btn-open-form', function() {
+  $(document).on('click', '.btn-open-form', function () {
     let poId = $(this).data('id');
     let invoice = $(this).data('invoice');
     let obj = $(this).data('object');
-     if (typeof obj === "string") {
-        try {
-            obj = JSON.parse(obj);
-        } catch (e) {
-            console.error("Data-object bukan JSON valid:", obj);
-            obj = {};
-        }
+    if (typeof obj === "string") {
+      try {
+        obj = JSON.parse(obj);
+      } catch (e) {
+        console.error("Data-object bukan JSON valid:", obj);
+        obj = {};
+      }
     }
 
     currentPO = obj; // simpan object ke global variable
@@ -625,6 +627,76 @@ $(document).on("click", "#newsDelete_btn", function (e) {
     $('#approveModal #approve_po_id').val(poId);
     $('#approveModal #invoice_number').text(invoice);
     $('#approveModal').modal('show');
+  }), $(document).on('click', '.upgrade-btn', function () {
+    let userId = $(this).data('id');
+    let userName = $(this).data('name');
+
+    // isi form modal
+    $('#upgradeModal #upgrade_id').val(userId);
+    $('#upgradeModal #upgrade_text').text("Upgrade reseller: " + userName + " ke level baru?");
+
+    // buka modal
+    $('#upgradeModal').modal('show');
+  }),$(document).on('submit', '.redeem-form', function (e) {
+    e.preventDefault(); // cegah submit normal
+
+    const $form = $(this);
+    const formData = $form.serialize();
+
+    // Ambil info tambahan untuk pesan konfirmasi
+    const rewardName = $form.data('reward') || 'reward ini';
+    const qty = $form.find('input[name="redeem_qty"]').val() || 1;
+
+    Swal.fire({
+        title: 'Redeem hadiah?',
+        text: `Anda yakin ingin menukarkan ${qty} x ${rewardName}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Redeem!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "app/action/redeem_reward.php",
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                    $form.find('button[type="submit"]').prop('disabled', true).text('Processing...');
+                },
+                success: function (res) {
+                    if (res.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: res.message,
+                            timer: 1800,
+                            showConfirmButton: false
+                        });
+                        $form[0].reset();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: res.message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan server.'
+                    });
+                },
+                complete: function () {
+                    $form.find('button[type="submit"]').prop('disabled', false).text('Redeem');
+                }
+            });
+        }
+    });
 }),
   $(document).on("click", ".btn-reject", function () {
     const orderId = $(this).data('id');
@@ -648,206 +720,228 @@ $(document).on("click", "#newsDelete_btn", function (e) {
         }
       });
     }
-  }), $(document).on('click', '.stock-apply-add', function() {
+  }), $(document).on('click', '.stock-apply-add', function () {
     const id = $(this).data('id');
     const input = $('.stock-input[data-id="' + id + '"]');
     const val = parseInt(input.val()) || 0;
 
     console.log(val);
-  
+
 
     if (val <= 0) {
-        alert('Masukkan nilai lebih besar dari 0.');
-        return;
+      alert('Masukkan nilai lebih besar dari 0.');
+      return;
     }
 
     $.ajax({
-        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
-        method: 'POST',
-        data: { id: id, change: val },
-        success: function(res) {
-      if (res.status) {
-        alert('Success: ' + res.message);
-        input.val(0);
+      url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+      method: 'POST',
+      data: {
+        id: id,
+        change: val
+      },
+      success: function (res) {
+        if (res.status) {
+          alert('Success: ' + res.message);
+          input.val(0);
           $('#stockManagementTable').DataTable().ajax.reload();
-        // reload table or update UI here if needed
-      } else {
-        alert('Error: ' + res.message);
+          // reload table or update UI here if needed
+        } else {
+          alert('Error: ' + res.message);
+        }
+      },
+      error: function () {
+        alert('Terjadi kesalahan pada server.');
       }
-    },
-    error: function() {
-      alert('Terjadi kesalahan pada server.');
-    }
     });
-}), $(document).on('click', '.stock-apply-reduce', function() {
+  }), $(document).on('click', '.stock-apply-reduce', function () {
     const id = $(this).data('id');
     const input = $('.stock-input[data-id="' + id + '"]');
     const val = parseInt(input.val()) || 0;
 
     if (val <= 0) {
-        alert('Masukkan nilai lebih besar dari 0.');
-        return;
+      alert('Masukkan nilai lebih besar dari 0.');
+      return;
     }
 
     $.ajax({
-        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
-        method: 'POST',
-        data: { id: id, change: -val },
-        success: function(res) {
-      if (res.status) {
-        alert('Success: ' + res.message);
-        input.val(0);
+      url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+      method: 'POST',
+      data: {
+        id: id,
+        change: -val
+      },
+      success: function (res) {
+        if (res.status) {
+          alert('Success: ' + res.message);
+          input.val(0);
           $('#stockManagementTable').DataTable().ajax.reload();
-        // reload table or update UI here if needed
-      } else {
-        alert('Error: ' + res.message);
+          // reload table or update UI here if needed
+        } else {
+          alert('Error: ' + res.message);
+        }
+      },
+      error: function () {
+        alert('Terjadi kesalahan pada server.');
       }
-    },
-    error: function() {
-      alert('Terjadi kesalahan pada server.');
-    }
     });
-}),$(document).on('click', '.stock-apply-add-m', function() {
+  }), $(document).on('click', '.stock-apply-add-m', function () {
     const id = $(this).data('id');
     const input = $('.stock-input-m[data-id="' + id + '"]');
     const val = parseInt(input.val()) || 0;
 
     console.log(val);
-  
+
 
     if (val <= 0) {
-        alert('Masukkan nilai lebih besar dari 0.');
-        return;
+      alert('Masukkan nilai lebih besar dari 0.');
+      return;
     }
 
     $.ajax({
-        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
-        method: 'POST',
-        data: { id: id, change: val },
-        success: function(res) {
-      if (res.status) {
-        alert('Success: ' + res.message);
-        input.val(0);
+      url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+      method: 'POST',
+      data: {
+        id: id,
+        change: val
+      },
+      success: function (res) {
+        if (res.status) {
+          alert('Success: ' + res.message);
+          input.val(0);
           $('#stockManagementTable').DataTable().ajax.reload();
-        // reload table or update UI here if needed
-      } else {
-        alert('Error: ' + res.message);
+          // reload table or update UI here if needed
+        } else {
+          alert('Error: ' + res.message);
+        }
+      },
+      error: function () {
+        alert('Terjadi kesalahan pada server.');
       }
-    },
-    error: function() {
-      alert('Terjadi kesalahan pada server.');
-    }
     });
-}), $(document).on('click', '.stock-apply-reduce-m', function() {
+  }), $(document).on('click', '.stock-apply-reduce-m', function () {
     const id = $(this).data('id');
     const input = $('.stock-input-m[data-id="' + id + '"]');
     const val = parseInt(input.val()) || 0;
 
     if (val <= 0) {
-        alert('Masukkan nilai lebih besar dari 0.');
-        return;
+      alert('Masukkan nilai lebih besar dari 0.');
+      return;
     }
 
     $.ajax({
-        url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
-        method: 'POST',
-        data: { id: id, change: -val },
-        success: function(res) {
-      if (res.status) {
-        alert('Success: ' + res.message);
-        input.val(0);
+      url: 'app/action/edit_stock_management.php', // ganti dengan path PHP kamu
+      method: 'POST',
+      data: {
+        id: id,
+        change: -val
+      },
+      success: function (res) {
+        if (res.status) {
+          alert('Success: ' + res.message);
+          input.val(0);
           $('#stockManagementTable').DataTable().ajax.reload();
-        // reload table or update UI here if needed
-      } else {
-        alert('Error: ' + res.message);
+          // reload table or update UI here if needed
+        } else {
+          alert('Error: ' + res.message);
+        }
+      },
+      error: function () {
+        alert('Terjadi kesalahan pada server.');
       }
-    },
-    error: function() {
-      alert('Terjadi kesalahan pada server.');
-    }
     });
-}),$(document).on('click', '.refund-btn', function () {
+  }), $(document).on('click', '.refund-btn', function () {
     if (!confirm("Yakin ingin refund transaksi ini?")) return;
 
     let invoice = $(this).data('invoice');
 
-    $.post('app/action/proses_refund.php', { invoice_number: invoice }, function (res) {
-        let data = JSON.parse(res);
-        alert(data.message);
-        if (data.status === 'success') {
-            location.reload();
-        }
+    $.post('app/action/proses_refund.php', {
+      invoice_number: invoice
+    }, function (res) {
+      let data = JSON.parse(res);
+      alert(data.message);
+      if (data.status === 'success') {
+        location.reload();
+      }
     });
-}), $(document).on('click', '.cancel-refund-btn', function(e) {
+  }), $(document).on('click', '.cancel-refund-btn', function (e) {
     e.preventDefault();
     let invoice = $(this).data('invoice');
 
     if (!confirm("Yakin ingin membatalkan refund?")) return;
 
-    $.post('app/action/cancel_refund.php', { invoice_number: invoice }, function(res) {
-        let data = JSON.parse(res);
-        alert(data.message);
-        if (data.status === 'success') {
-            window.location.reload();
-        }
+    $.post('app/action/cancel_refund.php', {
+      invoice_number: invoice
+    }, function (res) {
+      let data = JSON.parse(res);
+      alert(data.message);
+      if (data.status === 'success') {
+        window.location.reload();
+      }
     });
-}),$(document).on('click', '.toggle-active', function() {
+  }), $(document).on('click', '.toggle-active', function () {
     var id = $(this).data('id');
     var action = $(this).text().trim() === 'Active' ? 'deactivate' : 'activate';
 
-    var confirmMsg = (action === 'activate') 
-        ? "Apakah kamu yakin ingin mengaktifkan produk ini?" 
-        : "Apakah kamu yakin ingin menonaktifkan produk ini?";
+    var confirmMsg = (action === 'activate') ?
+      "Apakah kamu yakin ingin mengaktifkan produk ini?" :
+      "Apakah kamu yakin ingin menonaktifkan produk ini?";
 
     if (!confirm(confirmMsg)) {
-        return; // batal
+      return; // batal
     }
 
     $.ajax({
-        url: 'app/action/active_product.php',
-        type: 'POST',
-        data: { id: id, action: action },
-        success: function(response) {
-            var res = JSON.parse(response);
-            if (res.status === 'success') {
-                alert('Status berhasil diupdate!');
-                $('#productTable').DataTable().ajax.reload(null, false); 
-            } else {
-                alert('Gagal update status');
-            }
-        },
-        error: function() {
-            alert('Terjadi kesalahan pada server.');
+      url: 'app/action/active_product.php',
+      type: 'POST',
+      data: {
+        id: id,
+        action: action
+      },
+      success: function (response) {
+        var res = JSON.parse(response);
+        if (res.status === 'success') {
+          alert('Status berhasil diupdate!');
+          $('#productTable').DataTable().ajax.reload(null, false);
+        } else {
+          alert('Gagal update status');
         }
+      },
+      error: function () {
+        alert('Terjadi kesalahan pada server.');
+      }
     });
-}),$(document).on('click', '.newsTogglePublish_btn', function() {
+  }), $(document).on('click', '.newsTogglePublish_btn', function () {
     var id = $(this).data('id');
     var action = $(this).data('action');
 
     // Pesan konfirmasi dinamis
-    var confirmMsg = (action === 'publish') 
-        ? "Apakah kamu yakin ingin mempublish berita ini?" 
-        : "Apakah kamu yakin ingin menyembunyikan berita ini?";
+    var confirmMsg = (action === 'publish') ?
+      "Apakah kamu yakin ingin mempublish berita ini?" :
+      "Apakah kamu yakin ingin menyembunyikan berita ini?";
 
     if (!confirm(confirmMsg)) {
-        return; // batal
+      return; // batal
     }
 
     $.ajax({
-        url: 'app/action/toogle_isactive.php',
-        type: 'POST',
-        data: { id: id, action: action },
-        success: function(response) {
-            var res = JSON.parse(response);
-            if (res.status === 'success') {
-                alert('Status berhasil diupdate!');
-                $('#newsTable').DataTable().ajax.reload(null, false); 
-            } else {
-                alert('Gagal update status');
-            }
-        },
-        error: function() {
-            alert('Terjadi kesalahan pada server.');
+      url: 'app/action/toogle_isactive.php',
+      type: 'POST',
+      data: {
+        id: id,
+        action: action
+      },
+      success: function (response) {
+        var res = JSON.parse(response);
+        if (res.status === 'success') {
+          alert('Status berhasil diupdate!');
+          $('#newsTable').DataTable().ajax.reload(null, false);
+        } else {
+          alert('Gagal update status');
         }
+      },
+      error: function () {
+        alert('Terjadi kesalahan pada server.');
+      }
     });
-});
+  });

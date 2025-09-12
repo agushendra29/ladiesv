@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address_ktp  = trim($_POST['address_ktp']);
     $contact      = trim($_POST['contact']);
     $email        = trim($_POST['email']);
-    $role_id      = $_POST['role'];
+    $role_id      = trim($_POST['role']);
     $date_input   = $_POST['date_of_birth'] ?? null; // input dari user
     $password     = $_POST['password'] ?? '';
     $update_at    = date('Y-m-d');
@@ -66,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'nama_rekening' => $sup_akun,
         'provinsi'      => $provinsi_id,
         'kota'          => $kota_id,
-        'kecamatan'     => $kecamatan
+        'kecamatan'     => $kecamatan,
+        'role_id' => $role_id
     ];
 
     $supRes = $obj->update('suppliar', 'id', $id, $supQuery);

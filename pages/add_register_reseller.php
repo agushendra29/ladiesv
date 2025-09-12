@@ -74,13 +74,7 @@ function getStockProduct($pid) {
           </div>
           <div class="form-col">
             <label for="sup_bank">Nama Bank *</label>
-            <select id="sup_bank" name="sup_bank" required>
-              <option value="">-- Pilih Bank --</option>
-              <option value="BCA">BCA</option>
-              <option value="BRI">BRI</option>
-              <option value="BNI">BNI</option>
-              <option value="MANDIRI">MANDIRI</option>
-            </select>
+            <input type="text" id="sup_bank" name="sup_bank" required>
           </div>
         </div>
 
@@ -188,7 +182,7 @@ a#addProductBtn:hover { background:#005bb5; }
 .form-actions { text-align:center; margin-top:36px; }
 .btn-reset { background:#ef4444; color:#fff; padding:14px 28px; border:none; border-radius:12px; margin-right:14px; cursor:pointer; font-weight:500; }
 .btn-reset:hover { background:#dc2626; }
-.btn-submit { background:#3b82f6; color:#fff; padding:14px 28px; border:none; border-radius:12px; cursor:pointer; font-weight:500; }
+.btn-submit { background:#ef4444; color:#fff; padding:14px 28px; border:none; border-radius:12px; cursor:pointer; font-weight:500; }
 .btn-submit:hover { background:#EEA0A0; }
 
 .form-row { display: flex; flex-wrap: wrap; gap:16px; margin-bottom:0; }

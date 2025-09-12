@@ -1,28 +1,32 @@
 <style>
   /* Base */
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f5f7fb;
     color: #333;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   section.content {
     min-height: 85vh;
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1rem;
   }
 
   h3.section-title {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.6rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     color: #1f2937;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
   /* News Section */
+  .news-section {
+    margin-bottom: 2rem;
+  }
+
   .news-scroll {
     display: flex;
     gap: 18px;
@@ -31,18 +35,18 @@
     scroll-snap-type: x mandatory;
   }
   .news-scroll::-webkit-scrollbar {
-    height: 8px;
+    height: 6px;
   }
   .news-scroll::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
+    background: #d1d5db;
+    border-radius: 6px;
   }
 
   .news-card {
     flex: 0 0 320px;
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -50,12 +54,12 @@
     scroll-snap-align: start;
   }
   .news-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.15);
   }
 
   .news-icon {
-    background: linear-gradient(135deg, #EE6C6C, #3A7BDA);
+    background: linear-gradient(135deg, #3A7BDA, #EE6C6C);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,15 +69,15 @@
   }
 
   .news-body {
-    padding: 1.25rem;
+    padding: 1.2rem;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
   .news-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.4rem 0;
     color: #1e3a8a;
   }
   .news-meta {
@@ -92,7 +96,7 @@
   }
   .read-more-btn {
     margin-top: auto;
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #FF3D7C, #FF3D7C);
     color: white;
     text-decoration: none;
     padding: 9px 16px;
@@ -103,7 +107,7 @@
     transition: all 0.3s ease;
   }
   .read-more-btn:hover {
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    background: linear-gradient(135deg, #f97316, #fb923c);
   }
 
   /* Info boxes */
@@ -111,47 +115,73 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-top: 2rem;
   }
   .info-box {
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 1.5rem;
     color: white;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    align-items: center;
     text-align: center;
-    transition: transform .25s ease;
+    transition: transform .25s ease, box-shadow .25s ease;
   }
   .info-box:hover {
     transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.15);
   }
   .info-box .info-box-text {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
   }
-  .info-box .sell,
-  .info-box .buy {
-    margin-top: .75rem;
+  .info-box .sell {
     font-weight: 600;
-    font-size: 1.1rem;
-    display: block;
+    font-size: 1rem;
+    margin-top: 1rem;
   }
-  .sell { color: #ffe4e6; }
-  .buy { color: #d1fae5; }
+  .sell ul {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sell li {
+    font-size: 0.9rem;
+    margin: 2px 0;
+  }
+  .sell i {
+    font-size: 0.85rem;
+  }
+.bg-cards-1 {
+  background: linear-gradient(135deg, #f9a8d4, #ec4899);
+  color: white;
+  border: none;
+}
 
-  .bg-cards-1 {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-  }
-  .bg-cards-2 {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
+.bg-cards-2 {
+  background: linear-gradient(135deg, #fda4af, #f43f5e);
+  color: white;
+  border: none;
+}
+
+
+  /* Responsive tweak */
+  @media (max-width: 600px) {
+    h3.section-title {
+      font-size: 1.3rem;
+    }
+    .news-card {
+      flex: 0 0 260px;
+    }
+    .info-box .info-box-text {
+      font-size: 1.2rem;
+    }
   }
 </style>
 
 <div>
   <section class="content">
-    <div class="container-fluid">
+    <div class="container-fluid pt-4">
 
       <!-- News Section -->
       <div class="news-section">
@@ -190,41 +220,46 @@
           <h2 class="info-box-text">Today</h2>
           <span class="sell">
             Sell:
-    <?php
-$start = (new DateTime('today'))->format('Y-m-d 00:00:00');
-$end   = (new DateTime('tomorrow'))->format('Y-m-d 00:00:00');
-$suppliar_id = $_SESSION['distributor_id'] ?? 0;
+            <?php
+            $role_id     = $_SESSION['role_id'] ?? 0;
+            $suppliar_id = $_SESSION['distributor_id'] ?? 0;
 
-$sqlDetail = "
-  SELECT p.product_name, SUM(t.quantity) AS total_sold
-  FROM transaction_histories t
-  JOIN products p ON p.id = t.product_id
-  WHERE t.created_at >= :start
-    AND t.type = 'penjualan'
-    AND COALESCE(t.is_refund, 0) = 0
-    AND t.suppliar_id = :sid
-  GROUP BY t.product_id, p.product_name
-  ORDER BY p.product_name ASC
-";
-$stmt2 = $pdo->prepare($sqlDetail);
-$stmt2->execute([
-  'start' => $start,
-  'sid'   => $suppliar_id
-]);
-$rows = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+            $start = (new DateTime('today'))->format('Y-m-d 00:00:00');
+            $end   = (new DateTime('tomorrow'))->format('Y-m-d 00:00:00');
 
-if ($rows) {
-  echo "<ul>";
-  foreach ($rows as $r) {
-    echo "<li>" .htmlspecialchars($r['product_name']) . " : " . (int)$r['total_sold'] . " pcs</li>";
-  }
-  echo "</ul>";
-} else {
-  echo "<i>Tidak ada penjualan hari ini</i>";
-}
-?>
+            $sqlDetail = "
+              SELECT p.product_name, SUM(t.quantity) AS total_sold
+              FROM transaction_histories t
+              JOIN products p ON p.id = t.product_id
+              WHERE t.created_at >= :start
+                AND t.created_at < :end
+                AND t.type = 'penjualan'
+                AND COALESCE(t.is_refund, 0) = 0
+            ";
 
+            $params = ['start' => $start, 'end' => $end];
+            if (!in_array($role_id, [1,10])) {
+                $sqlDetail .= " AND t.suppliar_id = :sid";
+                $params['sid'] = $suppliar_id;
+            }
 
+            $sqlDetail .= " GROUP BY t.product_id, p.product_name
+                            ORDER BY p.product_name ASC";
+
+            $stmt2 = $pdo->prepare($sqlDetail);
+            $stmt2->execute($params);
+            $rows = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($rows) {
+              echo "<ul>";
+              foreach ($rows as $r) {
+                echo "<li>" . htmlspecialchars($r['product_name']) . " : " . (int)$r['total_sold'] . " pcs</li>";
+              }
+              echo "</ul>";
+            } else {
+              echo "<i>Tidak ada penjualan hari ini</i>";
+            }
+            ?>
           </span>
         </div>
 
@@ -233,39 +268,42 @@ if ($rows) {
           <h2 class="info-box-text">Monthly</h2>
           <span class="sell">
             Sell:
-             <?php
-$start = date('Y-m-01 00:00:00'); // awal bulan
-$end   = date('Y-m-t 23:59:59');  // akhir bulan
-$suppliar_id = $_SESSION['distributor_id'] ?? 0;
-$sqlDetail = "
-  SELECT p.product_name, SUM(t.quantity) AS total_sold
-  FROM transaction_histories t
-  JOIN products p ON p.id = t.product_id
-    WHERE t.created_at BETWEEN :start AND :end
-    AND t.type = 'penjualan'
-    AND COALESCE(t.is_refund, 0) = 0
-    AND t.suppliar_id = :sid
-  GROUP BY t.product_id, p.product_name
-  ORDER BY p.product_name ASC
-";
-$stmt2 = $pdo->prepare($sqlDetail);
-$stmt2->execute([
-  'start' => $start,
-  'end'   => $end,
-  'sid'   => $suppliar_id
-]);
-$rows = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+            <?php
+            $start = date('Y-m-01 00:00:00');
+            $end   = date('Y-m-t 23:59:59');
 
-if ($rows) {
-  echo "<ul>";
-  foreach ($rows as $r) {
-    echo "<li>" .htmlspecialchars($r['product_name']) . " : " . (int)$r['total_sold'] . " pcs</li>";
-  }
-  echo "</ul>";
-} else {
-  echo "<i>Tidak ada penjualan dakan bulan ini</i>";
-}
-?>
+            $sqlDetail = "
+              SELECT p.product_name, SUM(t.quantity) AS total_sold
+              FROM transaction_histories t
+              JOIN products p ON p.id = t.product_id
+              WHERE t.created_at BETWEEN :start AND :end
+                AND t.type = 'penjualan'
+                AND COALESCE(t.is_refund, 0) = 0
+            ";
+
+            $params = ['start' => $start, 'end' => $end];
+            if (!in_array($role_id, [1,10])) {
+                $sqlDetail .= " AND t.suppliar_id = :sid";
+                $params['sid'] = $suppliar_id;
+            }
+
+            $sqlDetail .= " GROUP BY t.product_id, p.product_name
+                            ORDER BY p.product_name ASC";
+
+            $stmt2 = $pdo->prepare($sqlDetail);
+            $stmt2->execute($params);
+            $rows = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+            if ($rows) {
+              echo "<ul>";
+              foreach ($rows as $r) {
+                echo "<li>" . htmlspecialchars($r['product_name']) . " : " . (int)$r['total_sold'] . " pcs</li>";
+              }
+              echo "</ul>";
+            } else {
+              echo "<i>Tidak ada penjualan dalam bulan ini</i>";
+            }
+            ?>
           </span>
         </div>
       </div>

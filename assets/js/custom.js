@@ -165,7 +165,39 @@ $("#empTable").DataTable({
             }
         })
     } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
-})), $(document).ready(function () {
+})),
+$(document).on('submit', '#upgradeForm', function (e) {
+    e.preventDefault();
+
+    let form = $(this);
+
+    $.ajax({
+        url: 'app/action/upgrade_reseller.php',
+        type: 'POST',
+        data: form.serialize(),
+        dataType: 'json',
+        beforeSend: function () {
+            // Bisa tambahkan loader di sini
+        },
+        success: function (data) {
+            Swal.fire({
+                icon: data.status === 'success' ? 'success' : 'error',
+                title: data.message,
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                if (data.status === 'success') {
+                    location.reload();
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", status, error, xhr.responseText);
+            Swal.fire('Error', 'Terjadi kesalahan koneksi atau respon tidak valid', 'error');
+        }
+    });
+}),
+$(document).ready(function () {
     $("#purchaseOrderForm").on("submit", function (e) {
         e.preventDefault();
 
@@ -389,79 +421,248 @@ $("#empTable").DataTable({
         $("#newsErrorArea").css("border-color", "red").show();
         $("#newsErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
     }
-}), $("#addReward").submit(function (e) {
+}),
+$("#editRewardForm").submit(function (e) {
     e.preventDefault();
 
-    var nama_reward = $("#nama_reward").val(),
-        periode_hadiah_dari = $("#periode_hadiah_dari").val(),
-        periode_hadiah_sampai = $("#periode_hadiah_sampai").val(),
-        role_id = $("#role_id").val(),
-        jumlah_point = $("#jumlah_point").val(),
-        max_redeem = $("#max_redeem").val();
+    let event_name   = $("#event_name").val().trim(),
+        reward_start = $("#reward_start").val().trim(),
+        reward_end   = $("#reward_end").val().trim(),
+        redeem_start = $("#redeem_start").val().trim(),
+        redeem_end   = $("#redeem_end").val().trim(),
+        role_id      = $("#role_id").val().trim();
 
-    if (
-        nama_reward !== "" &&
-        periode_hadiah_dari !== "" &&
-        periode_hadiah_sampai !== "" &&
-        role_id !== "" &&
-        jumlah_point !== "" &&
-        max_redeem !== ""
-    ) {
-        // Konfirmasi sebelum submit
-        Swal.fire({
-            title: "Apakah Anda yakin?",
-            text: "Data reward akan disimpan.",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, simpan!",
-            cancelButtonText: "Batal"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var formData = $("#addReward").serialize();
-                $.ajax({
-                    type: "POST",
-                    url: "app/action/add_reward.php",
-                    data: formData,
-                    success: function (res) {
-                        if ($.trim(res) === "Reward berhasil disimpan.") {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Berhasil!",
-                                text: res,
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                            $("#addReward")[0].reset();
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Gagal!",
-                                text: res,
-                                confirmButtonText: "OK"
-                            });
-                        }
-                    },
-                    error: function () {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Terjadi kesalahan pada server.",
-                            confirmButtonText: "Coba Lagi"
-                        });
-                    }
-                });
-            }
-        });
-    } else {
+    // Validasi input utama
+    if (!event_name || !reward_start || !reward_end || !redeem_start || !redeem_end || !role_id) {
         Swal.fire({
             icon: "warning",
             title: "Peringatan",
-            text: "Silakan isi semua field yang diperlukan.",
+            text: "Silakan isi semua field utama (Event, Periode, Role).",
             confirmButtonText: "OK"
         });
+        return;
     }
+
+    // Validasi format tanggal dd-mm-yyyy
+    const pattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+    for (let t of [reward_start, reward_end, redeem_start, redeem_end]) {
+        if (!pattern.test(t)) {
+            Swal.fire({
+                icon: "error",
+                title: "Format Salah",
+                text: "Gunakan format tanggal dd-mm-yyyy.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+    }
+
+    // Validasi reward item
+    let validItems = true;
+    let rows = $("#rewardTable tbody tr");
+    if (rows.length === 0) {
+        Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Minimal harus ada 1 reward item.",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    rows.each(function () {
+        let nama_reward = $(this).find("input[name*='nama_reward']").val().trim(),
+            jumlah_point = $(this).find("input[name*='jumlah_point']").val().trim(),
+            max_redeem   = $(this).find("input[name*='max_redeem']").val().trim();
+
+        if (!nama_reward || jumlah_point === "" || max_redeem === "") {
+            validItems = false;
+        }
+    });
+
+    if (!validItems) {
+        Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Semua kolom di daftar reward harus diisi.",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    // Konfirmasi sebelum update
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Perubahan data reward akan disimpan.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, simpan!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let formData = $("#editRewardForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: "app/action/edit_reward.php",   // action edit
+                data: formData,
+                success: function (res) {
+                    try {
+                        let data = JSON.parse(res);
+                        Swal.fire({
+                            icon: data.status === "success" ? "success" : "error",
+                            title: data.status === "success" ? "Berhasil!" : "Gagal!",
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: data.status !== "success"
+                        });
+                        if (data.status === "success") {
+                            // misal redirect ke list reward
+                            setTimeout(() => {
+                                window.location.href = "pages/reward_list.php";
+                            }, 1500);
+                        }
+                    } catch (err) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Respon server tidak valid.",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Terjadi kesalahan pada server.",
+                        confirmButtonText: "Coba Lagi"
+                    });
+                }
+            });
+        }
+    });
+}),$("#addRewardForm").submit(function (e) {
+    e.preventDefault();
+
+    let event_name   = $("#event_name").val().trim(),
+        reward_start = $("#reward_start").val().trim(),
+        reward_end   = $("#reward_end").val().trim(),
+        redeem_start = $("#redeem_start").val().trim(),
+        redeem_end   = $("#redeem_end").val().trim(),
+        role_id      = $("#role_id").val().trim();
+
+    // Validasi input utama
+    if (!event_name || !reward_start || !reward_end || !redeem_start || !redeem_end || !role_id) {
+        Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Silakan isi semua field utama (Event, Periode, Role).",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    // Validasi format tanggal
+    const pattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+    let tanggalInputs = [reward_start, reward_end, redeem_start, redeem_end];
+    for (let t of tanggalInputs) {
+        if (!pattern.test(t)) {
+            Swal.fire({
+                icon: "error",
+                title: "Format Salah",
+                text: "Gunakan format tanggal dd-mm-yyyy.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+    }
+
+    // Validasi reward items
+    let validItems = true;
+    let rows = $("#rewardTable tbody tr");
+    if (rows.length === 0) {
+        Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Minimal harus ada 1 reward item.",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    rows.each(function () {
+        let nama_reward = $(this).find("input[name*='nama_reward']").val().trim(),
+            jumlah_point = $(this).find("input[name*='jumlah_point']").val().trim(),
+            max_redeem   = $(this).find("input[name*='max_redeem']").val().trim();
+
+        if (!nama_reward || jumlah_point === "" || max_redeem === "") {
+            validItems = false;
+        }
+    });
+
+    if (!validItems) {
+        Swal.fire({
+            icon: "warning",
+            title: "Peringatan",
+            text: "Semua kolom di daftar reward harus diisi.",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
+
+    // Konfirmasi sebelum submit
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Data reward akan disimpan.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, simpan!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let formData = $("#addRewardForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: "app/action/add_reward.php",
+                data: formData,
+                success: function (res) {
+                    try {
+                        let data = JSON.parse(res);
+                        Swal.fire({
+                            icon: data.status === "success" ? "success" : "error",
+                            title: data.status === "success" ? "Berhasil!" : "Gagal!",
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: data.status !== "success"
+                        });
+                        if (data.status === "success") {
+                            $("#addRewardForm")[0].reset();
+                            $("#rewardTable tbody").html(""); // clear reward list
+                        }
+                    } catch (e) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Respon server tidak valid.",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Terjadi kesalahan pada server.",
+                        confirmButtonText: "Coba Lagi"
+                    });
+                }
+            });
+        }
+    });
 }), $("#purchaseOrderTable").DataTable({
     processing: !0,
     serverSide: !0,
@@ -1166,7 +1367,7 @@ drawCallback: function (settings) {
         <div style="text-align:left">
           <p><b>Nama:</b> ${payload.sup_name}</p>
           <p><b>NIK:</b> ${payload.sup_nik}</p>
-          <p><b>Tgl Lahir:</b> ${payload.birth_date}</p>
+          <p><b>Tanggal Lahir:</b> ${payload.dob}</p>
           <p><b>No HP:</b> ${payload.sup_contact}</p>
           <p><b>Alamat KTP:</b> ${payload.supaddressktp}</p>
           <p><b>Alamat Domisili:</b> ${payload.supaddress}</p>

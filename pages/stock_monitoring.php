@@ -74,21 +74,46 @@
     </div>
     
 
-    <?php if ($_SESSION['role_id']  == 1 ||  $_SESSION['role_id'] == 10): ?>
-      <div class="col-md-4">
-        <label>Pilih Supplier</label>
-        <select id="supplier_id" class="form-control">
-          <option value="">-- Pilih Supplier --</option>
-          <?php
-            $suppliers = $obj->all("suppliar");
-            foreach($suppliers as $sup){
-              echo '<option value="'.htmlspecialchars($sup->id).'">'.htmlspecialchars($sup->name).'</option>';
+   <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
+  <div class="col-md-4">
+    <label>Pilih Supplier</label>
+    <select id="supplier_id" class="form-control">
+      <option value="">-- Pilih Supplier --</option>
+      <?php
+        $sessionRole = $_SESSION['role_id'];
+        // Ambil semua supplier dulu (kamu bisa mengganti dengan query berfilter jika mau lebih efisien)
+        $suppliers = $obj->all("suppliar");
+
+        foreach ($suppliers as $sup) {
+          // Jika login Super Admin (10): tampilkan semua,
+          // tapi jika supplier adalah HO (role_id==1) hanya tampilkan bila suppliar_code == '000001'
+          if ($sessionRole == 10) {
+            if ($sup->role_id == 1 && ($sup->suppliar_code ?? '') !== '000001') {
+              continue; // skip HO yang bukan kode 000001
             }
-          ?>
-          <option value="all">Semua Supplier</option>
-        </select>
-      </div>
-    <?php endif; ?>
+            echo '<option value="' . htmlspecialchars($sup->id) . '">' . htmlspecialchars($sup->name) . '</option>';
+            continue;
+          }
+
+          // Jika login Role 1: tampilkan semua kecuali role_id==10
+          if ($sessionRole == 1) {
+            if ($sup->role_id == 10) {
+              continue; // skip super admin
+            }
+            // Jika supplier sendiri HO (role_id==1) tampilkan hanya jika suppliar_code == '000001'
+            if ($sup->role_id == 1 && ($sup->suppliar_code ?? '') !== '000001') {
+              continue;
+            }
+            echo '<option value="' . htmlspecialchars($sup->id) . '">' . htmlspecialchars($sup->name) . '</option>';
+            continue;
+          }
+        }
+      ?>
+      <option value="all">Semua Supplier</option>
+    </select>
+  </div>
+<?php endif; ?>
+
     <div class="col-md-3">
   <label>Pilih Produk</label>
   <select id="productFilter" class="form-control">

@@ -222,6 +222,37 @@
       <div id="mobileCards"></div>
     </div>
   </div>
+  <div class="modal fade" id="upgradeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:10px;">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">Upgrade Reseller</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="upgradeForm" action="app/action/upgrade_reseller.php" method="post">
+        <div class="modal-body">
+          <input type="hidden" name="id" id="upgrade_id">
+
+          <p id="upgrade_text" style="font-weight:500;"></p>
+
+          <div class="mb-3">
+            <label for="new_role" class="form-label">Pilih Role Baru</label>
+            <select name="new_role" id="new_role" class="form-control" required>
+              <option value="4">Agen</option>
+              <option value="3">Distributor</option>
+              <option value="2">Head Distributor</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-success">Upgrade</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  
 </section>
 
 <!-- jQuery & DataTables JS -->

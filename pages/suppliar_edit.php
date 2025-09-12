@@ -55,15 +55,8 @@
         </div>
 
         <div>
-          <label for="sup_bank" style="font-weight: 600; color: #334155;">Nama Bank <span style="color:#ef4444;">*</span></label>
-          <select id="sup_bank" name="bank" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background:white; cursor:pointer;">
-            <option value="">-- Pilih Bank --</option>
-            <option value="BCA" <?= $data->bank == 'BCA' ? 'selected' : '' ?>>BCA</option>
-            <option value="BRI" <?= $data->bank == 'BRI' ? 'selected' : '' ?>>BRI</option>
-            <option value="BNI" <?= $data->bank == 'BNI' ? 'selected' : '' ?>>BNI</option>
-            <option value="MANDIRI" <?= $data->bank == 'MANDIRI' ? 'selected' : '' ?>>MANDIRI</option>
-          </select>
+          <label for="bank" style="font-weight: 600; color: #334155;">Nama Bank <span style="color:#ef4444;">*</span></label>
+          <input type="text" id="bank" name="bank" placeholder="Nama Bank" value="<?= htmlspecialchars($data->bank); ?>"    style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;" placeholder="Nama Bank">
         </div>
 
         <div>

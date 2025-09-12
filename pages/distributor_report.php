@@ -75,12 +75,12 @@
       <label>Filter Produk (Per Item)</label>
       <select id="filterItem" class="form-control">
         <option value="">Semua Produk</option>
-        <?php 
+        <!-- <?php 
         // ambil data produk dari database
         $products = $obj->all('products');
         foreach ($products as $p): ?>
           <option value="<?= $p->id ?>"><?= htmlspecialchars($p->product_name) ?></option>
-        <?php endforeach; ?>
+        <?php endforeach; ?> -->
       </select>
     </div>
 

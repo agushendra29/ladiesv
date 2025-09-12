@@ -92,7 +92,7 @@
         </ul>
       </li>
       <?php endif; ?>
-       <?php if ($roleId ==5): ?>
+       <?php if ($roleId ==4): ?>
       <li style="margin-bottom: 6px;">
         <a href="index.php?page=suppliar" class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>" style="
           display: flex; align-items: center; gap: 14px;
@@ -137,6 +137,7 @@
               Daftar Produk
             </a>
           </li>
+          <?php if ($roleId !=5): ?>
           <li style="margin-bottom: 6px;">
             <a href="index.php?page=stock_management" class="nav-link <?php echo $actual_link=='stock_management'?'active':'';?>" style="
               display: block; font-size: 14px !important; font-weight: 500;
@@ -148,6 +149,7 @@
               Stok Produk
             </a>
           </li>
+          <?php endif ?>
         </ul>
       </li>
 
@@ -248,6 +250,7 @@
               Transaksi
             </a>
           </li>
+           <?php if ($roleId != 5): ?>
           <li style="margin-bottom: 6px;">
             <a href="index.php?page=stock_monitoring" class="nav-link <?php echo $actual_link=='stock_monitoring'?'active':'';?>" style="
               display: block; font-size: 14px !important; font-weight: 500;
@@ -259,6 +262,7 @@
               Stock Monitoring
             </a>
           </li>
+          <?php endif ?>
             <?php if ($roleId <= 2): ?>
           <li style="margin-bottom: 6px;">
             <a href="index.php?page=distributor_report" class="nav-link <?php echo $actual_link=='distributor_report'?'active':'';?>" style="

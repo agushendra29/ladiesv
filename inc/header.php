@@ -96,7 +96,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
 
 <head>
   <meta charset="utf-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
   <title>Ladies V</title>
@@ -106,14 +106,13 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
   <!-- Google Fonts -->
-   <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-  <!-- DataTables -->
-  <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">  <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
   <!-- Bootstrap Datepicker CSS -->
-  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+    rel="stylesheet" />
   <!-- Select2 CSS -->
   <link rel="stylesheet" href="plugins/select2/css/select2.min.css" />
   <!-- Custom CSS -->
@@ -130,16 +129,18 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
   <style>
     body,
     html {
-      font-family: 'Open Sans', sans-serif;
+      font-family: "Epunda Slab", serif;
       margin: 0;
       padding: 0;
     }
+
     .navbar-custom {
-      background-color: #fff !important;
-      border-bottom: 1px solid #e5e7eb;
+      background: #eb757e;
+      /* Pink lebih dark & crystal clear */
+      border-bottom: 1px solid rgba(220, 120, 190, 0.35);
+      color: #fff !important;
       padding: 0 20px;
       height: 56px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       user-select: none;
       display: flex;
       align-items: center;
@@ -150,6 +151,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       right: 0;
       z-index: 1040;
     }
+
     .nav-left,
     .nav-right {
       display: flex;
@@ -158,6 +160,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       margin: 0;
       padding: 0;
     }
+
     .nav-link {
       font-size: 20px;
       color: #4b5563;
@@ -169,10 +172,12 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       text-decoration: none;
       cursor: pointer;
     }
+
     .nav-link:hover {
       background-color: #f3f4f6;
       color: #EEA0A0;
     }
+
     .user-info {
       text-align: right;
       min-width: 140px;
@@ -182,12 +187,14 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       font-size: 15px;
       user-select: none;
     }
+
     .user-role {
       font-size: 13px;
       color: #6c757d;
       font-weight: normal;
       margin-top: 2px;
     }
+
     .profile-icon {
       width: 40px;
       height: 40px;
@@ -205,9 +212,11 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       text-decoration: none;
       position: relative;
     }
+
     .profile-icon:hover {
       background-color: #d0e4ff;
     }
+
     .dropdown-menu-custom {
       position: absolute;
       top: 56px;
@@ -220,6 +229,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       display: none;
       flex-direction: column;
     }
+
     .dropdown-item-custom {
       display: flex;
       align-items: center;
@@ -232,17 +242,21 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       border-radius: 8px;
       transition: background-color 0.25s ease;
     }
+
     .dropdown-item-custom:hover {
       background-color: #e0e7ff;
       color: #1e40af;
     }
+
     .dropdown-item-logout {
       color: #dc2626 !important;
     }
+
     .dropdown-item-logout:hover {
       background-color: #fee2e2 !important;
       color: #991b1b !important;
     }
+
     .dropdown-divider-custom {
       height: 1px;
       background-color: #e5e7eb;
@@ -250,100 +264,117 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     }
 
     /* Search box */
-.dataTables_wrapper .dataTables_filter {
-    text-align: right;
-    margin-bottom: 12px;
-}
-.dataTables_wrapper .dataTables_filter input {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    font-size: 12px;
-    outline: none;
-    width: 180px;
-    transition: all 0.2s;
-}
-.dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #EEA0A0;
-    box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
-}
+    .dataTables_wrapper .dataTables_filter {
+      text-align: right;
+      margin-bottom: 12px;
+    }
 
-/* Show entries */
-.dataTables_wrapper .dataTables_length {
-    margin-bottom: 12px;
-}
-.dataTables_wrapper .dataTables_length select {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    font-size: 12px;
-    outline: none;
-    min-width: 60px;
-}
+    .dataTables_wrapper .dataTables_filter input {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+      outline: none;
+      width: 180px;
+      transition: all 0.2s;
+    }
 
-/* Pagination */
-.dataTables_wrapper .dataTables_paginate {
-    margin-top: 12px;
-    text-align: center;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 5px 12px;
-    margin: 0 2px;
-    border-radius: 6px;
-    border: 1px solid #d1d5db;
-    background-color: #fff;
-    color: #374151;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #EEA0A0;
-    color: #fff !important;
-    border-color: #EEA0A0;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background-color: #e0e7ff;
-    color: #EEA0A0 !important;
-    border-color: #EEA0A0;
-}
+    .dataTables_wrapper .dataTables_filter input:focus {
+      border-color: #EEA0A0;
+      box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+    }
 
+    /* Show entries */
+    .dataTables_wrapper .dataTables_length {
+      margin-bottom: 12px;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+      outline: none;
+      min-width: 60px;
+    }
+
+    /* Pagination */
+    .dataTables_wrapper .dataTables_paginate {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      padding: 5px 12px;
+      margin: 0 2px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      background-color: #fff;
+      color: #374151;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background-color: #EEA0A0;
+      color: #fff !important;
+      border-color: #EEA0A0;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background-color: #e0e7ff;
+      color: #EEA0A0 !important;
+      border-color: #EEA0A0;
+    }
   </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
   <div class="wrapper">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand navbar-white navbar-light navbar-custom" role="navigation" aria-label="Main navigation">
+    <nav class="navbar navbar-expand navbar-white navbar-light navbar-custom" role="navigation"
+      aria-label="Main navigation">
       <!-- Left navbar links -->
       <ul class="nav-left navbar-nav" role="menubar">
         <li class="nav-item" role="none">
-          <a class="nav-link" data-widget="pushmenu" href="#" id="menuToggle" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar menu">
+          <a class="nav-link" style="color:white;" data-widget="pushmenu" href="#" id="menuToggle" role="menuitem"
+            aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar menu">
             <i class="fas fa-bars" aria-hidden="true"></i>
           </a>
         </li>
       </ul>
 
       <!-- Right navbar links -->
-      <ul class="nav-right navbar-nav" role="menubar">
+      <ul class="nav-right navbar-nav" role="menubar" style="color:white;">
         <li class="user-info" role="none">
-          <div><?php echo htmlspecialchars($userRole); ?></div>
-          <div class="user-role">
-            <b>Total Point: <?php echo htmlspecialchars($totalPoint); ?></b>
-            &nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($roleName); ?>
+          <div style="color:white;"><?php echo htmlspecialchars($userRole); ?></div>
+          <div class="user-role" style="color:white;">
+            <b>
+              &nbsp;&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($roleName); ?>
+            </b>
           </div>
         </li>
         <li class="nav-item dropdown" style="position: relative;" role="none">
-          <a href="#" id="profileDropdown" class="profile-icon" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
-            <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 24px; line-height: 1;">account_circle</span>
+          <a href="#" id="profileDropdown" class="profile-icon" role="menuitem" aria-haspopup="true"
+            aria-expanded="false" aria-label="User menu">
+            <span class="material-symbols-outlined" aria-hidden="true"
+              style="font-size: 24px; line-height: 1;margin-left:0px !important;">account_circle</span>
           </a>
 
           <div id="profileDropdownMenu" class="dropdown-menu-custom" aria-labelledby="profileDropdown" role="menu">
+            <span class="dropdown-item-custom" role="menuitem" tabindex="-1">
+              <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">star</i>
+              <div class="user-role" style="color:black;">
+                <b>Total Point: <?php echo htmlspecialchars($totalPoint); ?></b>
+              </div>
+            </span>
             <a href="index.php?page=profile" class="dropdown-item-custom" role="menuitem" tabindex="-1">
               <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">person</i> Profile
             </a>
             <div class="dropdown-divider-custom" role="separator"></div>
-            <a href="app/action/logout.php" class="dropdown-item-custom dropdown-item-logout" role="menuitem" tabindex="-1">
+            <a href="app/action/logout.php" class="dropdown-item-custom dropdown-item-logout" role="menuitem"
+              tabindex="-1">
               <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">logout</i> Logout
             </a>
           </div>
@@ -373,18 +404,19 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       });
     </script>
     <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.getElementById("sidebar");
-  const toggleBtn = document.querySelector("[data-widget='pushmenu']");
+      document.addEventListener("DOMContentLoaded", () => {
+        const sidebar = document.getElementById("sidebar");
+        const toggleBtn = document.querySelector("[data-widget='pushmenu']");
 
-  if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      sidebar.classList.toggle("active");
-    });
-  }
-});
-</script>
+        if (toggleBtn && sidebar) {
+          toggleBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            sidebar.classList.toggle("active");
+          });
+        }
+      });
+    </script>
   </div>
 </body>
+
 </html>

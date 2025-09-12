@@ -6,7 +6,7 @@ function getStockProduct($pid) {
     global $obj, $distributor_id;
     $role_id = $_SESSION['role_id'] ?? null;
 
-    if ($role_id == 10) {
+    if ($role_id == 10 || $role_id == 1) {
         $stockData = $obj->allCondition('distributor_stocks', "product_id = ? AND suppliar_id = ?", [$pid, 1]);
     } else {
         $stockData = $obj->allCondition('distributor_stocks', "product_id = ? AND suppliar_id = ?", [$pid, $distributor_id]);
@@ -46,7 +46,9 @@ $membersJson = json_encode($members);
 $productsData = [];
 foreach ($products as $p) {
     $p->pStock = getStockProduct($p->id);
-    $productsData[] = $p;
+    if($p->pStock > 0) {
+      $productsData[] = $p;
+    }
 }
 ?>
 
@@ -121,7 +123,7 @@ foreach ($products as $p) {
             Reset
           </button>
           <button type="submit"
-            style="background-color: #3b82f6; color: white; padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 500;">
+            style="background-color: #ef4444; color: white; padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 500;">
             Submit Penjualan
           </button>
         </div>
