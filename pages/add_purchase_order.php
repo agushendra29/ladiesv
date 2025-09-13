@@ -114,6 +114,7 @@ $products = $obj->all('products');
       width: '100%',
     });
   }
+  
 
   function updateRowTotal(row) {
     const productSelect = row.querySelector(".product-select");

@@ -65,7 +65,8 @@ try {
         'is_active' => 1,
         'provinsi' => $provinsi,
         'kota' => $kota,
-        'kecamatan' => $kecamatan
+        'kecamatan' => $kecamatan,
+        'parent_id' => $user_id
     ];
     $suppliar_id = $obj->create('suppliar', $sup_data);
     if(!$suppliar_id) throw new Exception('Gagal menambahkan suppliar.');

@@ -194,13 +194,6 @@ $("#editCatForm").submit(function (e) {
 
     let confirmHtml = `
     <div style="text-align:left">
-      <p><b>Nama Reward:</b> ${payload.nama_reward || '-'}</p>
-      <p><b>Role:</b> ${$("#role_id option:selected").text() || '-'}</p>
-      <p><b>Periode Dari:</b> ${payload.periode_hadiah_dari || '-'}</p>
-      <p><b>Periode Sampai:</b> ${payload.periode_hadiah_sampai || '-'}</p>
-      <p><b>Jumlah Point:</b> ${payload.jumlah_point || '-'}</p>
-      <p><b>Maksimal Redeem:</b> ${payload.max_redeem || '-'}</p>
-      <hr>
       <p style="color:red; font-weight:bold;">
         PERUBAHAN DATA YANG SUDAH DISIMPAN TIDAK DAPAT DIBATALKAN.
       </p>

@@ -34,7 +34,7 @@ if ($Ouser->is_login() != false) {
 
       <form action="app/action/login.php" method="post">
         <div class="mb-3">
-          <label for="username" class="form-label" style="font-weight:600; font-size:14px; color:#333;">ID Member</label>
+          <label for="username" class="form-label" style="font-weight:600; font-size:14px; color:#333;">User ID</label>
           <input type="text" name="username" class="form-control" id="username" required style="height:44px; border-radius:10px; font-size:14px; border:1px solid #d0d7de;">
         </div>
 

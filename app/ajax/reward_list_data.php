@@ -14,32 +14,47 @@ function getChildDistributorIds($pdo, $parentId) {
 function getTotalQty($pdo, $startDate, $endDate, $distributorId, $roleId) {
     if (!$startDate || !$endDate) return 0;
 
-    // perbaikan: akhir hari 23:59:59
     $startDateTime = $startDate.' 00:00:00';
     $endDateTime = $endDate.' 23:59:59';
-    
+
     if ($roleId == 2) {
         $childIds = getChildDistributorIds($pdo, $distributorId);
         $childIds[] = $distributorId;
         $in = str_repeat('?,', count($childIds) - 1) . '?';
+
         $sql = "SELECT COALESCE(SUM(quantity),0) FROM transaction_histories 
-                WHERE type='penjualan' AND suppliar_id IN ($in) 
+                WHERE suppliar_id IN ($in) 
                 AND created_at BETWEEN ? AND ?";
+        
+        // jika role_id 5, hitung semua tipe
+        if ($roleId == 5) {
+            $sql .= " AND type IN ('penjualan','pembelian')";
+        } else {
+            $sql .= " AND type='penjualan'";
+        }
+
         $params = array_merge($childIds, [$startDateTime, $endDateTime]);
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return (int)$stmt->fetchColumn();
+
     } else {
         $sql = "SELECT COALESCE(SUM(quantity),0) FROM transaction_histories 
-                WHERE type='penjualan' AND suppliar_id = ? 
+                WHERE suppliar_id = ? 
                 AND created_at BETWEEN ? AND ?";
+        
+        if ($roleId == 5) {
+            $sql .= " AND type IN ('penjualan','pembelian')";
+        } else {
+            $sql .= " AND type='penjualan'";
+        }
+
         $params = [$distributorId, $startDateTime, $endDateTime];
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         return (int)$stmt->fetchColumn();
     }
 }
-
 function getRedeemedPoint($pdo, $userId, $eventName) {
     $stmt = $pdo->prepare("SELECT COALESCE(SUM(total_point),0) 
                            FROM reward_redemptions 

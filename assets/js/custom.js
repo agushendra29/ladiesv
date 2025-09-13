@@ -965,6 +965,7 @@ drawCallback: function (settings) {
         });
     }
 }), $("#newsTable").DataTable({
+        stripeClasses: [],
     processing: !0,
     serverSide: !0,
     serverMethod: "post",

@@ -20,14 +20,21 @@ if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
 ## Search query
 $searchQuery = " ";
 if ($searchValue != '') {
-    $searchQuery = " AND (
-        i.invoice_number LIKE :invoice_number OR 
-        i.net_total LIKE :net_total OR 
-        u2.name LIKE :distributor_name
-    ) ";
-    $searchArray['invoice_number']   = "%$searchValue%";
-    $searchArray['net_total']        = "%$searchValue%";
-    $searchArray['distributor_name'] = "%$searchValue%";
+    $lowerSearch = strtolower($searchValue);
+
+    // Jika search mengandung 'head', ambil semua transaksi customer_id=1 atau suppliar_id=1
+    if (str_contains($lowerSearch, 'head')) {
+        $searchQuery = " AND (i.customer_id = 1 OR i.suppliar_id = 1) ";
+    } else {
+        $searchQuery = " AND (
+            i.invoice_number LIKE :invoice_number OR 
+            i.net_total LIKE :net_total OR 
+            u2.name LIKE :distributor_name
+        ) ";
+        $searchArray['invoice_number']   = "%$searchValue%";
+        $searchArray['net_total']        = "%$searchValue%";
+        $searchArray['distributor_name'] = "%$searchValue%";
+    }
 }
 
 ## Total records without filtering
@@ -68,7 +75,7 @@ $sqlFetch = "
     LEFT JOIN products p ON d.pid = p.id
     WHERE 1 {$whereExtra} {$searchQuery}
     GROUP BY i.id
-  ORDER BY i.id DESC 
+    ORDER BY i.id DESC 
     LIMIT :limit OFFSET :offset
 ";
 $stmt = $pdo->prepare($sqlFetch);
@@ -99,19 +106,19 @@ foreach ($records as $row) {
     if (empty($row['items_summary']) || $row['net_total'] == 0) {
         continue;
     }
-       $itemsSummary = str_replace('||', '<br>', $row['items_summary']);
-         if ($row['distributor_role'] == 1 || $row['distributor_role'] == 10) {
+    $itemsSummary = str_replace('||', '<br>', $row['items_summary']);
+    if ($row['distributor_role'] == 1 || $row['distributor_role'] == 10) {
         $distributorDisplay = "Head Office";
     } else {
         $distributorDisplay = $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']);
     }
     $data[] = [
-"invoice_number"   =>  '<a href="app/invoice/po_pdf.php?id='.$row['id'].'" 
-   class="btn btn-sm btn-outline-primary"
-   style="padding:6px 12px; border-radius:8px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px;"
-   download>
-   <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
-</a>',
+        "invoice_number"   =>  '<a href="app/invoice/po_pdf.php?id='.$row['id'].'" 
+           class="btn btn-sm btn-outline-primary"
+           style="padding:6px 12px; border-radius:8px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px;"
+           download>
+           <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
+        </a>',
         "customer_name"    => $row['customer_name'] . ' - ' . getSuppliarCode($row['customer_id']),
         "distributor_name" => $distributorDisplay,
         "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),

@@ -135,7 +135,7 @@
 }
 
 body {
-font-family: 'Open Sans' !important;
+    font-family: 'Montserrat' !important;
 }
 
 
@@ -155,42 +155,76 @@ body.sidebar-collapse .content-wrapper {
 #sidebar {
     transition: margin-left 0.3s ease;
 }
+
 /* --- Sidebar umum --- */
 .sidebar {
-  width: 260px;
-  background-color: #F7CECE;
-  color: #D92765;
-  height: 100vh;
-  position: fixed;
-  top: 57px; left: 0;
-  overflow-y: auto;
-  border-right: 1px solid #e5e7eb;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.05);
-  z-index: 1030;
-  transition: transform 0.3s ease;
+    width: 250px;
+    background-color: #F7CECE;
+    height: 100vh;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    overflow-y: auto;
+    border-right: 1px solid #e5e7eb;
+    z-index: 1030;
+    transition: transform 0.3s ease;
+}
+
+
+.section-title {
+    font-weight: 600;
+    color: #011c4b;
+    font-size: 24px;
+}
+
+.section-title-description {
+    color: #8492A6;
+    font-weight: 400;
+    font-size:16px;
+}
+
+.section-card-body {
+    padding: 1.5rem !important;
+    background:white;
+    border-radius: 6px;
+}
+
+table.dataTable.stripe tbody tr.odd,
+table.dataTable.display tbody tr.odd {
+  background-color: white !important;
+  background:white !important;
+}
+table.dataTable.stripe tbody tr.even,
+table.dataTable.display tbody tr.even {
+  background-color: white !important;
 }
 
 @media (max-width: 768px) {
-  #sidebar {
-    margin-left: 0; /* default tertutup */
-  }
-
-  body.sidebar-collapse #sidebar {
-    margin-left: 0; /* kalau collapse -> buka */
-  }
-}
-/* Desktop: sidebar selalu terbuka */
-@media (min-width: 769px) {
-  #main-content {
-    margin-left: 249px; /* konten geser */
-  }
-  .sidebar {
-    transform: translateX(0);   
-  }
+    #sidebar {
+        margin-left: 0;
+        /* default tertutup */
+    }
 
     body.sidebar-collapse #sidebar {
-    margin-left: -260px;
-  }
+        margin-left: 0;
+        /* kalau collapse -> buka */
+    }
+}
+
+/* Desktop: sidebar selalu terbuka */
+@media (min-width: 769px) {
+    #main-content {
+        margin-left: 249px;
+        /* konten geser */
+    }
+
+    .sidebar {
+        transform: translateX(0);
+    }
+
+    body.sidebar-collapse #sidebar {
+        margin-left: -260px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -203,7 +237,9 @@ body.sidebar-collapse .content-wrapper {
         width: 100%;
     }
 
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3 {
         font-size: 16px !important;
     }
 }
@@ -211,15 +247,20 @@ body.sidebar-collapse .content-wrapper {
 
 /* Mobile: sidebar default sembunyi */
 @media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%); /* sembunyikan */
-  }
-  .sidebar.active {
-    transform: translateX(0); /* munculkan saat toggle */
-  }
-  #main-content {
-    margin-left: 0 !important; /* konten full width */
-  }
+    .sidebar {
+        transform: translateX(-100%);
+        /* sembunyikan */
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+        /* munculkan saat toggle */
+    }
+
+    #main-content {
+        margin-left: 0 !important;
+        /* konten full width */
+    }
 }
 
 .form-control,
@@ -269,18 +310,27 @@ body.sidebar-collapse .content-wrapper {
 }
 
 @media (max-width: 768px) {
-  /* Search, pagination, length menu tetap rapi */
-  .dataTables_wrapper .dataTables_filter,
-  .dataTables_wrapper .dataTables_length,
-  .dataTables_info,
-  .dataTables_wrapper .dataTables_paginate {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 8px 0;
-    gap: 10px;
-    font-size:10px !important;
-  }
-  .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 280px; }
-  .dataTables_wrapper .dataTables_paginate { margin-top: 4px; gap:6px; }
+
+    /* Search, pagination, length menu tetap rapi */
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 8px 0;
+        gap: 10px;
+        font-size: 10px !important;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        margin-top: 4px;
+        gap: 6px;
+    }
 }

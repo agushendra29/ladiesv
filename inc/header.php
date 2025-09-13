@@ -10,15 +10,24 @@ $actual_link = explode('=', "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 $actual_link = end($actual_link);
 
 $distributor_id = $_SESSION['distributor_id'] ?? null;
+$suppliarCode = '000000';
 if ($distributor_id) {
     // Query suppliar berdasar distributor_id
     $stmt = $pdo->prepare("SELECT * FROM suppliar WHERE id = :id LIMIT 1");
     $stmt->bindValue(':id', $distributor_id, PDO::PARAM_INT);
     $stmt->execute();
     $suppliar = $stmt->fetch(PDO::FETCH_OBJ);
+      if ($suppliar && isset($suppliar->suppliar_code)) {
+        $suppliarCode = $suppliar->suppliar_code;
+    }
 }
 
 $userRole = $_SESSION['name'] ?? 'Guest';
+
+if (!in_array($_SESSION['role_id'] ?? 0, [1, 10])) {
+    $userRole .= ' - ' . $suppliarCode;
+}
+
 $roleId = $_SESSION['role_id'] ?? 'User';
 
 $roleNames = [
@@ -109,9 +118,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
   <link rel="stylesheet" href="assets/css/responsive.css">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">  <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
-  <!-- Bootstrap Datepicker CSS -->
-  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">  <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
     rel="stylesheet" />
   <!-- Select2 CSS -->
   <link rel="stylesheet" href="plugins/select2/css/select2.min.css" />
@@ -129,7 +136,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
   <style>
     body,
     html {
-      font-family: "Epunda Slab", serif;
+      font-family: "Open Sans", serif;
       margin: 0;
       padding: 0;
     }
@@ -137,7 +144,6 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     .navbar-custom {
       background: #eb757e;
       /* Pink lebih dark & crystal clear */
-      border-bottom: 1px solid rgba(220, 120, 190, 0.35);
       color: #fff !important;
       padding: 0 20px;
       height: 56px;
@@ -174,8 +180,10 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
     }
 
     .nav-link:hover {
-      background-color: #f3f4f6;
-      color: #EEA0A0;
+      background-color: #D92765 !important;
+      color: white;
+      font-weight:bold;
+
     }
 
     .user-info {
@@ -195,27 +203,34 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
       margin-top: 2px;
     }
 
-    .profile-icon {
-      color:#EEA0A0;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid;
-      background-color: #e9f2ff;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      cursor: pointer;
-      user-select: none;
-      text-decoration: none;
-      position: relative;
-    }
+  .profile-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .profile-icon:hover {
-      background-color: #d0e4ff;
-    }
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  color: #fff;
+
+  border: 2px solid #fff;                 /* border putih tipis */
+  box-shadow: 0 4px 8px rgba(0,0,0,.15);   /* bayangan lembut */
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.profile-icon:hover {
+  transform: scale(1.07);
+  box-shadow: 0 6px 14px rgba(0,0,0,.25);
+}
+
+/* Tambahan efek ring ketika dropdown terbuka */
+.profile-icon.active {
+  box-shadow: 0 0 0 4px rgba(255,255,255,.4), 0 6px 14px rgba(0,0,0,.25);
+}
 
     .dropdown-menu-custom {
       position: absolute;
@@ -358,8 +373,8 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
         <li class="nav-item dropdown" style="position: relative;" role="none">
           <a href="#" id="profileDropdown" class="profile-icon" role="menuitem" aria-haspopup="true"
             aria-expanded="false" aria-label="User menu">
-            <span class="material-symbols-outlined" aria-hidden="true"
-              style="font-size: 24px; line-height: 1;margin-left:0px !important;">account_circle</span>
+            <img src="./assets/images/logo.png" style="width:36px;" />
+           
           </a>
 
           <div id="profileDropdownMenu" class="dropdown-menu-custom" aria-labelledby="profileDropdown" role="menu">

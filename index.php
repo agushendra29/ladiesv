@@ -2,7 +2,7 @@
 <?php require_once 'inc/sidebar.php'; ?>
 
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper" style="padding:20px; background-color:white; min-height:100vh;">
+<div class="content-wrapper" style="padding:20px; background-color:#f9f9f9; min-height:100vh;">
   <?php 
         if (isset($_GET['page'])) {
           $page ='pages/' .$_GET['page'].'.php';
