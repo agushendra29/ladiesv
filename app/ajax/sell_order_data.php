@@ -114,8 +114,7 @@ foreach ($records as $row) {
     }
     $data[] = [
         "invoice_number"   =>  '<a href="app/invoice/po_pdf.php?id='.$row['id'].'" 
-           class="btn btn-sm btn-outline-primary"
-           style="padding:6px 12px; border-radius:8px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px;"
+           class="btn-invoice"
            download>
            <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
         </a>',

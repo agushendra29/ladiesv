@@ -112,6 +112,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css" />
+    <link rel="icon" href="./assets/images/logo.png" type="image/png">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css" />
   <!-- Google Fonts -->

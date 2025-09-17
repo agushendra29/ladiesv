@@ -1,12 +1,13 @@
-<div class="reward-wrapper">
+<div style="padding-top:52px;">
   <section class="content">
     <div class="container-fluid">
+      <div class="section-card-body">
 
       <!-- ===== Header ===== -->
-      <div class="reward-header">
-        <h2>📋 DAFTAR HADIAH</h2>
+      <div class="page-header-custom">
+        <div class="section-title">Daftar Hadiah</div>
         <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
-          <a href="index.php?page=add_reward" class="btn-add-reward">
+          <a href="index.php?page=add_reward" class="btn-custom">
             <i class="fas fa-plus"></i> Tambah Reward
           </a>
         <?php endif; ?>
@@ -46,12 +47,13 @@
           </tbody>
         </table>
       </div>
+          </div>
 
       <!-- ===== Riwayat Penukaran ===== -->
-      <div class="mt-5">
-        <h3 class="riwayat-title">🕑 Riwayat Penukaran</h3>
+      <div class="mt-5 section-card-body">
+        <div class="section-title mb-2">Riwayat Penukaran</div>
         <div class="table-responsive">
-          <table id="redeemHistoryTable" class="riwayat-table">
+          <table id="redeemHistoryTable" class="custom-table dataTable display">
             <thead>
               <tr>
                 <th>Event</th>
@@ -121,7 +123,7 @@
 .reward-tab-wrapper {
   display: flex;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 .reward-tab {

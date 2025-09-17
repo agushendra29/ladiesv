@@ -84,30 +84,24 @@
   }
 </style>
 
-<div>
+<div style="padding-top:52px;">
   <!-- Header -->
-  <div class="content-header">
-    <div class="container-fluid mt-3">
+   <div class="section-card-body" style="margin: 10px;">
+    <div class="container-fluid">
       <div class="row align-items-center">
-        <div class="col-md-6">
-          <h1 class="m-0 font-weight-bold text-dark">Sales Report</h1>
+        <div class="page-custom-header">
+          <div class="section-title">Sales Report</div> 
         </div>
-        <div class="col-md-6">
-          <ol class="breadcrumb float-sm-right bg-transparent p-0 m-0">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Sales Report</li>
-          </ol>
-        </div>
+       
       </div>
     </div>
-  </div>
 
   <!-- Content -->
   <section class="content">
     <div class="container-fluid">
       <!-- Filter -->
-      <div class="">
-        <div class="card-body">
+      <div>
+        <div>
           <div class="row g-3 align-items-end">
             <div class="col-md-5">
               <label style="font-weight:500">Start Date - End Date</label>
@@ -160,9 +154,8 @@
             </div>
 
             <div class="col-md-2">
-              <button id="search_sales_report" class="btn btn-primary"
-                style="font-size:12px;height:38px;padding: 0px 20px;">
-                <i class="fas fa-search"></i> Search
+              <button id="search_sales_report" class="btn-custom">
+                <i class="fas fa-search"></i> Filter
               </button>
             </div>
           </div>
@@ -173,7 +166,7 @@
       <div class="mt-4">
         <div class="p-0">
           <div class="table-responsive" style="overflow-x:auto;">
-            <table id="salesReportTable" class="text-center">
+            <table id="salesReportTable" class="dataTable custom-table">
               <thead>
                 <tr>
                   <th>Sales Date</th>
@@ -200,6 +193,7 @@
 
     </div>
   </section>
+    </div>
 </div>
 
 <!-- JS -->

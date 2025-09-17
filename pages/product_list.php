@@ -1,19 +1,18 @@
 <!-- Content Wrapper -->
-<div style="padding-top:52px;background-color: white;">
+<div style="padding-top:52px;">
   <!-- Product List Page -->
   <section class="content">
     <div class="container-fluid">
-      <div>
+      <div class="section-card-body">
         <!-- Header -->
         <div class="page-header-custom">
-          <h2>📦 DAFTAR PRODUK</h2>
+          <div class="section-title">Daftar Produk</div>
           <?php if ($_SESSION['role_id'] <= 1 || $_SESSION['role_id'] == 10): ?>
           <a href="index.php?page=add_product" class="btn-custom">
             <i class="fas fa-plus"></i> Tambah Produk
           </a>
           <?php endif; ?>
         </div>
-
         <!-- Table untuk desktop -->
         <div class="table-responsive">
           <table id="productTable" class="display dataTable text-center custom-table">

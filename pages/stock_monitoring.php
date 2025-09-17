@@ -2,59 +2,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <style>
-  /* Style tabel mengikuti style sales_report */
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
-    background: #fff;
-    font-size: 13px !important;
-    min-width: 900px;
-  }
-
-  table thead {
-    background-color: #EEA0A0;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    font-size: 11px;
-  }
-
-  table thead th {
-    padding: 16px 20px;
-    border-bottom: none;
-  }
-
-  table thead th:first-child {
-    border-top-left-radius: 12px;
-  }
-
-  table thead th:last-child {
-    border-top-right-radius: 12px;
-  }
-
-  table tbody tr {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  table tbody tr:hover {
-    background-color: #eff6ff;
-    box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
-  }
-
-  table tbody tr td {
-    padding: 14px 22px;
-    vertical-align: middle;
-    font-weight: 500;
-    color: #374151;
-  }
 
   .no-data {
     text-align: center;
@@ -64,16 +11,17 @@
   }
 </style>
 
-<div class="container mt-5">
-  <h3 class="mb-3 mt-4">Stock Monitoring</h3>
-  
+<div class="container-fluid" style="padding-top:72px;">
+  <div class="section-card-body" style="padding-top:72px;">
+  <div class="page-custom-header">
+  <div class="mb-3 section-title">Stock Monitoring</div>
+</div>
   <div class="row mb-3">
     <div class="col-md-4">
       <label>Periode</label>
       <input type="text" id="issuedate" class="form-control" readonly />
     </div>
-    
-
+  
    <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
   <div class="col-md-4">
     <label>Pilih Supplier</label>
@@ -128,13 +76,14 @@
 </div>
     
 
-    <div class="col-md-2 align-self-end">
-      <button id="btnSearchStock" class="btn btn-primary">Cari</button>
+    <div class="col-md-2 align-self-end mt-3">
+      <button id="btnSearchStock" class="btn-custom">Filter</button>
     </div>
   </div>
 
+  <div style="padding:5px;background:white;">
   <div class="table-responsive">
-    <table id="stockMonitoringTable" class="table text-center">
+    <table id="stockMonitoringTable" class="text-center dataTable custom-table">
       <thead>
         <tr>
           <th>Product Name</th>
@@ -151,6 +100,8 @@
       </tbody>
     </table>
   </div>
+    </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>

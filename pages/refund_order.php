@@ -111,13 +111,13 @@
     }
 </style>
 
-<div>
+<div class="container-fluid" style="padding-top:32px;">
     <!-- Header -->
     <div class="content-header">
         <div class="container-fluid mt-3">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1 class="m-0 font-weight-bold text-dark" style="font-size:18px;">Cancel Invoice</h1>
+                    <div class="section-title">Cancel Invoice</div>
                 </div>
                 <div class="col-md-6">
                     <ol class="breadcrumb float-sm-right bg-transparent p-0 m-0" style="font-size:12px;">
@@ -182,8 +182,8 @@
 
                         <!-- Search Button -->
                         <div class="col-md-1 d-flex align-items-end">
-                            <button id="search_refund" class="btn btn-primary w-100">
-                                <i class="fas fa-search"></i>
+                            <button id="search_refund" class="btn-custom w-100">
+                                <i class="fas fa-search"></i> Filter
                             </button>
                         </div>
                     </div>
@@ -193,7 +193,7 @@
             <!-- Sales Report Table -->
             <div class="mt-3">
                 <div class="table-responsive">
-                    <table id="salesReportTable" class="text-center">
+                    <table id="salesReportTable" class="text-center dataTable custom-table">
                         <thead>
                             <tr>
                                 <th>Sales Date</th>

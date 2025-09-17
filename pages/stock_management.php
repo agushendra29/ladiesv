@@ -1,32 +1,32 @@
-<div style="padding-top:52px; padding-bottom:52px; background-color: white;">
-  <!-- Stok Produk Page -->
+<div style="padding-top:52px; padding-bottom:52px;">
   <section class="content">
     <div class="container-fluid">
-      <div>
-        <!-- Header -->
-        <div class="header-block">
-          <h2>📦 DAFTAR STOK PRODUK</h2>
+      <div class="section-card-body">
+        <div class="page-header-custom">
+          <div class="section-title">Daftar Stok Produk</div>
           <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
-          <a href="index.php?page=add_stock_management" target="_blank" class="btn-add">
+          <a href="index.php?page=add_stock_management" target="_blank" class="btn-custom">
             <i class="fas fa-plus"></i> Tambah Stok
           </a>
           <?php endif; ?>
         </div>
 
         <!-- Table Stok -->
-        <div class="table-responsive" style="overflow-x:auto;">
-          <table id="stockManagementTable" class="display dataTable text-center stock-table">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Nama Produk</th>
-                <th>Distributor</th>
-                <th>Jumlah Stok</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+        <div>
+          <div class="table-responsive">
+            <table id="stockManagementTable" class="display dataTable text-center custom-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Produk</th>
+                  <th>Distributor</th>
+                  <th>Jumlah Stok</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Card view untuk mobile -->
@@ -39,11 +39,11 @@
     <div class="container-fluid" style="margin-top: 20px;">
       <div class="log-block">
         <div class="header-block">
-          <h2>📝 RIWAYAT PERUBAHAN STOK</h2>
+          <div class="section-title">Riwayat Perubahan Stok</h2>
         </div>
 
-        <div class="table-responsive" style="overflow-x:auto;">
-          <table id="stockLogsTable" class="display dataTable text-center stock-table">
+        <div class="table-responsive">
+          <table id="stockLogsTable" class="display dataTable text-center custom-table">
             <thead>
               <tr>
                 <th>Distributor</th>
@@ -69,42 +69,43 @@
 </div>
 
 <style>
-/* Header block */
-.header-block {
+  .page-header-custom {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
-.header-block h2 {
+.page-header-custom h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 600;
   color: #222;
   user-select: none;
 }
-.btn-add {
+.btn-custom {
   background-color: #EB4F7D;
   color: #fff;
-  border-radius: 10px;
-  padding: 8px 18px;
+  border-radius: 12px;
+  padding: 8px 20px;
   font-weight: 600;
   font-size: 12px;
-  text-decoration: none;
+  border: none;
   box-shadow: 0 4px 12px rgba(0,115,234,0.4);
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  width: fit-content;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
 }
-.btn-add:hover {
+.btn-custom:hover {
   background-color: #005bb5;
   box-shadow: 0 6px 18px rgba(0,91,181,0.5);
 }
 
-/* Table styling */
-.stock-table {
+/* Table */
+.custom-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 10px;
@@ -112,35 +113,54 @@
   overflow: hidden;
   box-shadow: 0 4px 18px rgba(0,0,0,0.07);
   background: #fff;
-  font-size: 12px !important;
-  min-width: 900px;
+  font-size: 11px !important;
 }
-.stock-table thead {
+.custom-table thead {
   background-color: #EEA0A0;
   color: #fff;
   text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  font-size: 10px !important;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 9px !important;
 }
-.stock-table th { font-size:10px !important; }
-.stock-table td { padding: 12px 18px; vertical-align: middle; text-align: center; }
-.stock-table tbody tr {
+.custom-table th {
+  padding: 10px 14px;
+  line-height: 1.3;
+  font-size: 10px !important;
+  text-align:center !important; 
+}
+.custom-table td {
+  padding: 14px 22px;
+  vertical-align: middle;
+  text-align: center;
+}
+#stockManagementTable tbody tr {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-.stock-table tbody tr:hover {
+#stockManagementTable tbody tr:hover {
   background-color: #eff6ff;
   box-shadow: 0 6px 20px rgba(0,115,234,0.15);
 }
 
-/* Card views */
-#mobileStockCards, #mobileLogCards {
+#stockLogsTable tbody tr {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+#stockLogsTable tbody tr:hover {
+  background-color: #eff6ff;
+  box-shadow: 0 6px 20px rgba(0,115,234,0.15);
+}
+
+
+#mobileLogCards {
   display: none;
 }
-#mobileStockCards .card-item, #mobileLogCards .card-item {
+#mobileLogCards .card-item {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
@@ -150,24 +170,24 @@
   width: 100%;
   max-width: 400px;
 }
-#mobileStockCards .card-item h4, #mobileLogCards .card-item h4 {
+#mobileLogCards .card-item h4 {
   font-size: 14px;
   margin-bottom: 4px;
   font-weight: 600;
 }
-#mobileStockCards .card-item .meta, #mobileLogCards .card-item .meta {
+#mobileLogCards .card-item .meta {
   font-size: 11px;
   color: #555;
   margin-bottom: 2px;
 }
-#mobileStockCards .card-item .actions, #mobileLogCards .card-item .actions {
+#mobileLogCards .card-item .actions {
   margin-top: 6px;
   display: flex;
   flex-wrap: nowrap;
   gap: 6px;
   justify-content: flex-start;
 }
-#mobileStockCards .card-item .actions .btn, #mobileLogCards .card-item .actions .btn {
+#mobileLogCards .card-item .actions .btn {
   padding: 4px 8px;
   font-size: 11px;
   border-radius: 4px;
@@ -175,31 +195,67 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+  margin-bottom: 0;
+}
+/* Mobile Cards */
+#mobileStockCards {
+  display: none;
+}
+#mobileStockCards .card-item {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+#mobileStockCards .card-item h4 {
+  font-size: 14px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+#mobileStockCards .card-item .meta {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 2px;
+}
+#mobileStockCards .card-item .actions {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-start;
+}
+#mobileStockCards .card-item .actions .btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  margin-bottom: 0;
 }
 
 /* Responsif */
 @media (max-width: 768px) {
-  .header-block h2 { font-size: 16px; }
-  .btn-add { width: 100%; justify-content: center; }
-  .stock-table { font-size: 11px !important; min-width: unset; }
-  .stock-table th { font-size: 9px !important; }
-  .stock-table td { font-size: 11px !important; }
-
-  /* Hide table, show cards */
-  #stockManagementTable thead, #stockManagementTable tbody,
-  #stockLogsTable thead, #stockLogsTable tbody { display: none; }
-  #mobileStockCards, #mobileLogCards { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 12px; }
-
+  .page-header-custom h2 { font-size: 20px; }
+  .btn-custom { width: 100%; justify-content: center; }
+  /* sembunyikan isi tabel tapi biarkan wrapper DataTables tampil */
+  #stockManagementTable thead tr, #stockManagementTable tbody tr td { display: none; }
+  #mobileStockCards { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 12px; }
+  #mobileStockCards .card-item { width: 100%; max-width: 400px; }
   .dataTables_wrapper .dataTables_filter,
   .dataTables_wrapper .dataTables_paginate,
   .dataTables_wrapper .dataTables_length {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 8px 0;
-      gap: 8px;
-      font-size: 12px;
-      text-align:center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0;
+    gap: 8px;
+    font-size: 12px;
   }
   .dataTables_wrapper .dataTables_filter input { width: 100%; max-width: 300px; }
 }
@@ -207,4 +263,4 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

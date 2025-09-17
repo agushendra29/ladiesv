@@ -55,7 +55,7 @@ foreach ($products as $p) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="mb-5">
+<div class="m-3 container-fluid">
   <section class="content">
     <div class="mt-5">
       <h2 class="mb-4" style="font-size: 20px; font-weight: 600; color: #333;">📦 Form Penjualan</h2>

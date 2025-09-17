@@ -2,12 +2,7 @@
   <!-- Anggota List Page -->
   <section class="content">
     <div class="container-fluid" style="margin-top: 40px;">
-      <div style="
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
-        padding: 24px;
-      ">
+      <div>
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
           <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #333;">List Reward</h2>

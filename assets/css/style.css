@@ -21,6 +21,26 @@
     font-family: tahoma;
 }
 
+.btn-invoice {
+    background: transparent;
+    border:solid 2px #4f46e5;
+    padding:6px 8px;
+    margin:10px;
+    border-radius: 6px;
+    color: #4f46e5;
+    font-size:12px;
+}
+
+.btn-invoice:hover {
+    background: #4f46e5;
+    border:solid 2px #4f46e5;
+    padding:6px 8px;
+    margin:10px;
+    border-radius: 6px;
+    color: white;
+    font-size:12px;
+}
+
 .main-header .navbar-nav .nav-item .nav-link img {
     width: 40px;
 }
@@ -137,8 +157,6 @@
 body {
     font-family: 'Montserrat' !important;
 }
-
-
 body.sidebar-collapse .navbar-custom {
     left: 0 !important;
     /* navbar geser ke kiri full */
@@ -184,7 +202,7 @@ body.sidebar-collapse .content-wrapper {
 }
 
 .section-card-body {
-    padding: 1.5rem !important;
+    padding: 10px 15px !important;
     background:white;
     border-radius: 6px;
 }
@@ -308,6 +326,118 @@ table.dataTable.display tbody tr.even {
     border-color: #EEA0A0 !important;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
 }
+
+.dataTables_length {
+    font-size:12px !important;
+}
+
+.dataTables_length select {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.dataTables_filter {
+    font-size: 12px;
+}
+
+.dataTables_filter input {
+    margin-left: 6px !important;
+}
+
+table.dataTable>thead {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 0px !important;
+    border:solid 0px !important;
+}
+
+td {
+    font-weight: bold;
+}
+.dataTables_info {
+    font-size: 12px !important;
+    margin-top: 15px !important;
+}
+
+table.dataTable {
+    border-radius: 0px !important;
+}
+
+.card-item {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    padding: 12px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  font-size: 11px !important;
+}
+.custom-table thead {
+  background-color: #EEA0A0;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-size: 9px !important;
+}
+.custom-table th {
+  padding: 10px 14px;
+  line-height: 1.3;
+  font-size: 10px !important;
+  text-align:center !important; 
+}
+.custom-table td {
+  padding: 14px 22px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+ .page-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+.page-header-custom h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: #222;
+  user-select: none;
+}
+.btn-custom {
+  background-color: #EB4F7D;
+  color: #fff;
+  border-radius: 12px;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 12px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,115,234,0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-custom:hover {
+  background-color: #005bb5;
+  box-shadow: 0 6px 18px rgba(0,91,181,0.5);
+}
+
 
 @media (max-width: 768px) {
 

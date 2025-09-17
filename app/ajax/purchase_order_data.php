@@ -140,9 +140,7 @@ foreach ($empRecords as $row) {
         "id" => $row['invoice_number'] !=="-"
     ? '
         <a href="app/invoice/nota_pembelian.php?id='.$row['invoice_number'].'" 
-        
-           class="btn btn-sm btn-outline-primary"
-           style="padding:6px 10px; border-radius:6px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px; text-decoration:none;"
+           class="btn-invoice"
            title="Download Invoice">
            <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
         </a>

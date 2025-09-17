@@ -32,9 +32,7 @@ $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
     color: #333;
     line-height: 1.6;
   }
-  section.content { padding: 2rem 1rem; min-height: 85vh; }
 
-  .section-title { font-size: 1.6rem; font-weight: 700; color: #1e293b; margin-bottom: .25rem; }
   .section-title-description { color:#64748b; margin-bottom:1.5rem; }
 
   .dashboard-grid {
@@ -133,9 +131,9 @@ $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
   .bg-cards-2 { background:linear-gradient(135deg,#fda4af,#f43f5e); }
 </style>
 
-<div>
+<div style="padding-top:52px;">
   <section class="content">
-    <div class="container-fluid pt-4">
+    <div class="container-fluid" style="padding:20px;">
       <div class="dashboard-grid">
         <!-- Kiri: Berita Terkini -->
         <div class="news-container">

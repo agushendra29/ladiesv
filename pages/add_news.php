@@ -1,4 +1,4 @@
-<div style="margin-bottom:75px; background-color: white;">
+<div style="background-color: white;" class="m-3 container-fluid">
   <section class="content">
     <div class="container-fluid" style="margin-top: 50px;">
       <div>

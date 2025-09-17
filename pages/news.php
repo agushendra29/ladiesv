@@ -1,23 +1,23 @@
 <div style="padding-top:52px;">
   <section class="content">
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding:20px;">
       <div>
         <!-- Header -->
-        <div class="page-header-custom">
-          <div class="section-title">Daftar Berita</div>
-          <a href="index.php?page=add_news" class="btn-custom">
-            <i class="fas fa-plus"></i> Tambah Berita
-          </a>
-        </div>
-
         <div class="section-card-body">
+          <div class="page-header-custom">
+            <div class="section-title">Daftar Berita</div>
+            <a href="index.php?page=add_news" class="btn-custom">
+              <i class="fas fa-plus"></i> Tambah Berita
+            </a>
+          </div>
+
           <!-- Table untuk desktop -->
           <div class="table-responsive">
             <table id="newsTable" class="display dataTable text-center custom-table">
               <thead>
                 <tr>
                   <th style="width:120px;">Judul</th>
-                  <th>Isi Berita</th>
+                  <th style="width: 420px;">Isi Berita</th>
                   <th>Tanggal Publikasi</th>
                   <th>Tanggal Dibuat</th>
                   <th>Aksi</th>
@@ -166,7 +166,7 @@
   #newsTable td:nth-child(2) {
     white-space: normal;
     overflow: hidden;
-    background:white !important;
+    background: white !important;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;

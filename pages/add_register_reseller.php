@@ -16,7 +16,7 @@ function getStockProduct($pid) {
 }
 ?>
 
-<div>
+<div class="m-3 container-fluid">
   <section class="content">
     <div class="mt-5 mb-5">
       <h2>📦 Form Register Reseller</h2>

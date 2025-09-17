@@ -10718,7 +10718,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini)
   body:not(.sidebar-mini-md) .main-footer,
   body:not(.sidebar-mini-md) .main-header {
     transition: margin-left 0.3s ease-in-out;
-    margin-left: 260px;
+    margin-left: 250px;
   }
 }
 @media (min-width: 768px) and (prefers-reduced-motion: reduce) {
