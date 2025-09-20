@@ -11,14 +11,28 @@ $actual_link = end($actual_link);
 
 $distributor_id = $_SESSION['distributor_id'] ?? null;
 $suppliarCode = '000000';
+
+$parentName = '-';
+$parentCode = '-';
 if ($distributor_id) {
     // Query suppliar berdasar distributor_id
     $stmt = $pdo->prepare("SELECT * FROM suppliar WHERE id = :id LIMIT 1");
     $stmt->bindValue(':id', $distributor_id, PDO::PARAM_INT);
     $stmt->execute();
     $suppliar = $stmt->fetch(PDO::FETCH_OBJ);
-      if ($suppliar && isset($suppliar->suppliar_code)) {
+    if ($suppliar && isset($suppliar->suppliar_code)) {
         $suppliarCode = $suppliar->suppliar_code;
+    }
+
+
+    $stmt2 = $pdo->prepare("SELECT * FROM suppliar WHERE id = :id LIMIT 1");
+    $stmt2->bindValue(':id', $suppliar->parent_id, PDO::PARAM_INT);
+    $stmt2->execute();
+    $parent = $stmt2->fetch(PDO::FETCH_OBJ);
+    
+     if ($parent && isset($parent->suppliar_code)) {
+        $parentCode = $parent->suppliar_code;
+        $parentName = $parent->name;
     }
 }
 
@@ -380,12 +394,13 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
           </a>
 
           <div id="profileDropdownMenu" class="dropdown-menu-custom" aria-labelledby="profileDropdown" role="menu">
+            <?php if($_SESSION['role_id'] == 5): ?>
             <span class="dropdown-item-custom" role="menuitem" tabindex="-1">
-              <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">star</i>
               <div class="user-role" style="color:black;">
-                <b>Total Point: <?php echo htmlspecialchars($totalPoint); ?></b>
+                Referal: <br><b><?php echo htmlspecialchars($parentCode); ?> - <?php echo htmlspecialchars($parentName); ?></br></b>
               </div>
             </span>
+           <?php endif; ?>
             <a href="index.php?page=profile" class="dropdown-item-custom" role="menuitem" tabindex="-1">
               <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">person</i> Profile
             </a>

@@ -73,7 +73,16 @@ if (!empty($_POST['birth_date'])) {
             $suppliar_id = $obj->create('suppliar', $sup_data);
 
             if ($suppliar_id) {
-                $suppliar_code = str_pad($suppliar_id, 6, "0", STR_PAD_LEFT);
+                   if (in_array((int)$sup_role, [10, 1])) {
+        // role_id 10 atau 1 → mulai dari 000000
+        $suppliar_code = str_pad($suppliar_id, 6, "0", STR_PAD_LEFT);
+    } elseif (in_array((int)$sup_role, [2, 3, 4, 5])) {
+        // role_id 2,3,4,5 → prefix 1 + pad 5 digit → contoh 100001
+        $suppliar_code = '1' . str_pad($suppliar_id, 5, "0", STR_PAD_LEFT);
+    } else {
+        // default jika role lain
+        $suppliar_code = str_pad($suppliar_id, 6, "0", STR_PAD_LEFT);
+    }
                 $obj->update('suppliar', 'id', $suppliar_id, [
                     'suppliar_code' => $suppliar_code
                 ]);

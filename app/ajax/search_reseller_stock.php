@@ -27,7 +27,7 @@ if (!$issuedate) {
 
 // ambil anak suppliar
 $childs = $obj->allQuery(
-    "SELECT id, name, suppliar_code FROM suppliar WHERE parent_id = ? AND role_id = 3",
+    "SELECT id, name, suppliar_code FROM suppliar WHERE parent_id = ? AND role_id = 5",
     [$parent_id]
 );
 if (!$childs) {

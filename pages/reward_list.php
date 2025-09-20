@@ -65,7 +65,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- data diisi AJAX -->
+              <!-- data diisi AJAX -->  
             </tbody>
           </table>
         </div>

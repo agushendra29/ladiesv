@@ -165,7 +165,15 @@
           <li>
             <a href="index.php?page=distributor_report"
                class="nav-sublink <?php echo $actual_link=='distributor_report'?'active':'';?>">
-              Penjualan Distributor
+              Laporan Distributor
+            </a>
+          </li>
+          <?php endif; ?>
+           <?php if ($roleId == 2 || $roleId == 3 || $roleId == 4): ?>
+          <li>
+            <a href="index.php?page=reseller_report"
+               class="nav-sublink <?php echo $actual_link=='reseller_report'?'active':'';?>">
+              Laporan Reseller
             </a>
           </li>
           <?php endif; ?>
