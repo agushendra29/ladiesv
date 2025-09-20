@@ -27,11 +27,21 @@ class User extends Objects {
 {
     // --- Ambil data user sesuai username atau suppliar_code ---
     $stmt = $this->pdo->prepare("
-        SELECT *
-        FROM user
-        WHERE (suppliar_code = :username OR login_name = :username)
-        LIMIT 1
-    ");
+    SELECT *
+    FROM user
+    WHERE 
+        (
+            login_name IS NOT NULL 
+            AND login_name <> '' 
+            AND login_name = :username
+        )
+        OR
+        (
+            (login_name IS NULL OR login_name = '')
+            AND suppliar_code = :username
+        )
+    LIMIT 1
+");
     $stmt->bindValue(":username", $username, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_OBJ);

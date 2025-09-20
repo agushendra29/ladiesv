@@ -2,8 +2,9 @@
   /* ====== Style umum select filter ====== */
   .custom-select-lg {
     width: 100%;
-    height: 40px;
+    height: 38px;
     font-size: 1rem;
+    font-weight:400;
     padding: 0 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
@@ -23,59 +24,7 @@
   }
 
   /* ====== Style untuk tabel ====== */
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
-    background: #fff;
-    font-size: 13px !important;
-    min-width: 900px;
-  }
-
-  table thead {
-    background-color: #EEA0A0;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    font-size: 11px;
-  }
-
-  table thead th {
-    padding: 16px 20px;
-    border-bottom: none;
-  }
-
-  table thead th:first-child {
-    border-top-left-radius: 12px;
-  }
-
-  table thead th:last-child {
-    border-top-right-radius: 12px;
-  }
-
-  table tbody tr {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  table tbody tr:hover {
-    background-color: #eff6ff;
-    box-shadow: 0 6px 20px rgba(0, 115, 234, 0.15);
-  }
-
-  table tbody tr td {
-    padding: 14px 22px;
-    vertical-align: middle;
-    font-weight: 500;
-    color: #374151;
-  }
-
+  
   .no-data {
     text-align: center;
     color: #9ca3af;
@@ -103,7 +52,7 @@
       <div>
         <div>
           <div class="row g-3 align-items-end">
-            <div class="col-md-5">
+            <div class="col-md">
               <label style="font-weight:500">Start Date - End Date</label>
               <div id="reportrange" class="form-control" style="cursor: pointer;">
                 <i class="fa fa-calendar"></i> &nbsp;
@@ -113,7 +62,7 @@
             </div>
 
             <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
-            <div class="col-md-5">
+            <div class="col-md">
               <label class="fw-bold">Select Member</label>
               <div>
                 <select name="customer" id="customer" class="form-select custom-select-lg">
@@ -130,7 +79,7 @@
               </div>
             </div>
             <?php endif; ?>
-            <div class="col-md-3 mt-3">
+            <div class="col-md mt-3">
               <label class="fw-bold">Tipe Transaksi</label>
               <select id="typeFilter" class="form-select custom-select-lg">
                 <option value="all">- All -</option>
@@ -153,7 +102,7 @@
               </select>
             </div>
 
-            <div class="col-md-2">
+            <div>
               <button id="search_sales_report" class="btn-custom">
                 <i class="fas fa-search"></i> Filter
               </button>
@@ -166,7 +115,7 @@
       <div class="mt-4">
         <div class="p-0">
           <div class="table-responsive" style="overflow-x:auto;">
-            <table id="salesReportTable" class="dataTable custom-table">
+            <table id="salesReportTable" class="display dataTable text-center custom-table">
               <thead>
                 <tr>
                   <th>Sales Date</th>

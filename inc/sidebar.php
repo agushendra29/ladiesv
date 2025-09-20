@@ -242,7 +242,7 @@
 }
 .nav-sublink {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   color: #4b5563;
   text-decoration: none;
@@ -251,12 +251,14 @@
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 .nav-sublink:hover {
-  background-color: #e0e7ff;
-  color: #D92765;
+  color: white;
+  background: #D92765;
+  font-size:13px;
 }
 .nav-sublink.active {
   background-color: #D92765;
   color: #fff !important;
+  font-size:13px;
 }
 .submenu-arrow {
   margin-left: auto;

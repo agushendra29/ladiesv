@@ -1,145 +1,148 @@
-<?php 
+<?php
 require_once '../init.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // ---------- PARAMETER ----------
     $issueData   = $_POST['issuedate'] ?? '';
-    $suppliar_id = ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10) 
-                    ? ($_POST['suppliar_id'] ?? 'all') 
-                    : $_SESSION['distributor_id'];
+    $suppliar_id = ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10)
+        ? ($_POST['suppliar_id'] ?? 'all')
+        : ($_SESSION['distributor_id'] ?? 0);
 
-    $product_id = $_POST['product_id'] ?? 'all';
-    $type       = $_POST['type'] ?? 'all';
+    $product_id  = $_POST['product_id'] ?? 'all';
+    $type        = $_POST['type'] ?? 'all';
+    $page        = isset($_POST['page']) ? (int)$_POST['page'] : 1;
+    $limit       = 10;
+    $offset      = ($page - 1) * $limit;
 
-    $page   = isset($_POST['page']) ? (int)$_POST['page'] : 1;
-    $limit  = 10;
-    $offset = ($page - 1) * $limit;
+    // ============================================================
+    // 1️⃣  LOAD PERTAMA  (tidak ada issuedate dan role HEAD)
+    // ============================================================
+    if (empty($issueData) && (int)($_SESSION['role_id'] ?? 0) === 2) {
+        $headId = (int)$_SESSION['distributor_id'];
+        $childStmt = $pdo->prepare("SELECT id,name,suppliar_code FROM suppliar WHERE parent_id = :pid");
+        $childStmt->execute([':pid' => $headId]);
+        $children = $childStmt->fetchAll(PDO::FETCH_OBJ);
 
-    // ========== Date Filter ==========
+        if ($children) {
+            foreach ($children as $c) {
+                echo "<tr>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>".htmlspecialchars($c->name.' - '.$c->suppliar_code)."</td>
+                        <td>0</td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='7' style='text-align:center;'>Tidak ada distributor anak</td></tr>";
+        }
+        exit; // stop di sini agar tidak lanjut query transaksi
+    }
+
+    // ============================================================
+    // 2️⃣  PROSES NORMAL (jika sudah filter)
+    // ============================================================
+    // Range tanggal
     $data = explode('-', $issueData);
     $issu_first_date = isset($data[0]) ? $obj->convertDateMysql(trim($data[0])) : date('Y-m-d', strtotime('-30 days'));
     $issu_end_date   = isset($data[1]) ? $obj->convertDateMysql(trim($data[1]))   : date('Y-m-d');
 
-    // ========== Build Filters ==========
-    $whereClauses = [];
-    $params       = [];
+    // Build filter
+    $where   = [];
+    $params  = [];
 
     if ($suppliar_id !== 'all') {
-        $whereClauses[] = "(th.suppliar_id = :suppliar_id OR th.customer_id = :suppliar_id)";
+        $where[] = "(th.suppliar_id = :suppliar_id OR th.customer_id = :suppliar_id)";
         $params[':suppliar_id'] = $suppliar_id;
     }
-
-    if($product_id !== 'all') {
-        $whereClauses[] = "th.product_id = :product_id";
+    if ($product_id !== 'all') {
+        $where[] = "th.product_id = :product_id";
         $params[':product_id'] = $product_id;
     }
 
+    $currentUser = (int)($_SESSION['distributor_id'] ?? 0);
+    $where[] = "NOT ( (th.type='penjualan' AND th.customer_id = :current_user)
+                   OR (th.type='pembelian' AND th.suppliar_id = :current_user) )";
+    $params[':current_user'] = $currentUser;
 
-    $currentUserId = (int)($_SESSION['distributor_id'] ?? 0);
-$whereClauses[] = "NOT (th.type = 'penjualan' AND th.customer_id = :current_user OR th.type = 'pembelian' AND th.suppliar_id = :current_user)";
-$params[':current_user'] = $currentUserId;
-
-    $whereClauses[] = "th.created_at BETWEEN :start AND :end";
+    $where[] = "th.created_at BETWEEN :start AND :end";
     $params[':start'] = $issu_first_date . ' 00:00:00';
     $params[':end']   = $issu_end_date   . ' 23:59:59';
 
-    $whereSQL = count($whereClauses) > 0 ? "WHERE " . implode(' AND ', $whereClauses) : "";
+    $whereSQL = $where ? 'WHERE '.implode(' AND ', $where) : '';
 
-    // ========== Hitung Total ==========
-    $countSql  = "SELECT COUNT(*) FROM transaction_histories th $whereSQL";
-    $countStmt = $pdo->prepare($countSql);
-    $countStmt->execute($params);
-    $totalData  = $countStmt->fetchColumn();
+    // Hitung total data
+    $cnt = $pdo->prepare("SELECT COUNT(*) FROM transaction_histories th $whereSQL");
+    $cnt->execute($params);
+    $totalData  = $cnt->fetchColumn();
     $totalPages = ceil($totalData / $limit);
 
-    // ========== Ambil Data ==========
-    $dataSql = "
-        SELECT th.*, 
-               s1.name AS suppliar_name, 
-               s2.name AS customer_name,
-               s2.suppliar_code AS customer_code,
-               s1.suppliar_code AS suppliar_code,
-               p.product_name AS product_name
-        FROM transaction_histories th
-        LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
-        LEFT JOIN suppliar s2 ON th.customer_id = s2.id
-        LEFT JOIN products p  ON th.product_id = p.id
-        $whereSQL
-        ORDER BY th.created_at DESC
-        LIMIT :offset, :limit
-    ";
-
-    $stmt = $pdo->prepare($dataSql);
-
-    foreach ($params as $key => $val) {
-        $stmt->bindValue($key, $val);
-    }
-    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-
+    // Ambil data transaksi
+    $sql = "SELECT th.*,
+                   s1.name AS suppliar_name, s1.suppliar_code AS suppliar_code,
+                   s2.name AS customer_name, s2.suppliar_code AS customer_code,
+                   p.product_name
+            FROM transaction_histories th
+            LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
+            LEFT JOIN suppliar s2 ON th.customer_id = s2.id
+            LEFT JOIN products p  ON th.product_id = p.id
+            $whereSQL
+            ORDER BY th.created_at DESC
+            LIMIT :offset, :limit";
+    $stmt = $pdo->prepare($sql);
+    foreach ($params as $k => $v) $stmt->bindValue($k, $v);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindValue(':limit',  $limit,  PDO::PARAM_INT);
     $stmt->execute();
-    $res = $stmt->fetchAll(PDO::FETCH_OBJ);
+    $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-    // ========== Output ==========
-    if ($res) {
-        foreach ($res as $data) {
-            // mapping type berdasarkan posisi suppliar_id / customer_id
-            $transType = $data->type;
+    if ($rows) {
+        foreach ($rows as $r) {
+            $transType = $r->type;
 
-        
-            // filter type manual
-            if ($type !== 'all' && strtolower($transType) !== strtolower($type)) {
-                continue;
+            if ($type !== 'all' && strtolower($transType) !== strtolower($type)) continue;
+
+            // Tentukan partner
+            if ($transType === 'penjualan') {
+                $partnerName = $r->customer_name ?: 'Penjualan Pribadi';
+                $partnerCode = $r->customer_code ?: '';
+            } elseif ($transType === 'pembelian') {
+                $partnerName = $r->suppliar_name ?: '-';
+                $partnerCode = $r->suppliar_code ?: '';
+            } else {
+                $partnerName = $r->customer_name ?: '-';
+                $partnerCode = $r->customer_code ?: '';
             }
 
-             $partnerName = '';
-        $partnerCode = '';
+            $qty = strtolower($r->type) === 'refund'
+                ? "<span style='color:red;'>-{$r->quantity}</span>"
+                : $r->quantity;
 
-        if ($transType === 'penjualan') {
-            // tampilkan pembeli
-            $partnerName = $data->customer_name ?: 'Penjualan Pribadi';
-            $partnerCode = $data->customer_code ?: '';
-        } elseif ($transType === 'pembelian') {
-            // tampilkan penjual
-            $partnerName = $data->suppliar_name ?: '-';
-            // ambil kode suppliar kalau diperlukan
-            $partnerCode = $data->suppliar_code ?? '';
-        } else {
-            // default (refund, dll.)
-            $partnerName = $data->customer_name ?: '-';
-            $partnerCode = $data->customer_code ?: '';
-        }
-
-            // handle quantity
-            $quantityDisplay = $data->quantity;
-            if (strtolower($data->type) === 'refund') {
-                $quantityDisplay = "<span style='color:red;'>-" . $data->quantity . "</span>";
-            }
-
-            $dateFormatted = date('d-m', strtotime($data->created_at));
+            $date = date('d-m', strtotime($r->created_at));
 
             echo "<tr>
-                <td>{$dateFormatted}</td>
-                <td>{$data->invoice_number}</td>
-                <td>{$transType}</td>
-                 <td>" . htmlspecialchars(trim($partnerName . '-' . $partnerCode)) . "</td>
-                <td>{$data->product_name}</td>
-                <td>{$quantityDisplay}</td>
-                <td>" . htmlspecialchars($data->note) . "</td>
-            </tr>";
+                    <td>{$date}</td>
+                    <td>{$r->invoice_number}</td>
+                    <td>{$transType}</td>
+                    <td>".htmlspecialchars(trim($partnerName.'-'.$partnerCode))."</td>
+                    <td>{$qty}</td>
+                    <td>{$r->product_name}</td>
+                    <td>".htmlspecialchars($r->note)."</td>
+                  </tr>";
         }
     } else {
         echo "<tr><td colspan='7' style='text-align:center;'>No data found</td></tr>";
     }
 
-    // ========== Pagination ==========
+    // Pagination
     echo '<tr><td colspan="7" style="text-align:center;">';
     echo '<nav><ul class="pagination justify-content-center" style="margin-top:15px;">';
-    for ($p = 1; $p <= $totalPages; $p++) {
-        $activeClass = ($p == $page) ? 'active' : '';
-        echo '<li class="page-item ' . $activeClass . '">';
-        echo '<a href="#" class="page-link" data-page="' . $p . '">' . $p . '</a>';
-        echo '</li>';
+    for ($p=1; $p <= $totalPages; $p++) {
+        $active = ($p==$page)?'active':'';
+        echo "<li class='page-item $active'><a href='#' class='page-link' data-page='$p'>$p</a></li>";
     }
-    echo '</ul></nav>';
-    echo '</td></tr>';
+    echo '</ul></nav></td></tr>';
 }

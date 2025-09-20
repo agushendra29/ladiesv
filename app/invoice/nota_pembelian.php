@@ -5,7 +5,7 @@ require_once 'fpdf/fpdf.php';
 if (!isset($_GET['id'])) die("Invoice number tidak ditemukan");
 $invoice_number = $_GET['id'];
 
-// Ambil data
+// === Query data TIDAK diubah ===
 $stmt = $pdo->prepare("
     SELECT th.invoice_number, th.type, th.created_at, th.payment_type, th.bank_type,
            s1.name AS suppliar_name, s1.role_id AS role_id, s1.suppliar_code AS suppliar_code,
@@ -24,71 +24,71 @@ $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (!$rows) die("Data invoice tidak ditemukan");
 
-$header = $rows[0];
-$totalQty = array_sum(array_column($rows, 'quantity'));
+$header   = $rows[0];
+$totalQty = array_sum(array_column($rows,'quantity'));
 
-function formatMember($name, $role_id, $code) {
+function formatMember($name,$role_id,$code){
     $prefix = ($role_id >= 2 && $role_id <= 5) ? 'D' : '';
-    return $name . ' (' . $prefix . '-' . str_pad($code ?? '000000', 6, '0', STR_PAD_LEFT) . ')';
+    return $name.' ('.$prefix.'-'.str_pad($code ?? '000000',6,'0',STR_PAD_LEFT).')';
 }
 
 $pdf = new FPDF('P','mm','A4');
 $pdf->AddPage();
+$pdf->AddFont('Montserrat','','Montserrat-Regular.php');
+$pdf->AddFont('Montserrat','B','Montserrat-Bold.php');
 
-// Judul
-$pdf->SetFont('Arial','B',16);
-$pdf->Cell(0,10,'INVOICE TRANSAKSI',0,1,'C');
-$pdf->Ln(5);
+// ==================== HEADER ====================
+$pdf->Image('logo.jpeg',10,10,40); // logo kiri
 
-// Kiri & Kanan Inline
-$pdf->SetFont('Arial','',12);
-$pengirim = ($header['role_id']==1 || $header['role_id']==10)?'Head Office':formatMember($header['suppliar_name'],$header['role_id'],$header['suppliar_code']);
-$customer = formatMember($header['customer_name'],$header['customer_role'],$header['customer_code']);
-$orderDate = date('d-m-Y H:i', strtotime($header['created_at']));
-$jenisTransaksi = ucfirst($header['type']);
-$paymentInfo = ($header['payment_type'] ?: '-') . ' ' . ($header['bank_type'] ?: '-');
+$pdf->SetXY(130,12);
+$pdf->SetFont('Montserrat','B',14);
+$pdf->Cell(70,8,'INVOICE',0,2,'R');
 
-// Lebar kolom kiri dan kanan
-$widthLeft = 95;
-$widthRight = 95;
+$pdf->SetFont('Montserrat','',10);
+$pdf->Cell(70,6,'No: '.$header['invoice_number'],0,2,'R');
+$pdf->Cell(70,6,'Tanggal: '.date('d-m-Y H:i',strtotime($header['created_at'])),0,2,'R');
+$pdf->Cell(70,6,'Pembayaran: '.(($header['payment_type'] ?: '-') . ' ' . ($header['bank_type'] ?: '-')),0,2,'R');
+$pdf->Ln(15);
 
-// Baris 1: Pengirim & Tanggal
-$pdf->Cell($widthLeft,6,"Pengirim: $pengirim",0,0);
-$pdf->Cell($widthRight,6,"Tanggal: $orderDate",0,1);
+// ==================== INFORMASI PEMBELI / PENJUAL ====================
+$pengirim = ($header['role_id']==1||$header['role_id']==10)
+              ? 'Head Office'
+              : formatMember($header['suppliar_name'],$header['role_id'],$header['suppliar_code']);
+$penerima = formatMember($header['customer_name'],$header['customer_role'],$header['customer_code']);
 
-// Baris 2: Pemesan & Jenis Transaksi
-$pdf->Cell($widthLeft,6,"Pemesan: $customer",0,0);
-$pdf->Cell($widthRight,6,"Jenis Transaksi: $jenisTransaksi",0,1);
+$pdf->SetFont('Montserrat','B',11);
+$pdf->Cell(95,7,'Order Dari',0,0);
+$pdf->Cell(95,7,'Dikirim Ke',0,1);
 
-// Baris 3: Kosong kiri & Pembayaran kanan
-$pdf->Cell($widthLeft,6,"",0,0);
-$pdf->Cell($widthRight,6,"Pembayaran: $paymentInfo",0,1);
+$pdf->SetFont('Montserrat','',10);
+$pdf->Cell(95,6,$pengirim,0,0);
+$pdf->MultiCell(95,6,$penerima,0,1);
+$pdf->Ln(4);
 
-$pdf->Ln(5);
-
-// Table Items
-$pdf->SetFont('Arial','B',12);
+// ==================== TABEL PRODUK ====================
+$pdf->SetFont('Montserrat','B',10);
 $pdf->Cell(10,8,'No',1,0,'C');
-$pdf->Cell(140,8,'Nama Produk',1,0,'C');
+$pdf->Cell(130,8,'Nama Produk',1,0,'C');
 $pdf->Cell(30,8,'Qty',1,1,'C');
 
-$pdf->SetFont('Arial','',12);
-$no = 1;
-foreach ($rows as $item) {
+$pdf->SetFont('Montserrat','',9);
+$no=1;
+foreach($rows as $item){
     $pdf->Cell(10,8,$no++,1,0,'C');
-    $pdf->Cell(140,8,$item['product_name'],1,0);
+    $pdf->Cell(130,8,$item['product_name'],1,0);
     $pdf->Cell(30,8,$item['quantity'],1,1,'C');
 }
 
-// Total
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(150,8,'TOTAL',1,0,'R');
+// ==================== TOTAL ====================
+$pdf->SetFont('Montserrat','B',10);
+$pdf->Cell(140,8,'TOTAL',1,0,'R');
 $pdf->Cell(30,8,$totalQty,1,1,'C');
+$pdf->Ln(6);
 
-// Alamat pengiriman di bawah total
-$pdf->Ln(5);
-$alamat = $header['customer_address'] ?? '-';
-$pdf->MultiCell(0,6,"Alamat Pengiriman: $alamat");
+// ==================== ALAMAT PENGIRIMAN ====================
+$pdf->SetFont('Montserrat','B',11);
+$pdf->Cell(0,7,'Alamat Pengiriman',0,1);
+$pdf->SetFont('Montserrat','',10);
+$pdf->MultiCell(0,6,$header['customer_address'] ?? '-');
 
-// Output PDF
-$pdf->Output('D','Invoice_'.$header['invoice_number'].'.pdf');
+$pdf->Output('I','Invoice_'.$header['invoice_number'].'.pdf');

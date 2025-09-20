@@ -22,7 +22,7 @@ $("#editCatForm").submit(function (e) {
         },
         function (e) {
           "true" == $.trim(e) ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert("faild to delete data");
         }
       );
@@ -36,7 +36,7 @@ $("#editCatForm").submit(function (e) {
       data: t,
       success: function (e) {
         "yes" == $.trim(e) ?
-          (alert("member added successfully"), location.reload()) :
+          (alert("member added successfully"), window.location.reload()) :
           alert(e);
       },
     });
@@ -67,7 +67,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -148,7 +148,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -173,7 +173,7 @@ $("#editCatForm").submit(function (e) {
         function (res) {
           if (res === "true") {
             alert(current_status == 1 ? "Data suspended successfully" : "Data activated successfully");
-            location.reload();
+            window.location.reload();
           } else {
             alert(res);
           }
@@ -245,7 +245,7 @@ $("#editCatForm").submit(function (e) {
           status: status
         }, function (res) {
           Swal.fire('Sukses', res, 'success').then(() => {
-            location.reload(); // refresh halaman agar status tombol berubah
+            window.location.reload(); // refresh halaman agar status tombol berubah
           });
         }).fail(function () {
           Swal.fire('Error', 'Terjadi kesalahan saat mengubah status', 'error');
@@ -265,7 +265,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -282,7 +282,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -299,7 +299,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -316,7 +316,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -333,7 +333,7 @@ $("#editCatForm").submit(function (e) {
         function (e) {
           "true" == e
             ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert(e);
         }
       );
@@ -361,7 +361,7 @@ $("#editCatForm").submit(function (e) {
       data: t,
       success: function (e) {
         "yes" == $.trim(e) ?
-          (alert("Expense catagory added successfylly"), location.reload()) :
+          (alert("Expense catagory added successfylly"), window.location.reload()) :
           alert(e);
       },
     });
@@ -441,7 +441,7 @@ $("#editCatForm").submit(function (e) {
         },
         function (e) {
           "true" == $.trim(e) ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert("faild to delete data");
         }
       );
@@ -499,7 +499,7 @@ $("#editCatForm").submit(function (e) {
         },
         function (e) {
           "true" == $.trim(e) ?
-            (alert("data deleted successfull"), location.reload()) :
+            (alert("data deleted successfull"), window.location.reload()) :
             alert("faild to delete data");
         }
       );
@@ -661,14 +661,18 @@ $("#editCatForm").submit(function (e) {
                 },
                 success: function (res) {
                     if (res.status === 'success') {
-                        Swal.fire({
+                       Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',
                             text: res.message,
-                            timer: 1800,
+                            timer: 1500,
                             showConfirmButton: false
+                        }).then(() => {
+                            // ✅ reload halaman setelah popup selesai
+                            window.location.reload(); // bekerja di mobile & desktop
                         });
                         $form[0].reset();
+                        window.location.reload();
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -854,7 +858,7 @@ $("#editCatForm").submit(function (e) {
       let data = JSON.parse(res);
       alert(data.message);
       if (data.status === 'success') {
-        location.reload();
+        window.location.reload();
       }
     });
   }), $(document).on('click', '.cancel-refund-btn', function (e) {

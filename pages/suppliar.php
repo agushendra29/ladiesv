@@ -185,9 +185,9 @@
   }
 </style>
 </head>
-<div style="padding-top:52px;">
+<div style="padding-top:56px;">
   <section class="content">
-    <div class="container-fluid" style="padding:20px;">
+    <div class="container-fluid">
       <div class="section-card-body">
         <!-- Header -->
         <!-- Header -->
