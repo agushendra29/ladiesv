@@ -25,40 +25,53 @@
    <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
   <div class="col-md-4">
     <label>Pilih Supplier</label>
-    <select id="supplier_id" class="form-control">
-      <option value="">-- Pilih Supplier --</option>
-      <?php
-        $sessionRole = $_SESSION['role_id'];
-        // Ambil semua supplier dulu (kamu bisa mengganti dengan query berfilter jika mau lebih efisien)
-        $suppliers = $obj->all("suppliar");
+  <select id="supplier_id" class="form-control">
+  <option value="">-- Pilih Supplier --</option>
+  <?php
+    $sessionRole = $_SESSION['role_id'] ?? '';
+    $suppliers   = $obj->all("suppliar");
 
-        foreach ($suppliers as $sup) {
-          // Jika login Super Admin (10): tampilkan semua,
-          // tapi jika supplier adalah HO (role_id==1) hanya tampilkan bila suppliar_code == '000001'
-          if ($sessionRole == 10) {
-            if ($sup->role_id == 1 && ($sup->suppliar_code ?? '') !== '000001') {
-              continue; // skip HO yang bukan kode 000001
+    foreach ($suppliers as $sup) {
+        // === Kondisi untuk Super Admin (10) ===
+        if ((int)$sessionRole === 10) {
+            // Jika supplier HO tapi bukan 000001, skip
+            if ((int)$sup->role_id === 1 && ($sup->suppliar_code ?? '') !== '000001') {
+                continue;
             }
-            echo '<option value="' . htmlspecialchars($sup->id) . '">' . htmlspecialchars($sup->name) . '</option>';
+            // Jika HO dengan 000001, tampilkan sebagai Head Office
+            if ((int)$sup->role_id === 1 && $sup->suppliar_code === '000001') {
+                echo '<option value="'.htmlspecialchars($sup->id).'">Head Office</option>';
+            } else {
+                echo '<option value="'.htmlspecialchars($sup->id).'">'.htmlspecialchars($sup->name).' - '.htmlspecialchars($sup->suppliar_code).'</option>';
+            }
             continue;
-          }
-
-          // Jika login Role 1: tampilkan semua kecuali role_id==10
-          if ($sessionRole == 1) {
-            if ($sup->role_id == 10) {
-              continue; // skip super admin
-            }
-            // Jika supplier sendiri HO (role_id==1) tampilkan hanya jika suppliar_code == '000001'
-            if ($sup->role_id == 1 && ($sup->suppliar_code ?? '') !== '000001') {
-              continue;
-            }
-            echo '<option value="' . htmlspecialchars($sup->id) . '">' . htmlspecialchars($sup->name) . '</option>';
-            continue;
-          }
         }
-      ?>
-      <option value="all">Semua Supplier</option>
-    </select>
+
+        // === Kondisi untuk Head Office (1) ===
+        if ((int)$sessionRole === 1) {
+            // Skip semua supplier role 10
+            if ((int)$sup->role_id === 10) {
+                continue;
+            }
+            // Jika supplier HO tapi bukan 000001, skip
+            if ((int)$sup->role_id === 1 && ($sup->suppliar_code ?? '') !== '000001') {
+                continue;
+            }
+            // Jika HO dengan 000001 → Head Office
+            if ((int)$sup->role_id === 1 && $sup->suppliar_code === '000001') {
+                echo '<option value="'.htmlspecialchars($sup->id).'">Head Office</option>';
+            } else {
+                echo '<option value="'.htmlspecialchars($sup->id).'">'.htmlspecialchars($sup->name).' - '.htmlspecialchars($sup->suppliar_code).'</option>';
+            }
+            continue;
+        }
+
+        // === Role lain (distributor/agen) bisa tambah kondisi lain bila perlu ===
+    }
+  ?>
+  <option value="all">Semua Supplier</option>
+</select>
+
   </div>
 <?php endif; ?>
 

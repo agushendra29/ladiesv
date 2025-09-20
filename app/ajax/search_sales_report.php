@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $offset      = ($page - 1) * $limit;
 
     // ============================================================
-    // 1️⃣  LOAD PERTAMA  (tidak ada issuedate dan role HEAD)
+    // 1️⃣  LOAD PERTAMA  (periode kosong + role HEAD)
     // ============================================================
     if (empty($issueData) && (int)($_SESSION['role_id'] ?? 0) === 2) {
         $headId = (int)$_SESSION['distributor_id'];
@@ -39,18 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo "<tr><td colspan='7' style='text-align:center;'>Tidak ada distributor anak</td></tr>";
         }
-        exit; // stop di sini agar tidak lanjut query transaksi
+        exit;
     }
 
     // ============================================================
     // 2️⃣  PROSES NORMAL (jika sudah filter)
     // ============================================================
-    // Range tanggal
     $data = explode('-', $issueData);
     $issu_first_date = isset($data[0]) ? $obj->convertDateMysql(trim($data[0])) : date('Y-m-d', strtotime('-30 days'));
     $issu_end_date   = isset($data[1]) ? $obj->convertDateMysql(trim($data[1]))   : date('Y-m-d');
 
-    // Build filter
     $where   = [];
     $params  = [];
 
@@ -74,16 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $whereSQL = $where ? 'WHERE '.implode(' AND ', $where) : '';
 
-    // Hitung total data
+    // Hitung total
     $cnt = $pdo->prepare("SELECT COUNT(*) FROM transaction_histories th $whereSQL");
     $cnt->execute($params);
     $totalData  = $cnt->fetchColumn();
     $totalPages = ceil($totalData / $limit);
 
-    // Ambil data transaksi
+    // ✅ Query ambil data + role_id dari suppliar & customer
     $sql = "SELECT th.*,
-                   s1.name AS suppliar_name, s1.suppliar_code AS suppliar_code,
-                   s2.name AS customer_name, s2.suppliar_code AS customer_code,
+                   s1.name AS suppliar_name, s1.suppliar_code AS suppliar_code, s1.role_id AS sup_role,
+                   s2.name AS customer_name, s2.suppliar_code AS customer_code, s2.role_id AS cust_role,
                    p.product_name
             FROM transaction_histories th
             LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
@@ -92,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $whereSQL
             ORDER BY th.created_at DESC
             LIMIT :offset, :limit";
+
     $stmt = $pdo->prepare($sql);
     foreach ($params as $k => $v) $stmt->bindValue($k, $v);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -102,22 +101,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($rows) {
         foreach ($rows as $r) {
             $transType = $r->type;
-
             if ($type !== 'all' && strtolower($transType) !== strtolower($type)) continue;
 
-            // Tentukan partner
+            // ✅ Tentukan partner dengan cek role_id = 1/10 -> Head Office
             if ($transType === 'penjualan') {
-                $partnerName = $r->customer_name ?: 'Penjualan Pribadi';
-                $partnerCode = $r->customer_code ?: '';
+                if (in_array((int)$r->cust_role, [1,10])) {
+                    $partnerName = 'Head Office';
+                    $partnerCode = '';
+                } else {
+                    $partnerName = $r->customer_name ?: 'Penjualan Pribadi';
+                    $partnerCode = $r->customer_code ?: '';
+                }
             } elseif ($transType === 'pembelian') {
-                $partnerName = $r->suppliar_name ?: '-';
-                $partnerCode = $r->suppliar_code ?: '';
+                if (in_array((int)$r->sup_role, [1,10])) {
+                    $partnerName = 'Head Office';
+                    $partnerCode = '';
+                } else {
+                    $partnerName = $r->suppliar_name ?: '-';
+                    $partnerCode = $r->suppliar_code ?: '';
+                }
             } else {
-                $partnerName = $r->customer_name ?: '-';
-                $partnerCode = $r->customer_code ?: '';
+                if (in_array((int)$r->cust_role, [1,10])) {
+                    $partnerName = 'Head Office';
+                    $partnerCode = '';
+                } else {
+                    $partnerName = $r->customer_name ?: '-';
+                    $partnerCode = $r->customer_code ?: '';
+                }
             }
 
-            $qty = strtolower($r->type) === 'refund'
+            $qty  = strtolower($r->type) === 'refund'
                 ? "<span style='color:red;'>-{$r->quantity}</span>"
                 : $r->quantity;
 
@@ -127,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <td>{$date}</td>
                     <td>{$r->invoice_number}</td>
                     <td>{$transType}</td>
-                    <td>".htmlspecialchars(trim($partnerName.'-'.$partnerCode))."</td>
+                    <td>".htmlspecialchars(trim($partnerName.($partnerCode ? ' - '.$partnerCode : '')))."</td>
                     <td>{$qty}</td>
                     <td>{$r->product_name}</td>
                     <td>".htmlspecialchars($r->note)."</td>

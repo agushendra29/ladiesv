@@ -57,6 +57,7 @@ $stmt = $pdo->prepare("SELECT
     po.created_at,
     po.approved_at,
     u.name AS suppliar_name,
+    u.suppliar_code AS suppliar_code,
     SUM(po.total_amount) AS total_amount,
     GROUP_CONCAT(CONCAT(p.product_name, ' - Qty: ', po.quantity) SEPARATOR ', ') AS items_summary
 FROM purchase_orders po
@@ -146,7 +147,7 @@ foreach ($empRecords as $row) {
         </a>
       '
     : '<span style="color:#6c757d; font-size:13px;">-</span>',
-        "suppliar_id" => $row['suppliar_name'],
+        "suppliar_id" =>  $row['suppliar_name'] . ' - ' . $row['suppliar_code'],
         "total_amount" => 'Rp ' . number_format($row['total_amount'], 0, ',', '.'),
         "status" => strtoupper($row['status']),
         "items_summary" => $row['items_summary'],

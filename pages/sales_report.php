@@ -65,17 +65,32 @@
             <div class="col-md">
               <label class="fw-bold">Select Member</label>
               <div>
-                <select name="customer" id="customer" class="form-select custom-select-lg">
-                  <option value="all">- All -</option>
-                  <?php 
-                    $all_customer = $obj->all('suppliar');
-                    $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R', 10 => 'SA'];
-                    foreach ($all_customer as $customer) {
-                      $roleLabel = isset($roleMap[$customer->role_id]) ? $roleMap[$customer->role_id] : $customer->role_id;
-                      echo '<option value="'.$customer->id.'">'.$customer->name.' - '.$roleLabel.'-'.$customer->suppliar_code.'</option>';
-                    }
-                  ?>
-                </select>
+               <select name="customer" id="customer" class="form-select custom-select-lg">
+    <option value="all">- All -</option>
+    <?php 
+    // ambil semua suppliar
+    $all_customer = $obj->all('suppliar');
+    $roleMap = [1 => 'HO', 2 => 'HD', 3 => 'D', 4 => 'A', 5 => 'R', 10 => 'SA'];
+
+    foreach ($all_customer as $customer) {
+        // cek role_id 1/10
+        if (in_array((int)$customer->role_id, [1,10])) {
+            // hanya tampilkan jika suppliar_code = 000001
+            if ($customer->suppliar_code === '000001') {
+                echo '<option value="'.$customer->id.'">Head Office</option>';
+            }
+            // lewati suppliar HO/SA lain
+            continue;
+        }
+
+        // untuk role selain 1/10
+        $roleLabel = isset($roleMap[$customer->role_id]) ? $roleMap[$customer->role_id] : $customer->role_id;
+        echo '<option value="'.$customer->id.'">'
+                .htmlspecialchars($customer->name.' - '.$roleLabel.' - '.$customer->suppliar_code).
+             '</option>';
+    }
+    ?>
+</select>
               </div>
             </div>
             <?php endif; ?>
