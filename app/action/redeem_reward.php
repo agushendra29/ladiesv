@@ -12,6 +12,7 @@ if (!$current_user_id) {
 $reward_id  = isset($_POST['reward_id']) ? (int)$_POST['reward_id'] : 0;
 $event_name = trim($_POST['event_name'] ?? '');
 $qty        = isset($_POST['redeem_qty']) ? (int)$_POST['redeem_qty'] : 0;
+$remainingPoint = isset($_POST['remaining_point']) ? (int)$_POST['remaining_point'] : 0;
 
 if ($reward_id <= 0 || $qty <= 0) {
     echo json_encode(['status' => 'error', 'message' => 'Data tidak valid.']);
@@ -57,7 +58,7 @@ try {
         return (int)$st->fetchColumn();
     }
 
-    $user_point = getTotalQty($pdo, $periodeStart, $periodeEnd, $current_user_id);
+    $user_point = $remainingPoint;
 
     // --- Total poin sudah diredeem user pada event ini
     $sql = "SELECT COALESCE(SUM(total_point),0)
@@ -68,7 +69,7 @@ try {
     $st->execute([$current_user_id, $event_name]);
     $used_point = (int)$st->fetchColumn();
 
-    $available_point = $user_point - $used_point;
+    $available_point = $user_point;
 
     if ($total_point > $available_point) {
         echo json_encode(['status' => 'error', 'message' => 'Point tidak mencukupi.']);

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $po_id = $_POST['approve_po_id'] ?? null;
-$fromDistributorId = $_SESSION['distributor_id']; // distributor/ pusat yang approve
+$fromDistributorId = 1; // distributor/ pusat yang approve
 $payment_type   = $_POST['payment_type'] ?? null;
 $shipping_type  = $_POST['shipping_type'] ?? null;
 
@@ -52,7 +52,7 @@ try {
         $qty       = $o['quantity'];
 
         $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id = ? AND product_id = ?");
-        $stmt->execute(["1", $productId]);
+        $stmt->execute([1, $productId]);
         $fromStock = $stmt->fetch();
 
          $productName = getProductName($pdo, $productId);
@@ -114,6 +114,18 @@ try {
     foreach ($orders as $o) {
         $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number,payment_type, jenis_pengiriman) 
             VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?,?,?)");
+        $stmt->execute([
+            $fromDistributorId,
+            $o['product_id'],
+            $o['quantity'],
+            $toDistributorId,
+            $user['name'],
+            $invoice_number,
+            $payment_type,
+            $shipping_type
+        ]);
+          $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number,payment_type, jenis_pengiriman) 
+            VALUES (?, 'penjualan', ?, ?, NOW(), ?, ?, ?,?,?)");
         $stmt->execute([
             $fromDistributorId,
             $o['product_id'],

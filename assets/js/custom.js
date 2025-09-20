@@ -1381,7 +1381,7 @@ drawCallback: function (settings) {
     // Validasi minimal 2 produk
     let totalQty = payload.products.reduce((sum, p) => sum + p.quantity, 0);
     if (totalQty < 2) {
-        $('#formErrorArea').text("pendaftaran reseller harus membeli minimal 2 produk").show();
+         Swal.fire('Error', "pendaftaran reseller harus membeli minimal 2 produk" || 'Terjadi kesalahan server.', 'error');
         return;
     }
     $('#formErrorArea').hide();
@@ -1427,10 +1427,9 @@ drawCallback: function (settings) {
                 data: {
                     data: JSON.stringify(payload)
                 },
-                dataType: 'text',
+                dataType: 'json',
                 success: function (res) {
-                    res = res.trim();
-                    if (res === 'yes') {
+                    if (res.ok) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',

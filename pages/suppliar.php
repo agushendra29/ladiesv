@@ -257,7 +257,6 @@
               <input type="hidden" name="id" id="upgrade_id">
 
               <p id="upgrade_text" style="font-weight:500;"></p>
-
               <div class="mb-3">
                 <label for="new_role" class="form-label">Pilih Role Baru</label>
                 <select name="new_role" id="new_role" class="form-control" required>

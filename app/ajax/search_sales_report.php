@@ -33,9 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[':product_id'] = $product_id;
     }
 
-    if($type !== 'all') {
-        // filter manual nanti di PHP setelah mapping type
-    }
+
+    $currentUserId = (int)($_SESSION['distributor_id'] ?? 0);
+$whereClauses[] = "NOT (th.type = 'penjualan' AND th.customer_id = :current_user OR th.type = 'pembelian' AND th.suppliar_id = :current_user)";
+$params[':current_user'] = $currentUserId;
 
     $whereClauses[] = "th.created_at BETWEEN :start AND :end";
     $params[':start'] = $issu_first_date . ' 00:00:00';
@@ -56,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                s1.name AS suppliar_name, 
                s2.name AS customer_name,
                s2.suppliar_code AS customer_code,
+               s1.suppliar_code AS suppliar_code,
                p.product_name AS product_name
         FROM transaction_histories th
         LEFT JOIN suppliar s1 ON th.suppliar_id = s1.id
@@ -83,20 +85,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // mapping type berdasarkan posisi suppliar_id / customer_id
             $transType = $data->type;
 
-            if ($suppliar_id !== 'all') {
-                if ($data->suppliar_id == $suppliar_id) {
-                    // di sisi suppliar_id (penjual) → tetap "penjualan"
-                    $transType = 'penjualan';
-                } elseif ($data->customer_id == $suppliar_id) {
-                    // di sisi customer_id (pembeli) → dianggap "pembelian"
-                    $transType = 'pembelian';
-                }
-            }
-
+        
             // filter type manual
             if ($type !== 'all' && strtolower($transType) !== strtolower($type)) {
                 continue;
             }
+
+             $partnerName = '';
+        $partnerCode = '';
+
+        if ($transType === 'penjualan') {
+            // tampilkan pembeli
+            $partnerName = $data->customer_name ?: 'Penjualan Pribadi';
+            $partnerCode = $data->customer_code ?: '';
+        } elseif ($transType === 'pembelian') {
+            // tampilkan penjual
+            $partnerName = $data->suppliar_name ?: '-';
+            // ambil kode suppliar kalau diperlukan
+            $partnerCode = $data->suppliar_code ?? '';
+        } else {
+            // default (refund, dll.)
+            $partnerName = $data->customer_name ?: '-';
+            $partnerCode = $data->customer_code ?: '';
+        }
 
             // handle quantity
             $quantityDisplay = $data->quantity;
@@ -110,9 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td>{$dateFormatted}</td>
                 <td>{$data->invoice_number}</td>
                 <td>{$transType}</td>
-                <td>" . (!empty($data->customer_name) 
-                    ? htmlspecialchars($data->customer_name . " - " . $data->customer_code) 
-                    : "Penjualan Pribadi") . "</td>
+                 <td>" . htmlspecialchars(trim($partnerName . '-' . $partnerCode)) . "</td>
                 <td>{$data->product_name}</td>
                 <td>{$quantityDisplay}</td>
                 <td>" . htmlspecialchars($data->note) . "</td>

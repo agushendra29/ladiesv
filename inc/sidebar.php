@@ -26,7 +26,7 @@
       <!-- Pendaftaran -->
       <li class="has-submenu">
         <input type="checkbox" id="user-menu-toggle">
-        <label for="user-menu-toggle" class="nav-label <?php echo in_array($actual_link,['distributor_management','suppliar','add_register_reseller'])?'active':'';?>">
+        <label style="font-weight:600;" for="user-menu-toggle" class="nav-label <?php echo in_array($actual_link,['distributor_management','suppliar','add_register_reseller'])?'active':'';?>">
           <i class="material-symbols-outlined">inventory</i>
           <span>Pendaftaran</span>
           <i class="fas fa-angle-down submenu-arrow"></i>
@@ -73,7 +73,7 @@
       <!-- Produk -->
       <li class="has-submenu">
         <input type="checkbox" id="produk-menu-toggle">
-        <label for="produk-menu-toggle" class="nav-label <?php echo in_array($actual_link,['add_product','product_list','stock_management'])?'active':'';?>">
+        <label style="font-weight:600;" for="produk-menu-toggle" class="nav-label <?php echo in_array($actual_link,['add_product','product_list','stock_management'])?'active':'';?>">
           <i class="material-symbols-outlined">inventory</i>
           <span>Produk</span>
           <i class="fas fa-angle-down submenu-arrow"></i>
@@ -141,7 +141,7 @@
       <!-- Reports -->
       <li class="has-submenu">
         <input type="checkbox" id="reports-menu-toggle">
-        <label for="reports-menu-toggle" class="nav-label <?php echo in_array($actual_link,['sales_report','purchase_report','stock_monitoring','distributor_report'])?'active':'';?>">
+        <label style="font-weight:600;" for="reports-menu-toggle" class="nav-label <?php echo in_array($actual_link,['sales_report','purchase_report','stock_monitoring','distributor_report'])?'active':'';?>">
           <i class="material-symbols-outlined">lab_profile</i>
           <span>Reports</span>
           <i class="fas fa-angle-down submenu-arrow"></i>

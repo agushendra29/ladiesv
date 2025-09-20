@@ -23,17 +23,17 @@
 
 .btn-invoice {
     background: transparent;
-    border:solid 2px #4f46e5;
+    border:solid 2px #eb757e;
     padding:6px 8px;
     margin:10px;
     border-radius: 6px;
-    color: #4f46e5;
+    color: #eb757e;
     font-size:12px;
 }
 
 .btn-invoice:hover {
-    background: #4f46e5;
-    border:solid 2px #4f46e5;
+    background: #eb757e;
+    border:solid 2px #eb757e;
     padding:6px 8px;
     margin:10px;
     border-radius: 6px;
@@ -345,7 +345,7 @@ table.dataTable.display tbody tr.even {
 }
 
 table.dataTable>thead {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #ff73a4;
     border-radius: 0px !important;
     border:solid 0px !important;
 }

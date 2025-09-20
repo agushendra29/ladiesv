@@ -54,7 +54,7 @@ try {
     } else {
         // Penjualan pribadi / input manual
         $customer_name = $buyer_manual ?: 'Penjualan Pribadi';
-        $buyer_role_id = 5; // anggap R untuk pribadi
+        $buyer_role_id = 0; // anggap R untuk pribadi
     }
 
     // Ambil item valid (pid > 0 & qty > 0)
@@ -167,6 +167,23 @@ try {
             VALUES (?, 'penjualan', ?, ?, NOW(), ?, ?, ?)
         ");
         $stmt->execute([$current_user_id, $pid, $qty, $customer_id, $customer_name, $invoice_number]);
+
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories
+                (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)
+            VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)
+        ");
+        $stmt->execute([$current_user_id, $pid, $qty, $customer_id, $customer_name, $invoice_number]);
+
+
+        if($buyer_role_id == 5) {
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories
+                (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)
+            VALUES (?, 'penjualan', ?, ?, NOW(), ?, ?, ?)
+        ");
+        $stmt->execute([$customer_id, $pid, $qty, 0, "penjualan pribadi", ""]);
+        } 
 
         // Jika kamu punya kolom price/net_total di transaction_histories, gunakan ini:
         /*

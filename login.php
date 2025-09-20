@@ -17,13 +17,12 @@ if ($Ouser->is_login() != false) {
   <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body style="background-color:#f6f7fb; font-family: 'Plus Jakarta Sans', sans-serif;">
+<body style="background-image:url(assets/images/background-login.jpg); background-size:cover; font-family: 'Plus Jakarta Sans', sans-serif;">
 
 <div class="container">
   <div class="card" style="max-width:420px; margin:100px auto; padding:40px 30px; border:none; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.05);">
     <div class="card-body p-0">
-      <div class="text-center mb-4">
-        <img src="assets/images/logo.png" alt="logo" style="width:120px;">
+      <div class="text-center mb-0">
       </div>
 
       <h2 class="text-center mb-4" style="font-weight:600; font-size:24px; color:#333;">Sign in to your account</h2>

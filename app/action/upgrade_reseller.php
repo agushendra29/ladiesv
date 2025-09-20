@@ -21,8 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([':id' => $id]);
 
             // Reset stok produk di user
-            $stmt = $pdo->prepare("UPDATE user SET role_id = 0 WHERE suppliar_id = :id");
-            $stmt->execute([':id' => $id]);
+            $stmt = $pdo->prepare("UPDATE user SET role_id = :role  WHERE suppliar_id = :id");
+            $stmt->execute([   ':role' => $new_role,
+                ':id'   => $id]);
 
             $pdo->commit();
 

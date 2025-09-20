@@ -5,96 +5,81 @@ $role_id         = $_POST['role_id'] ?? '';
 $current_role_id = $_SESSION['role_id'] ?? '';
 $current_user_id = $_SESSION['distributor_id'] ?? 0;
 
-/**
- * Ambil semua reseller anak (role_id = 5) dari parent tertentu
- */
 function getChildResellerIds($pdo, $parentId) {
     $stmt = $pdo->prepare("SELECT id FROM suppliar WHERE parent_id = ? AND role_id = 5");
     $stmt->execute([$parentId]);
     return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 }
-
 /**
- * Hitung total poin sesuai aturan:
- * 1. Reseller (role 5): poin pembelian + penjualan sendiri.
- * 2. Parent: poin penjualan sendiri + semua transaksi reseller anak (jual & beli).
- * 3. Jika supplier lain menjual ke reseller → poin untuk parent reseller
- *    (reseller tetap dapat poin dari pembelian & penjualan sendiri).
+ * Hitung total quantity transaksi penjualan yang
+ * poinnya menjadi milik $distributorId
  */
-function getTotalQty($pdo, $startDate, $endDate, $distributorId, $roleId) {
+function getTotalQty(PDO $pdo, string $startDate, string $endDate, int $distributorId): int
+{
+    $role = $_SESSION['role_id'] ?? 0;
     if (!$startDate || !$endDate) return 0;
-    $startDateTime = $startDate.' 00:00:00';
-    $endDateTime   = $endDate.' 23:59:59';
 
-    // --- CASE 1: reseller sendiri (role 5)
-    if ($roleId == 5) {
-        $sql = "SELECT COALESCE(SUM(quantity),0)
-                FROM transaction_histories
-                WHERE suppliar_id = ?
-                  AND created_at BETWEEN ? AND ?
-                  AND type IN ('penjualan','pembelian')";
+    $start = $startDate . ' 00:00:00';
+    $end   = $endDate   . ' 23:59:59';
+
+    // --- Jika HEAD DISTRIBUTOR ---
+    if ($role == 2) {
+        // ambil semua anak langsung
+        $stmtChild = $pdo->prepare("SELECT id FROM suppliar WHERE parent_id = ?");
+        $stmtChild->execute([$distributorId]);
+        $childIds = $stmtChild->fetchAll(PDO::FETCH_COLUMN);
+
+        // gabung head + semua anak
+        $allIds = array_merge([$distributorId], $childIds);
+        if (empty($allIds)) return 0;
+
+        // buat placeholder ?,?,?
+        $ph = implode(',', array_fill(0, count($allIds), '?'));
+
+        $sql = "
+            SELECT COALESCE(SUM(th.quantity),0) AS total_point
+            FROM transaction_histories th
+            LEFT JOIN suppliar cust ON cust.id = th.customer_id
+            WHERE th.type = 'penjualan'
+              AND th.created_at BETWEEN ? AND ?
+              AND (
+                    -- customer punya parent salah satu head/child
+                    (cust.parent_id IN ($ph))
+                 OR -- customer tanpa parent, penjual adalah head/child
+                    (cust.parent_id IS NULL AND th.suppliar_id IN ($ph))
+                 OR -- transaksi tanpa customer, penjual adalah head/child
+                    (cust.id IS NULL     AND th.suppliar_id IN ($ph))
+              )
+        ";
+
+        $params = array_merge([$start, $end], $allIds, $allIds, $allIds);
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$distributorId, $startDateTime, $endDateTime]);
+        $stmt->execute($params);
         return (int)$stmt->fetchColumn();
     }
 
-    // --- CASE 2: parent (distributor yang punya reseller anak)
-    $childResellerIds = getChildResellerIds($pdo, $distributorId);
-    $total = 0;
-
-    // 2a. penjualan parent sendiri
-    $sqlParent = "SELECT COALESCE(SUM(quantity),0)
-                  FROM transaction_histories
-                  WHERE suppliar_id = ?
-                    AND created_at BETWEEN ? AND ?
-                    AND type='penjualan'";
-    $stmt = $pdo->prepare($sqlParent);
-    $stmt->execute([$distributorId, $startDateTime, $endDateTime]);
-    $total += (int)$stmt->fetchColumn();
-
-    // 2b. transaksi anak reseller sendiri (jual & beli)
-    if (!empty($childResellerIds)) {
-        $inChild = str_repeat('?,', count($childResellerIds) - 1) . '?';
-
-        $sqlChild = "SELECT COALESCE(SUM(quantity),0)
-                     FROM transaction_histories
-                     WHERE suppliar_id IN ($inChild)
-                       AND created_at BETWEEN ? AND ?
-                       AND type IN ('penjualan','pembelian')";
-        $paramsChild = array_merge($childResellerIds, [$startDateTime, $endDateTime]);
-        $stmt = $pdo->prepare($sqlChild);
-        $stmt->execute($paramsChild);
-        $total += (int)$stmt->fetchColumn();
-
-        // 2c. penjualan dari supplier lain ke reseller anak → poin untuk parent
-        $sqlToChild = "SELECT COALESCE(SUM(quantity),0)
-                       FROM transaction_histories
-                       WHERE customer_id IN ($inChild)
-                         AND created_at BETWEEN ? AND ?
-                         AND type='penjualan'";
-        $paramsToChild = array_merge($childResellerIds, [$startDateTime, $endDateTime]);
-        $stmt = $pdo->prepare($sqlToChild);
-        $stmt->execute($paramsToChild);
-        $total += (int)$stmt->fetchColumn();
-    }
-
-    // --- CASE 3: user lain (bukan reseller, bukan parent) ---
-    //   Tidak boleh dapat poin dari penjualan ke reseller anak orang lain
-    if ($roleId != 5 && empty($childResellerIds)) {
-        $sql = "SELECT COALESCE(SUM(quantity),0)
-                FROM transaction_histories t
-                LEFT JOIN suppliar s ON t.customer_id = s.id
-                WHERE t.suppliar_id = ?
-                  AND t.created_at BETWEEN ? AND ?
-                  AND t.type='penjualan'
-                  AND NOT (s.role_id = 5 AND s.parent_id IS NOT NULL)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$distributorId, $startDateTime, $endDateTime]);
-        return (int)$stmt->fetchColumn();
-    }
-
-    return $total;
+    // --- Distributor biasa ---
+    $sql = "
+        SELECT COALESCE(SUM(th.quantity),0) AS total_point
+        FROM transaction_histories th
+        LEFT JOIN suppliar cust ON cust.id = th.customer_id
+        WHERE th.type = 'penjualan'
+          AND th.created_at BETWEEN :start AND :end
+          AND (
+                (cust.parent_id = :dist)
+             OR (cust.parent_id IS NULL AND th.suppliar_id = :dist)
+             OR (cust.id IS NULL     AND th.suppliar_id = :dist)
+          )
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':dist'  => $distributorId,
+        ':start' => $start,
+        ':end'   => $end
+    ]);
+    return (int)$stmt->fetchColumn();
 }
+
 
 function getRedeemedPoint($pdo, $userId, $eventName) {
     $stmt = $pdo->prepare("SELECT COALESCE(SUM(total_point),0)
@@ -116,6 +101,7 @@ $sql .= " ORDER BY role_id, event_name, id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 if (!$rows) {
     echo "<p>Tidak ada data.</p>";
@@ -232,7 +218,7 @@ foreach ($rows as $index => $row) {
 
         echo "<div class='event-card' data-target='group{$groupId}'>
                 <strong><span class='arrow'>▶</span> ".htmlspecialchars($row['event_name'])."</strong>
-                <span><strong>Periode: {$eventPeriode} | Penukaran: {$redeemDate}</strong>
+                <span><strong>Periode: {$eventPeriode} {$current_user_id} | Penukaran: {$redeemDate}</strong>
                 Total: {$eventTotalPoint} | Redeem: {$redeemedPoint} | Sisa: {$remainingPoint}</span>";
 
         if ($current_role_id == 10) {
@@ -267,6 +253,7 @@ foreach ($rows as $index => $row) {
     if ($current_role_id != 10 && $eventActive && $remainingPoint >= $row['jumlah_point']) {
         $maxRedeemAttr = ($row['max_redeem'] > 0) ? "max='{$row['max_redeem']}'" : "";
         echo "<form class='redeem-form'>
+                <input type='hidden' name='remaining_point' value='{$remainingPoint}'>
                 <input type='hidden' name='reward_id' value='{$row['id']}'>
                 <input type='hidden' name='event_name' value='".htmlspecialchars($row['event_name'])."'>
                 <input type='number' name='redeem_qty' min='0' {$maxRedeemAttr} placeholder='Qty' required>

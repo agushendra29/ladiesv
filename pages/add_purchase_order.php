@@ -55,7 +55,7 @@ $products = $obj->all('products');
           </div>
 
           <!-- Tombol tambah produk -->
-          <div class="mb-4">
+          <!-- <div class="mb-4">
             <button type="button" id="addProductRow" style="
               background-color:#EB4F7D;
               color:white;
@@ -67,7 +67,7 @@ $products = $obj->all('products');
               transition:background-color 0.3s ease;">
               ➕ Tambah Produk
             </button>
-          </div>
+          </div> -->
 
           <!-- Distributor & Total Keseluruhan -->
           <div class="row">

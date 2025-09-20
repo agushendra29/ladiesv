@@ -23,33 +23,73 @@ class User extends Objects {
 
 
 	// user login method to dashboard
-	public function login($username, $pass) {
-		$stmt = $this->pdo->prepare("SELECT * FROM user WHERE (suppliar_code = :username OR login_name = :username) AND password = :pass");
-		$stmt->bindValue(":username", $username, PDO::PARAM_STR);
-		$stmt->bindValue(":pass", $pass, PDO::PARAM_STR);
-		$stmt->execute();
-		$user = $stmt->fetch(PDO::FETCH_OBJ);
-		$count = $stmt->rowCount();
+	public function login($username, $pass)
+{
+    // --- Ambil data user sesuai username atau suppliar_code ---
+    $stmt = $this->pdo->prepare("
+        SELECT *
+        FROM user
+        WHERE (suppliar_code = :username OR login_name = :username)
+        LIMIT 1
+    ");
+    $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-		if ($count > 0) {
-	
-			 if ($user->is_active == 0) {
-            // Kalau akun suspend
-            	$_SESSION['login_error'] = "Your account has been suspended. Please contact admin.";
-            	redirect("login.php");
-        	} else {
-			$_SESSION['user_id'] = $user->id;
-			$_SESSION['user_role'] = $user->username;
-			$_SESSION['name'] = $this->getName($user->suppliar_code);
-			$_SESSION['role_id'] = $user->role_id;
-			$_SESSION['distributor_id'] = $user->suppliar_id;
-			redirect("index.php");
-			}
-		} else {
-			$_SESSION['login_error'] = "Invalid Username or Password";
-			redirect("login.php");
-		}
-	}
+    if (!$user) {
+        $_SESSION['login_error'] = "Invalid Username or Password";
+        redirect("login.php");
+        return;
+    }
+
+    // --- Ambil general password dari tabel common_setting ---
+    $stmt2 = $this->pdo->prepare("
+        SELECT general_password
+        FROM common_setting
+        LIMIT 1
+    ");
+    $stmt2->execute();
+    $generalPass = $stmt2->fetchColumn();   // ambil kolom tunggal
+
+    // --- Cek kecocokan password user atau general password ---
+    // Jika Anda sudah menggunakan password_hash() untuk user/general, 
+    // ganti dengan password_verify().
+    $validPassword = false;
+
+    // Jika password user disimpan plaintext (tidak disarankan):
+    if ($user->password === $pass) {
+        $validPassword = true;
+    }
+
+    // Cek general password
+     if (!$validPassword && $generalPass && $generalPass === $pass) {
+        if (!in_array((int)$user->role_id, [1, 10], true)) {
+            $validPassword = true;
+        }
+    }
+    if (!$validPassword) {
+        $_SESSION['login_error'] = "Invalid Username or Password";
+        redirect("login.php");
+        return;
+    }
+
+    // --- Cek status aktif ---
+    if ((int)$user->is_active === 0) {
+        $_SESSION['login_error'] = "Your account has been suspended. Please contact admin.";
+        redirect("login.php");
+        return;
+    }
+
+    // --- Set session dan redirect ---
+    $_SESSION['user_id']        = $user->id;
+    $_SESSION['user_role']      = $user->username;
+    $_SESSION['name']           = $this->getName($user->suppliar_code);
+    $_SESSION['role_id']        = $user->role_id;
+    $_SESSION['distributor_id'] = $user->suppliar_id;
+
+    redirect("index.php");
+}
+
 
 	public function is_admin(){
 		if ($_SESSION['user_role'] === 'admin') {
