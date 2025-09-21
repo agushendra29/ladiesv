@@ -126,7 +126,7 @@ foreach ($products as $p) {
 
           <div class="form-row">
             <div class="form-col-full">
-              <label for="supaddress">Alamat Domisili</label>
+              <label for="supaddress">Alamat Domisili / Pengiriman</label>
               <textarea id="supaddress" name="supaddress" rows="3"></textarea>
             </div>
           </div>

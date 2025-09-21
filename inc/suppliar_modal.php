@@ -59,7 +59,7 @@
             <textarea id="supaddressktp" name="supaddressktp" placeholder="Alamat sesuai KTP"></textarea>
           </div>
           <div class="form-group">
-            <label for="supaddress">Alamat Domisili</label>
+            <label for="supaddress">Alamat Domisili / Pengiriman</label>
             <textarea id="supaddress" name="supaddress" placeholder="Alamat pengiriman"></textarea>
           </div>
 
