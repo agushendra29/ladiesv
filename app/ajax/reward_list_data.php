@@ -23,32 +23,32 @@ function getTotalQty(PDO $pdo, string $startDate, string $endDate, int $distribu
     $end   = $endDate   . ' 23:59:59';
 
     // --- Jika HEAD DISTRIBUTOR ---
-    if ($role == 2) {
-        // ambil semua anak langsung
+     if ($role == 2) {
         $stmtChild = $pdo->prepare("SELECT id FROM suppliar WHERE parent_id = ?");
         $stmtChild->execute([$distributorId]);
         $childIds = $stmtChild->fetchAll(PDO::FETCH_COLUMN);
-
-        // gabung head + semua anak
-        $allIds = array_merge([$distributorId], $childIds);
+        $allIds   = array_merge([$distributorId], $childIds);
         if (empty($allIds)) return 0;
 
-        // buat placeholder ?,?,?
         $ph = implode(',', array_fill(0, count($allIds), '?'));
 
         $sql = "
-            SELECT COALESCE(SUM(th.quantity),0) AS total_point
+            SELECT COALESCE(
+                SUM(
+                    CASE 
+                        WHEN th.type = 'penjualan' THEN th.quantity
+                        WHEN th.type = 'refund'    THEN -th.quantity
+                        ELSE 0
+                    END
+                ),0
+            ) AS total_point
             FROM transaction_histories th
             LEFT JOIN suppliar cust ON cust.id = th.customer_id
-            WHERE th.type = 'penjualan'
-              AND th.created_at BETWEEN ? AND ?
+            WHERE th.created_at BETWEEN ? AND ?
               AND (
-                    -- customer punya parent salah satu head/child
                     (cust.parent_id IN ($ph))
-                 OR -- customer tanpa parent, penjual adalah head/child
-                    (cust.parent_id IS NULL AND th.suppliar_id IN ($ph))
-                 OR -- transaksi tanpa customer, penjual adalah head/child
-                    (cust.id IS NULL     AND th.suppliar_id IN ($ph))
+                 OR (cust.parent_id IS NULL AND th.suppliar_id IN ($ph))
+                 OR (cust.id IS NULL     AND th.suppliar_id IN ($ph))
               )
         ";
 
@@ -60,11 +60,18 @@ function getTotalQty(PDO $pdo, string $startDate, string $endDate, int $distribu
 
     // --- Distributor biasa ---
     $sql = "
-        SELECT COALESCE(SUM(th.quantity),0) AS total_point
+        SELECT COALESCE(
+            SUM(
+                CASE 
+                    WHEN th.type = 'penjualan' THEN th.quantity
+                    WHEN th.type = 'refund'    THEN -th.quantity
+                    ELSE 0
+                END
+            ),0
+        ) AS total_point
         FROM transaction_histories th
         LEFT JOIN suppliar cust ON cust.id = th.customer_id
-        WHERE th.type = 'penjualan'
-          AND th.created_at BETWEEN :start AND :end
+        WHERE th.created_at BETWEEN :start AND :end
           AND (
                 (cust.parent_id = :dist)
              OR (cust.parent_id IS NULL AND th.suppliar_id = :dist)

@@ -1,28 +1,41 @@
 <?php
 require_once '../init.php';
 
-## Read value from DataTables
-$draw = $_POST['draw'];
-$row = $_POST['start'];
-$rowperpage = $_POST['length'];
-$columnIndex = $_POST['order'][0]['column'];
-$columnName = $_POST['columns'][$columnIndex]['data'];
-$columnSortOrder = $_POST['order'][0]['dir'];
-$searchValue = $_POST['search']['value'];
-$searchArray = [];
+/* === DataTables Request === */
+$draw            = $_POST['draw'] ?? 1;
+$row             = $_POST['start'] ?? 0;
+$rowperpage      = $_POST['length'] ?? 10;
+$columnIndex     = $_POST['order'][0]['column'] ?? 0;
+$columnName      = $_POST['columns'][$columnIndex]['data'] ?? 'id';
+$columnSortOrder = $_POST['order'][0]['dir'] ?? 'desc';
+$searchValue     = $_POST['search']['value'] ?? '';
 
-## Filter suppliar jika bukan role 1 (HO)
-$whereExtra = '';
+/* === Filter tambahan dari user === */
+$startDate = $_POST['start_date'] ?? '';
+$endDate   = $_POST['end_date']   ?? '';
+
+$searchArray = [];
+$whereExtra  = '';
+$whereDate   = '';   // <- filter tanggal
+
+/* --- Batasan role (bukan HO dan bukan SuperAdmin) --- */
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $whereExtra = " AND i.suppliar_id = :suppliar_id ";
 }
 
-## Search query
-$searchQuery = " ";
-if ($searchValue != '') {
-    $lowerSearch = strtolower($searchValue);
+/* --- Filter Tanggal --- */
+if ($startDate !== '' && $endDate !== '') {
+    $whereDate = " AND DATE(i.order_date) BETWEEN :start_date AND :end_date ";
+} elseif ($startDate !== '') {
+    $whereDate = " AND DATE(i.order_date) >= :start_date ";
+} elseif ($endDate !== '') {
+    $whereDate = " AND DATE(i.order_date) <= :end_date ";
+}
 
-    // Jika search mengandung 'head', ambil semua transaksi customer_id=1 atau suppliar_id=1
+/* --- Search --- */
+$searchQuery = '';
+if ($searchValue !== '') {
+    $lowerSearch = strtolower($searchValue);
     if (str_contains($lowerSearch, 'head')) {
         $searchQuery = " AND (i.customer_id = 1 OR i.suppliar_id = 1) ";
     } else {
@@ -37,102 +50,92 @@ if ($searchValue != '') {
     }
 }
 
-## Total records without filtering
-$sqlTotal = "SELECT COUNT(*) AS allcount FROM invoice i WHERE 1 {$whereExtra}";
+/* === Total Records tanpa filter === */
+$sqlTotal = "SELECT COUNT(*) AS allcount FROM invoice i WHERE 1 {$whereExtra} {$whereDate}";
 $stmt = $pdo->prepare($sqlTotal);
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
+if ($startDate !== '') $stmt->bindValue(':start_date', $startDate);
+if ($endDate   !== '') $stmt->bindValue(':end_date',   $endDate);
 $stmt->execute();
-$totalRecords = $stmt->fetch()['allcount'];
+$totalRecords = $stmt->fetchColumn();
 
-## Total records with filtering
+/* === Total Records dengan filter & search === */
 $sqlTotalFilter = "
-    SELECT COUNT(DISTINCT i.id) AS allcount 
+    SELECT COUNT(DISTINCT i.id) AS allcount
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
-    WHERE 1 {$whereExtra} {$searchQuery}
-";
+    WHERE 1 {$whereExtra} {$whereDate} {$searchQuery}";
 $stmt = $pdo->prepare($sqlTotalFilter);
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
-foreach ($searchArray as $key => $search) {
-    $stmt->bindValue(':'.$key, $search, PDO::PARAM_STR);
-}
+if ($startDate !== '') $stmt->bindValue(':start_date', $startDate);
+if ($endDate   !== '') $stmt->bindValue(':end_date',   $endDate);
+foreach ($searchArray as $k => $v) $stmt->bindValue(":$k", $v);
 $stmt->execute();
-$totalRecordwithFilter = $stmt->fetch()['allcount'];
+$totalRecordwithFilter = $stmt->fetchColumn();
 
-## Fetch records with join
+/* === Fetch Data === */
 $sqlFetch = "
-    SELECT suppliar_id, customer_id, i.*,
-        u2.name AS distributor_name,
-        u2.role_id AS distributor_role,
-        GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR '||') AS items_summary
+    SELECT i.*, i.suppliar_id, i.customer_id,
+           u2.name AS distributor_name,
+           u2.role_id AS distributor_role,
+           GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR '||') AS items_summary
     FROM invoice i
     LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
     LEFT JOIN invoice_details d ON i.id = d.invoice_no
     LEFT JOIN products p ON d.pid = p.id
-    WHERE 1 {$whereExtra} {$searchQuery}
+    WHERE 1 {$whereExtra} {$whereDate} {$searchQuery}
     GROUP BY i.id
-    ORDER BY i.id DESC 
-    LIMIT :limit OFFSET :offset
-";
+    ORDER BY {$columnName} {$columnSortOrder}
+    LIMIT :limit OFFSET :offset";
 $stmt = $pdo->prepare($sqlFetch);
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
 }
-foreach ($searchArray as $key => $search) {
-    $stmt->bindValue(':'.$key, $search, PDO::PARAM_STR);
-}
-$stmt->bindValue(':limit', (int)$rowperpage, PDO::PARAM_INT);
-$stmt->bindValue(':offset', (int)$row, PDO::PARAM_INT);
+if ($startDate !== '') $stmt->bindValue(':start_date', $startDate);
+if ($endDate   !== '') $stmt->bindValue(':end_date',   $endDate);
+foreach ($searchArray as $k => $v) $stmt->bindValue(":$k", $v);
+$stmt->bindValue(':limit',  (int)$rowperpage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', (int)$row,        PDO::PARAM_INT);
 $stmt->execute();
-$records = $stmt->fetchAll();
+$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-## Format data for DataTables
-$data = [];
-
-function getSuppliarCode($name) {
+/* === Helper untuk kode suppliar === */
+function getSuppliarCode($id) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT suppliar_code FROM suppliar WHERE id = :id LIMIT 1");
-    $stmt->bindValue(':id', $name, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row ? $row['suppliar_code'] : null;
+    return $stmt->fetchColumn();
 }
 
-foreach ($records as $row) {
-    if (empty($row['items_summary']) || $row['net_total'] == 0) {
-        continue;
-    }
-    $itemsSummary = str_replace('||', '<br>', $row['items_summary']);
-    if ($row['distributor_role'] == 1 || $row['distributor_role'] == 10) {
-        $distributorDisplay = "Head Office";
-    } else {
-        $distributorDisplay = $row['distributor_name'] . ' - ' . getSuppliarCode($row['suppliar_id']);
-    }
+/* === Format Data untuk DataTables === */
+$data = [];
+foreach ($records as $r) {
+    if (empty($r['items_summary']) || $r['net_total'] == 0) continue;
+    $itemsSummary = str_replace('||', '<br>', $r['items_summary']);
+    $distName = ($r['distributor_role']==1 || $r['distributor_role']==10)
+        ? 'Head Office'
+        : $r['distributor_name'].' - '.getSuppliarCode($r['suppliar_id']);
+
     $data[] = [
-        "invoice_number"   =>  '<a href="app/invoice/po_pdf.php?id='.$row['id'].'" 
-           class="btn-invoice"
-           download>
-           <i class="fas fa-file-pdf"></i> '.$row['invoice_number'].'
-        </a>',
-        "customer_name"    => $row['customer_name'] . ' - ' . getSuppliarCode($row['customer_id']),
-        "distributor_name" => $distributorDisplay,
-        "net_total"        => $row['customer_name'] == "Penjualan Pribadi" ? "-" : 'Rp ' . number_format($row['net_total'], 0, ',', '.'),
-        "order_date"       => $row['order_date'],
-        "items_summary"    => $itemsSummary,
+        'invoice_number' => '<a href="app/invoice/po_pdf.php?id='.$r['id'].'" class="btn-invoice" download>
+                               <i class="fas fa-file-pdf"></i> '.$r['invoice_number'].'</a>',
+        'customer_name'  => $r['customer_name'].' - '.getSuppliarCode($r['customer_id']),
+        'distributor_name'=> $distName,
+        'net_total'      => $r['customer_name']=="Penjualan Pribadi" ? '-' : 'Rp '.number_format($r['net_total'],0,',','.'),
+        'order_date'     => $r['order_date'],
+        'items_summary'  => $itemsSummary
     ];
 }
 
-## JSON Response
-$response = [
-    "draw" => intval($draw),
-    "iTotalRecords" => $totalRecords,
-    "iTotalDisplayRecords" => $totalRecordwithFilter,
-    "aaData" => $data
-];
-
-header('Content-Type: application/json');
-echo json_encode($response);
+/* === JSON Response === */
+echo json_encode([
+    'draw' => intval($draw),
+    'iTotalRecords' => $totalRecords,
+    'iTotalDisplayRecords' => $totalRecordwithFilter,
+    'aaData' => $data
+]);

@@ -736,46 +736,6 @@ $("#editRewardForm").submit(function (e) {
             container.append(card);
         });
     }
-}), $("#sellOrderTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/sell_order_data.php"
-    },
-    columns: [{
-        data: "invoice_number"
-    }, {
-        data: "distributor_name"
-    }, {
-        data: "customer_name"
-    }, {
-        data: "net_total"
-    }, {
-        data: "order_date"
-    }, {
-        data: "items_summary"
-    }],drawCallback: function (settings) {
-        const api = this.api();
-        const data = api.rows({ page: "current" }).data();
-        const $mobileCards = $("#mobileSellOrders");
-
-        $mobileCards.empty();
-
-        data.each(function (row) {
-            const card = `
-                <div class="sell-card">
-                    <h4>${row.invoice_number}</h4>
-                    <p><strong>Distributor:</strong> ${row.distributor_name}</p>
-                    <p><strong>Pelanggan:</strong> ${row.customer_name}</p>
-                    <p><strong>Total Bayar:</strong> ${row.net_total}</p>
-                    <p><strong>Tanggal:</strong> ${row.order_date}</p>
-                    <p><strong>Produk:</strong><br> ${row.items_summary}</p>
-                </div>
-            `;
-            $mobileCards.append(card);
-        });
-    }
 }), $("#refundOrderTable").DataTable({
     processing: !0,
     serverSide: !0,
