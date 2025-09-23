@@ -91,7 +91,6 @@ $sqlFetch = "
     GROUP BY i.id
     ORDER BY {$columnName} {$columnSortOrder}
     LIMIT :limit OFFSET :offset 
-    ORDER BY DESC
     ";
 $stmt = $pdo->prepare($sqlFetch);
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {

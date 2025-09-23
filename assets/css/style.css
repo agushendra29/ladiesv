@@ -464,3 +464,18 @@ table.dataTable {
         gap: 6px;
     }
 }
+
+.daterangepicker .ranges li.active {
+    background-color: #EB4F7D !important;
+    color:white !important;
+}
+
+.daterangepicker td.active, .daterangepicker td.active:hover{
+     background-color: #EB4F7D !important;
+    color:white !important;
+}   
+
+.daterangepicker .drp-buttons .btn.btn-primary {
+    background-color: #EB4F7D !important;
+    border:solid 1px #EB4F7D !important;
+}

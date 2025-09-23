@@ -70,7 +70,12 @@ foreach ($products as $p) {
             <label style="font-weight: 500; display: block; margin-bottom: 8px;">Jenis Penjualan</label>
             <div style="display:flex; gap:20px; align-items:center;">
               <label><input type="radio" name="sale_type" value="anggota" checked> Penjualan Anggota</label>
-              <label><input type="radio" name="sale_type" value="pribadi" <?= $disablePribadi; ?>> Penjualan Pribadi</label>
+           <?php if ($roleId != 1 && $roleId != 10): ?>
+      <!-- hanya tampil bila bukan HO / SuperAdmin -->
+      <label>
+        <input type="radio" name="sale_type" value="pribadi"> Penjualan Pribadi
+      </label>
+      <?php endif; ?>
             </div>
           </div>
         </div>
