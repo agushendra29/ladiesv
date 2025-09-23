@@ -119,7 +119,7 @@
       <?php endif; ?>
 
       <!-- Refund -->
-      <?php if ($roleId == 10): ?>
+      <!-- <?php if ($roleId == 10): ?>
       <li>
         <a href="index.php?page=refund_order"
            class="nav-link <?php echo $actual_link=='refund_order'?'active':'';?>">
@@ -127,7 +127,7 @@
           <span>Cancel Invoice</span>
         </a>
       </li>
-      <?php endif; ?>
+      <?php endif; ?> -->
 
       <!-- Rewards -->
       <li>
@@ -153,14 +153,14 @@
               Transaksi
             </a>
           </li>
-          <?php if ($roleId != 5): ?>
+          <!-- <?php if ($roleId != 5): ?>
           <li>
             <a href="index.php?page=stock_monitoring"
                class="nav-sublink <?php echo $actual_link=='stock_monitoring'?'active':'';?>">
               Stock Monitoring
             </a>
           </li>
-          <?php endif; ?>
+          <?php endif; ?> -->
           <?php if ($roleId == 2): ?>
           <li>
             <a href="index.php?page=distributor_report"

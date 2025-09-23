@@ -114,7 +114,7 @@ function getRoleName($role_id) {
         case 3: return 'D';
         case 4: return 'A';
         case 5: return 'R';
-        case 10: return 'Super Admin';
+        case 10: return 'SA';
         default: return '-';
     }
 }

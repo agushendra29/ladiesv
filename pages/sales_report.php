@@ -100,7 +100,7 @@
                 <option value="all">- All -</option>
                 <option value="penjualan">Penjualan</option>
                 <option value="pembelian">Pembelian</option>
-                <option value="refund">Refund</option>
+                <!-- <option value="refund">Refund</option> -->
               </select>
             </div>
 

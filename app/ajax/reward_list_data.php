@@ -5,8 +5,8 @@ $role_id         = $_POST['role_id'] ?? '';
 $current_role_id = $_SESSION['role_id'] ?? '';
 $current_user_id = $_SESSION['distributor_id'] ?? 0;
 
-function getChildResellerIds($pdo, $parentId) {
-    $stmt = $pdo->prepare("SELECT id FROM suppliar WHERE parent_id = ? AND role_id = 5");
+function getAllChildIds($pdo, $parentId) {
+    $stmt = $pdo->prepare("SELECT id FROM suppliar WHERE parent_id = ?");
     $stmt->execute([$parentId]);
     return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 }
@@ -16,74 +16,33 @@ function getChildResellerIds($pdo, $parentId) {
  */
 function getTotalQty(PDO $pdo, string $startDate, string $endDate, int $distributorId): int
 {
-    $role = $_SESSION['role_id'] ?? 0;
     if (!$startDate || !$endDate) return 0;
 
     $start = $startDate . ' 00:00:00';
     $end   = $endDate   . ' 23:59:59';
 
-    // --- Jika HEAD DISTRIBUTOR ---
-     if ($role == 2) {
-        $stmtChild = $pdo->prepare("SELECT id FROM suppliar WHERE parent_id = ?");
-        $stmtChild->execute([$distributorId]);
-        $childIds = $stmtChild->fetchAll(PDO::FETCH_COLUMN);
-        $allIds   = array_merge([$distributorId], $childIds);
-        if (empty($allIds)) return 0;
+    // ambil semua id anak secara rekursif
+    $childIds = getAllChildIds($pdo, $distributorId);
+    $allIds   = array_merge([$distributorId], $childIds);
 
-        $ph = implode(',', array_fill(0, count($allIds), '?'));
+    $ph = implode(',', array_fill(0, count($allIds), '?'));
 
-        $sql = "
-            SELECT COALESCE(
-                SUM(
-                    CASE 
-                        WHEN th.type = 'penjualan' THEN th.quantity
-                        WHEN th.type = 'refund'    THEN -th.quantity
-                        ELSE 0
-                    END
-                ),0
-            ) AS total_point
-            FROM transaction_histories th
-            LEFT JOIN suppliar cust ON cust.id = th.customer_id
-            WHERE th.created_at BETWEEN ? AND ?
-              AND (
-                    (cust.parent_id IN ($ph))
-                 OR (cust.parent_id IS NULL AND th.suppliar_id IN ($ph))
-                 OR (cust.id IS NULL     AND th.suppliar_id IN ($ph))
-              )
-        ";
+ $sql = "
+    SELECT COALESCE(SUM(th.quantity),0) AS total_point
+    FROM transaction_histories th
+    LEFT JOIN suppliar c ON c.id = th.customer_id
+    WHERE th.type = 'penjualan'
+      AND th.created_at BETWEEN ? AND ?
+      AND th.suppliar_id IN ($ph)
+      AND th.is_refund = 0
+      -- abaikan semua pembelian oleh reseller/anak
+      AND (c.role_id IS NULL OR c.role_id <> 5)
+      AND (c.parent_id IS NULL)
+";
 
-        $params = array_merge([$start, $end], $allIds, $allIds, $allIds);
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return (int)$stmt->fetchColumn();
-    }
-
-    // --- Distributor biasa ---
-    $sql = "
-        SELECT COALESCE(
-            SUM(
-                CASE 
-                    WHEN th.type = 'penjualan' THEN th.quantity
-                    WHEN th.type = 'refund'    THEN -th.quantity
-                    ELSE 0
-                END
-            ),0
-        ) AS total_point
-        FROM transaction_histories th
-        LEFT JOIN suppliar cust ON cust.id = th.customer_id
-        WHERE th.created_at BETWEEN :start AND :end
-          AND (
-                (cust.parent_id = :dist)
-             OR (cust.parent_id IS NULL AND th.suppliar_id = :dist)
-             OR (cust.id IS NULL     AND th.suppliar_id = :dist)
-          )
-    ";
+    $params = array_merge([$start, $end], $allIds);
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':dist'  => $distributorId,
-        ':start' => $start,
-        ':end'   => $end
-    ]);
+    $stmt->execute($params);
     return (int)$stmt->fetchColumn();
 }
 
@@ -221,7 +180,7 @@ foreach ($rows as $index => $row) {
         }
 
         $eventPeriode = date('d M Y', $eventStart) . ' s/d ' . date('d M Y', $eventEnd);
-        $redeemDate   = date('d M Y', $redeemStart) . ' s/d ' . date('d M Y', $eventEnd);
+        $redeemDate   = date('d M Y', $redeemStart) . ' s/d ' . date('d M Y', $redeemEnd);
 
         echo "<div class='event-card' data-target='group{$groupId}'>
                 <strong><span class='arrow'>▶</span> ".htmlspecialchars($row['event_name'])."</strong>

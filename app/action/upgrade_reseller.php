@@ -10,14 +10,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
 
             // --- Ambil role lama sebelum update ---
-            $stmt = $pdo->prepare("SELECT role_id FROM suppliar WHERE id = :id");
+            $stmt = $pdo->prepare("SELECT role_id,parent_id FROM suppliar WHERE id = :id");
             $stmt->execute([':id' => $id]);
-            $oldRole = $stmt->fetchColumn();   // bisa null jika id tidak ada
+            $oldData = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$oldData) {
+                throw new Exception('Suppliar tidak ditemukan.');
+            }
+            $oldRole   = $oldData['role_id'];
+            $oldParent = $oldData['parent_id'];
 
             // --- Update role di tabel suppliar ---
             $stmt = $pdo->prepare("
                 UPDATE suppliar 
-                SET role_id = :role, 
+                SET role_id = :role, parent_id = NULL, parent_id_code = ''
                 WHERE id = :id
             ");
             $stmt->execute([
@@ -32,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // --- Update role di tabel user ---
             $stmt = $pdo->prepare("
                 UPDATE user 
-                SET role_id = :role, parent_id = NULL, parent_id_code = ''
+                SET role_id = :role 
                 WHERE id = :id
             ");
             $stmt->execute([
@@ -40,17 +45,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':id'   => $id
             ]);
 
+            $now = date('Y-m-d H:i:s');
+
             // --- Insert ke levelup_history ---
             $stmt = $pdo->prepare("
                 INSERT INTO levelup_history 
-                    (suppliar_id, role_from, role_to, created_at, updated_at)
+                    (suppliar_id, role_from, role_to, created_at, updated_at, parent_id_before)
                 VALUES 
-                    (:suppliar_id, :role_from, :role_to, NOW(), NOW())
+                    (:suppliar_id, :role_from, :role_to, :created_at, :updated_at, :parent_id)
             ");
             $stmt->execute([
                 ':suppliar_id' => $id,
                 ':role_from'   => $oldRole,
-                ':role_to'     => $new_role
+                ':role_to'     => $new_role,
+                ':created_at'  => $now,
+                ':updated_at'  => $now,
+                ':parent_id' => $oldParent
             ]);
 
             $pdo->commit();

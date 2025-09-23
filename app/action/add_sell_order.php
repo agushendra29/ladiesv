@@ -177,6 +177,20 @@ try {
 
 
         if($buyer_role_id == 5) {
+
+
+              $invoice_number_reseller = 'INV-R' . strtoupper(uniqid());
+            $invoiceData = [
+            'invoice_number' => $invoice_number_reseller,
+        'customer_id'    => 0,
+        'customer_name'  => "penjualan pribadi",
+        'order_date'     => $order_date,
+        'net_total'      => 0,
+        'return_status'  => 0,
+        'last_update'    => $order_date,
+        'suppliar_id'    => $customer_id
+        ];
+    $invoice_id = $obj->create('invoice', $invoiceData);
         $stmt = $pdo->prepare("
             INSERT INTO transaction_histories
                 (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)

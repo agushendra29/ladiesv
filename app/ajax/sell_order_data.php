@@ -16,7 +16,7 @@ $endDate   = $_POST['end_date']   ?? '';
 
 $searchArray = [];
 $whereExtra  = '';
-$whereDate   = '';   // <- filter tanggal
+$whereDate   = '';   // filter tanggal
 
 /* --- Batasan role (bukan HO dan bukan SuperAdmin) --- */
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
@@ -90,7 +90,9 @@ $sqlFetch = "
     WHERE 1 {$whereExtra} {$whereDate} {$searchQuery}
     GROUP BY i.id
     ORDER BY {$columnName} {$columnSortOrder}
-    LIMIT :limit OFFSET :offset";
+    LIMIT :limit OFFSET :offset 
+    ORDER BY DESC
+    ";
 $stmt = $pdo->prepare($sqlFetch);
 if ($_SESSION['role_id'] != 1 && $_SESSION['role_id'] != 10) {
     $stmt->bindValue(':suppliar_id', $_SESSION['distributor_id'], PDO::PARAM_INT);
@@ -105,26 +107,31 @@ $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* === Helper untuk kode suppliar === */
 function getSuppliarCode($id) {
+    if ($id <= 0) return ''; // aman bila id 0 atau negatif
     global $pdo;
     $stmt = $pdo->prepare("SELECT suppliar_code FROM suppliar WHERE id = :id LIMIT 1");
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
-    return $stmt->fetchColumn();
+    return $stmt->fetchColumn() ?: '';
 }
 
 /* === Format Data untuk DataTables === */
 $data = [];
 foreach ($records as $r) {
-    if (empty($r['items_summary']) || $r['net_total'] == 0) continue;
+    // hanya lewati bila tidak ada detail item
+    if (empty($r['items_summary'])) continue;
+
     $itemsSummary = str_replace('||', '<br>', $r['items_summary']);
     $distName = ($r['distributor_role']==1 || $r['distributor_role']==10)
         ? 'Head Office'
         : $r['distributor_name'].' - '.getSuppliarCode($r['suppliar_id']);
 
+    $customerCode = $r['customer_id'] > 0 ? getSuppliarCode($r['customer_id']) : '';
+
     $data[] = [
         'invoice_number' => '<a href="app/invoice/po_pdf.php?id='.$r['id'].'" class="btn-invoice" download>
                                <i class="fas fa-file-pdf"></i> '.$r['invoice_number'].'</a>',
-        'customer_name'  => $r['customer_name'].' - '.getSuppliarCode($r['customer_id']),
+        'customer_name'  => $r['customer_name'] . ($customerCode ? ' - '.$customerCode : ''),
         'distributor_name'=> $distName,
         'net_total'      => $r['customer_name']=="Penjualan Pribadi" ? '-' : 'Rp '.number_format($r['net_total'],0,',','.'),
         'order_date'     => $r['order_date'],

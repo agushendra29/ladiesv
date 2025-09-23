@@ -1,7 +1,7 @@
 <?php 
 $distributor_id = $_SESSION['distributor_id'];
 $products = $obj->all('products');
-
+$disablePribadi = ($role_id == 1 || $role_id == 10) ? 'disabled' : '';
 function getStockProduct($pid) {
     global $obj, $distributor_id;
     $role_id = $_SESSION['role_id'] ?? null;
@@ -55,7 +55,7 @@ foreach ($products as $p) {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="m-3 container-fluid">
+<div class="m-3 container-fluid" style="min-height:100vh;padding-bottom:72px;">
   <section class="content">
     <div class="mt-5">
       <h2 class="mb-4" style="font-size: 20px; font-weight: 600; color: #333;">📦 Form Penjualan</h2>
@@ -70,13 +70,13 @@ foreach ($products as $p) {
             <label style="font-weight: 500; display: block; margin-bottom: 8px;">Jenis Penjualan</label>
             <div style="display:flex; gap:20px; align-items:center;">
               <label><input type="radio" name="sale_type" value="anggota" checked> Penjualan Anggota</label>
-              <label><input type="radio" name="sale_type" value="pribadi"> Penjualan Pribadi</label>
+              <label><input type="radio" name="sale_type" value="pribadi" <?= $disablePribadi; ?>> Penjualan Pribadi</label>
             </div>
           </div>
         </div>
 
         <!-- Anggota -->
-        <div class="row gx-4 gy-3 mb-4" style="position:relative;">
+        <div class="row gx-4 gy-3 mb-4" style="position:prelative;">
           <div class="col-md-6">
             <label for="customer_name" style="font-weight: 500; display: block; margin-bottom: 8px;">Anggota</label>
             <input type="text" id="customer_name" placeholder="Ketik nama anggota..." autocomplete="off"
@@ -232,7 +232,7 @@ function createProductRow() {
   const row = document.createElement('tr');
   row.classList.add('product-row');
 
-  let options = '<option disabled selected>Pilih produk</option>';
+  let options = '<option disabled selected value="">Pilih produk</option>';
   productsData.forEach(p => {
     options += `<option value="${p.id}" 
       data-price-hd="${p.sell_price_hd}" 
@@ -371,6 +371,7 @@ $("#salesForm").submit(function (e) {
     let products = [];
     let totalAll = 0;
     let buyerData = members.find(m=>m.id==buyerId.value);
+    let isValid = true; 
 
     $(".product-row").each(function () {
         const prodSelect = $(this).find(".product-select")[0];
@@ -380,7 +381,7 @@ $("#salesForm").submit(function (e) {
         const price = buyerId.value==="0" ? 0 : getPriceByRole(prodSelect.options[prodSelect.selectedIndex], buyerData.role);
         const subtotal = price * qty;
 
-        if (!productId) { $("#saleErrorArea").show().html("Produk wajib dipilih."); return false; }
+        if (!productId) { $("#saleErrorArea").show().html("Produk wajib dipilih.");  return false; }
         if (qty<=0) { $("#saleErrorArea").show().html("Jumlah wajib lebih dari 0."); return false; }
 
         products.push({ product_id: productId, name: productName, price, quantity: qty, subtotal });

@@ -32,6 +32,22 @@
             return null;
           }
 
+          function getReferralCode(int $suppliarId): ?string
+{
+    $sql = "
+        SELECT p.suppliar_code
+        FROM suppliar s
+        LEFT JOIN suppliar p ON p.id = s.parent_id
+        WHERE s.id = ?
+        LIMIT 1
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$suppliarId]);
+    $code = $stmt->fetchColumn();
+
+    return $code !== false ? $code : null;
+}
+
           // default nilai
           $provinsiName = $data->provinsi;
           $kotaName = $data->kota;
@@ -75,6 +91,7 @@
         <div><label style="font-weight: bold;">Provinsi:</label><br><?= htmlspecialchars($provinsiName) ?></div>
         <div><label style="font-weight: bold;">Kota:</label><br><?= htmlspecialchars($kotaName) ?></div>
         <div><label style="font-weight: bold;">Kecamatan:</label><br><?= htmlspecialchars($kecamatanName) ?></div>
+        <div><label style="font-weight: bold;">Referal:</label><br><?= htmlspecialchars(getReferralCode($data->parent_id)) ?></div>
       </div>
 
       <!-- Form Ganti Password -->

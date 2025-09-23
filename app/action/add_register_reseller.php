@@ -87,7 +87,8 @@ try {
     $suppliar_id = $obj->create('suppliar', $sup_data);
     if(!$suppliar_id) throw new Exception('Gagal menambahkan suppliar.');
 
-    $suppliar_code = str_pad($suppliar_id, 6, "0", STR_PAD_LEFT);
+    $suppliar_code = '1' . str_pad($suppliar_id, 5, "0", STR_PAD_LEFT);
+    
     $obj->update('suppliar','id',$suppliar_id,['suppliar_code'=>$suppliar_code]);
     $obj->create('user', [
         'username'=>$sup_email,
@@ -179,10 +180,22 @@ try {
             VALUES (?,?,?,?,NOW(),?,?,?)");
         $stmt->execute([$current_user_id, 'pembelian', $pid,$qty,$suppliar_id,$sup_name,$invoice_number]);
 
+           $invoice_number_reseller = 'INV-R' . strtoupper(uniqid());
+            $invoiceData = [
+            'invoice_number' => $invoice_number_reseller,
+            'customer_id'    => 0,
+            'customer_name'  => "penjualan pribadi",
+            'order_date'     => $order_date,
+            'net_total'      => 0,
+            'return_status'  => 0,
+            'last_update'    => $order_date,
+            'suppliar_id'    => $suppliar_id
+            ];
+
         $stmt = $pdo->prepare("INSERT INTO transaction_histories 
             (suppliar_id,type,product_id,quantity,created_at,customer_id,customer_name,invoice_number)
             VALUES (?,?,?,?,NOW(),?,?,?)");
-        $stmt->execute([$suppliar_id, 'penjualan', $pid,$qty, 0 ,"penjualan pribadi",""]);
+        $stmt->execute([$suppliar_id, 'penjualan', $pid,$qty, 0 ,"penjualan pribadi",$invoice_number_reseller]);
     }
 
     // Update invoice & point
