@@ -20,21 +20,37 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="title" style="font-weight: 500;">Judul Berita *</label>
-              <input type="text" class="form-control" id="title" name="title" placeholder="Judul berita"
-                style="border-radius: 8px;" required>
+              <input type="text" class="form-control" id="title" name="title"
+                     placeholder="Judul berita" style="border-radius: 8px;" required>
             </div>
             <div class="col-md-6 mb-3">
               <label for="category" style="font-weight: 500;">Kategori Berita *</label>
-              <input type="text" class="form-control" id="category" name="category" placeholder="Kategori berita"
-                style="border-radius: 8px;" required>
+              <input type="text" class="form-control" id="category" name="category"
+                     placeholder="Kategori berita" style="border-radius: 8px;" required>
             </div>
           </div>
+
+          <!-- ✅ Multiple Checkbox untuk Role -->
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label style="font-weight: 500;">Tampilkan Untuk Role *</label>
+              <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 6px;">
+                <label><input type="checkbox" name="roles[]" value="1"> Head Office</label>
+                <label><input type="checkbox" name="roles[]" value="2"> Head Distributor</label>
+                <label><input type="checkbox" name="roles[]" value="3"> Distributor</label>
+                <label><input type="checkbox" name="roles[]" value="4"> Agen</label>
+                <label><input type="checkbox" name="roles[]" value="5"> Reseller</label>
+                <!-- Tambah/kurangi sesuai daftar role di sistem Anda -->
+              </div>
+            </div>
+          </div>
+          <!-- End Checkbox -->
 
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="publish_date" style="font-weight: 500;">Tanggal Publikasi *</label>
               <input type="date" class="form-control" id="publish_date" name="publish_date"
-                style="border-radius: 8px;" required>
+                     style="border-radius: 8px;" required>
             </div>
           </div>
 
@@ -42,7 +58,7 @@
             <div class="col-md-12 mb-3">
               <label for="content" style="font-weight: 500;">Isi Berita *</label>
               <textarea class="form-control" id="content" name="content" rows="6"
-                placeholder="Tulis isi berita di sini..." style="border-radius: 8px;" required></textarea>
+                        placeholder="Tulis isi berita di sini..." style="border-radius: 8px;" required></textarea>
             </div>
           </div>
 

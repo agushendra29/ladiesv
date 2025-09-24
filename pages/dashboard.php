@@ -1,30 +1,41 @@
 <?php
-// require_once '../init.php'; // pastikan koneksi & session sudah di-include
-
 $role_id     = $_SESSION['role_id'] ?? 0;
 $suppliar_id = $_SESSION['distributor_id'] ?? 0;
 
-// ==== Pagination Logic ====
-// gunakan 'pg' agar tidak bentrok dengan router ?page=news
 $perPage = 3;
 $pg      = max(1, (int)($_GET['pg'] ?? 1));
 $offset  = ($pg - 1) * $perPage;
 
-$totalStmt  = $pdo->query("SELECT COUNT(*) FROM news WHERE is_active = 1");
-$totalNews  = (int)$totalStmt->fetchColumn();
+// === Hitung total sesuai role ===
+$sqlCount = "
+    SELECT COUNT(*) 
+    FROM news 
+    WHERE is_active = 1
+      AND (role IS NULL OR role = '' OR FIND_IN_SET(:rid, role))
+";
+$stmtTotal = $pdo->prepare($sqlCount);
+$stmtTotal->bindValue(':rid', $role_id, PDO::PARAM_INT);
+$stmtTotal->execute();
+$totalNews  = (int)$stmtTotal->fetchColumn();
 $totalPages = ceil($totalNews / $perPage);
 
-$stmt = $pdo->prepare("
-    SELECT * FROM news
+// === Ambil data sesuai role ===
+$sqlData = "
+    SELECT *
+    FROM news
     WHERE is_active = 1
+      AND (role IS NULL OR role = '' OR FIND_IN_SET(:rid, role))
     ORDER BY publish_date DESC
     LIMIT :offset, :limit
-");
+";
+$stmt = $pdo->prepare($sqlData);
+$stmt->bindValue(':rid', $role_id, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->bindValue(':limit',  $perPage, PDO::PARAM_INT);
 $stmt->execute();
 $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
 ?>
+
 <style>
   body {
     background: #f5f7fb;

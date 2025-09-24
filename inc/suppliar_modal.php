@@ -23,6 +23,12 @@
             <input type="number" class="form-control" id="sup_nik" name="sup_nik" placeholder="Nomor Kependudukan" required pattern="\d{16}" maxlength="16" title="NIK harus 16 digit">
           </div>
 
+          <div class="form-group">
+            <label for="sup_nik">NPWP</label>
+            <input type="number" class="form-control" id="sup_npwp" name="sup_npwp" placeholder="Nomor NPWP" pattern="\d{15}" maxlength="15" title="NPWP harus 15 digit">
+          </div>
+
+
           <!-- No Rekening & Bank -->
           <div class="form-group">
             <label for="sup_rekening">No Rekening *</label>

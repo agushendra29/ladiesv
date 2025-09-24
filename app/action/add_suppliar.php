@@ -5,6 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ambil input dan sanitasi
     $sup_name      = trim($_POST['sup_name'] ?? '');
     $sup_nik       = trim($_POST['sup_nik'] ?? '');
+    $sup_npwp       = trim($_POST['sup_npwp'] ?? '');
     $sup_rekening  = trim($_POST['sup_rekening'] ?? '');
     $sup_bank      = trim($_POST['sup_bank'] ?? '');
     $sup_contact   = trim($_POST['sup_contact'] ?? '');
@@ -45,6 +46,13 @@ if (!empty($_POST['birth_date'])) {
         exit;
     }
 
+   if (!empty($sup_npwp)) {            // cek hanya jika diisi
+        if (!preg_match('/^[0-9]{15}$/', $sup_npwp)) {
+            echo "NPWP harus berupa 15 digit angka.";
+            exit;
+        }
+    }
+
     if (
         $sup_name && $sup_nik && $sup_rekening && $sup_bank && $birth_date && $sup_akun &&
         $sup_contact && $sup_email && $sup_role && $sup_password_plain && $sup_address &&
@@ -68,6 +76,7 @@ if (!empty($_POST['birth_date'])) {
                 'kota'       => $sup_kota,       // ✅ simpan id kabupaten/kota
                    'kecamatan'       => $sup_kecamatan,       // ✅ simpan id kabupaten/kota
                 'is_active'     => 1,
+                'npwp' => $sup_npwp
             ];
 
             $suppliar_id = $obj->create('suppliar', $sup_data);

@@ -7,8 +7,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category     = trim($_POST['category'] ?? '');
     $publish_date = trim($_POST['publish_date'] ?? '');
     $content      = trim($_POST['content'] ?? '');
+    $roles        = $_POST['roles'] ?? []; // array dari checkbox multiple
 
-    if ($id > 0 && !empty($title) && !empty($category) && !empty($publish_date) && !empty($content)) {
+    // gabungkan roles menjadi string "1,3,4" atau kosong bila tidak ada pilihan
+    $rolesStr = '';
+    if (!empty($roles) && is_array($roles)) {
+        // pastikan hanya angka yang masuk
+        $rolesClean = array_map('intval', $roles);
+        $rolesStr   = implode(',', $rolesClean);
+    }
+
+    if (
+        $id > 0 &&
+        $title !== '' &&
+        $category !== '' &&
+        $publish_date !== '' &&
+        $content !== ''
+    ) {
         try {
             $pdo->beginTransaction();
 
@@ -17,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'category'     => $category,
                 'publish_date' => $publish_date,
                 'content'      => $content,
+                'role'         => $rolesStr,          // ✅ simpan roles
                 'updated_at'   => date('Y-m-d H:i:s')
             ];
 
-            // update by id
             $obj->update('news', 'id', $id, $newsData);
 
             $pdo->commit();
-            echo 'Berita berhasil diperbarui.';
+            echo 'Berita berhasil diperbarui.';      // balasan sukses
         } catch (Exception $e) {
             $pdo->rollBack();
             echo 'Gagal memperbarui berita: ' . $e->getMessage();

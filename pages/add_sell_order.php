@@ -96,7 +96,7 @@ foreach ($products as $p) {
 
         <a id="addProductBtn" style="background-color: #EB4F7D; color: #fff; border-radius: 12px; padding: 8px 20px;
           font-weight: 600; font-size: 12px; border: none; box-shadow: 0 4px 12px rgba(0,115,234,0.4);
-          display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration:none;">+ Tambah Produk</a>
+          display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration:none;visibility: hidden;">+ Tambah Produk</a>
 
         <!-- Tabel Produk -->
         <div id="productRows" style="margin: 20px 0; overflow-x:auto;">
@@ -237,7 +237,7 @@ function createProductRow() {
   const row = document.createElement('tr');
   row.classList.add('product-row');
 
-  let options = '<option disabled selected value="">Pilih produk</option>';
+  let options = '';
   productsData.forEach(p => {
     options += `<option value="${p.id}" 
       data-price-hd="${p.sell_price_hd}" 

@@ -1,7 +1,7 @@
 <!-- Content Wrapper -->
 <div class="mb-5 mt-5">
   <section class="content">
-    <div style="background:white; padding: 20px; margin: auto; font-family: Arial, sans-serif; border-radius:5px;">
+    <div style="background:white; padding: 20px; margin: auto; border-radius:5px;">
       <?php 
        $login_user = $_SESSION['distributor_id'];
        $user_info = $obj->find('user','id',$login_user);
@@ -32,10 +32,10 @@
             return null;
           }
 
-          function getReferralCode(int $suppliarId): ?string
+         function getReferralCode(PDO $pdo, int $suppliarId): string
 {
     $sql = "
-        SELECT p.suppliar_code
+        SELECT p.suppliar_code AS code, p.name AS name
         FROM suppliar s
         LEFT JOIN suppliar p ON p.id = s.parent_id
         WHERE s.id = ?
@@ -43,9 +43,16 @@
     ";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$suppliarId]);
-    $code = $stmt->fetchColumn();
 
-    return $code !== false ? $code : null;
+    // ambil seluruh row sebagai array asosiatif
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row && $row['code']) {
+        // kembalikan gabungan kode + nama parent
+        return $row['code'] . ' - ' . $row['name'];
+    }
+
+    return "Tidak ada referal Code";
 }
 
           // default nilai
@@ -91,7 +98,7 @@
         <div><label style="font-weight: bold;">Provinsi:</label><br><?= htmlspecialchars($provinsiName) ?></div>
         <div><label style="font-weight: bold;">Kota:</label><br><?= htmlspecialchars($kotaName) ?></div>
         <div><label style="font-weight: bold;">Kecamatan:</label><br><?= htmlspecialchars($kecamatanName) ?></div>
-        <div><label style="font-weight: bold;">Referal:</label><br><?= htmlspecialchars(getReferralCode($data->parent_id)) ?></div>
+        <div><label style="font-weight: bold;">Referal:</label><br><?= htmlspecialchars(getReferralCode($pdo, $data->parent_id ? $data->parent_id : 0)) ?></div>
       </div>
 
       <!-- Form Ganti Password -->

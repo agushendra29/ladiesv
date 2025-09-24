@@ -1,7 +1,8 @@
 <!-- Content Wrapper -->
-<div class="mb-5 mt-5">
+<div style="padding-top:52px;padding-bottom:72px;">
   <section class="content">
-    <div style="max-width: 1000px; margin: auto;">
+    <div class="container-fluid section-card-body">
+  
       <?php 
         if (isset($_GET['edit_id'])) {
           $edit_id = $_GET['edit_id'];
@@ -16,6 +17,26 @@
 
           if ($data) {
       ?>
+          <?php
+// setelah $data = $stmt->fetch(PDO::FETCH_OBJ);
+$referralCode = null;
+$parentName   = null;
+if ($data) {
+    $refStmt = $pdo->prepare("
+        SELECT p.suppliar_code AS code, p.name AS name
+        FROM suppliar s
+        LEFT JOIN suppliar p ON p.id = s.parent_id
+        WHERE s.id = ?
+        LIMIT 1
+    ");
+    $refStmt->execute([$edit_id]);
+    $refRow = $refStmt->fetch(PDO::FETCH_ASSOC);
+    if ($refRow && $refRow['code']) {
+        $referralCode = $refRow['code'];
+        $parentName   = $refRow['name'];
+    }
+}
+?>
 
       <h2 style="font-size: 24px !important; font-weight: 700; color: #1e293b; margin-bottom: 24px; user-select:none;">
         ✏️ Edit Anggota: <?=htmlspecialchars($data->suppliar_code)?>
@@ -39,6 +60,12 @@
         <div>
           <label for="nik" style="font-weight: 600; color: #334155;">NIK (ID Number) <span style="color:#ef4444;">*</span></label>
           <input type="text" id="nik" name="nik" value="<?= htmlspecialchars($data->nik); ?>" required
+            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+        </div>
+
+        <div>
+          <label for="npwp" style="font-weight: 600; color: #334155;">NPWP</label>
+          <input type="text" id="npwp" name="npwp" value="<?= htmlspecialchars($data->npwp); ?>"
             style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
         </div>
 
@@ -134,6 +161,14 @@
             <option value="">-- Pilih Kecamatan --</option>
           </select>
         </div>
+        <div>
+  <label for="referral_code" style="font-weight:600; color:#334155;">Referral Code</label>
+  <input type="text" id="referral_code" name="referral_code"
+         value="<?= htmlspecialchars($referralCode ?: 'Tidak ada referral') . ($parentName ? ' - '.htmlspecialchars($parentName) : '') ?>"
+         readonly
+         style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1;
+                border-radius: 12px; font-size: 16px; background-color:#f1f5f9; color:#475569;">
+</div>
 
         <!-- Password -->
         <div style="position: relative;">

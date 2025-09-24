@@ -184,7 +184,7 @@ foreach ($rows as $index => $row) {
 
         echo "<div class='event-card' data-target='group{$groupId}'>
                 <strong><span class='arrow'>▶</span> ".htmlspecialchars($row['event_name'])."</strong>
-                <span><strong>Periode: {$eventPeriode} {$current_user_id} | Penukaran: {$redeemDate}</strong>
+                <span><strong>Periode: {$eventPeriode} | Penukaran: {$redeemDate}</strong>
                 Total: {$eventTotalPoint} | Redeem: {$redeemedPoint} | Sisa: {$remainingPoint}</span>";
 
         if ($current_role_id == 10) {

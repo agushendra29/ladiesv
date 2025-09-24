@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $provinsi_id  = $_POST['provinsi'] ?? '';
     $kota_id      = $_POST['kota'] ?? '';
     $kecamatan    = $_POST['kecamatan'] ?? '';
+    $npwp = $_POST['npwp'] ?? '';
 
     // Validasi semua field wajib
     if (
@@ -44,6 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if (!preg_match('/^[0-9]{16}$/', $nik)) {
+        echo "NIK harus berupa 16 digit angka.";
+        exit;
+    }
+
+    if (!empty($npwp)) {
+        if (!preg_match('/^[0-9]{15}$/', $npwp)) {
+            echo "NPWP harus berupa 15 digit angka.";
+            exit;
+        }
+    }
+
+
     // Cari suppliar berdasar ID
     $suppliar = $obj->find('suppliar', 'id', $id);
     if (!$suppliar) {
@@ -67,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'provinsi'      => $provinsi_id,
         'kota'          => $kota_id,
         'kecamatan'     => $kecamatan,
-        'role_id' => $role_id
+        'role_id' => $role_id,
+        'npwp' => $npwp
     ];
 
     $supRes = $obj->update('suppliar', 'id', $id, $supQuery);
