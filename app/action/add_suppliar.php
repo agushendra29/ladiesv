@@ -76,7 +76,8 @@ if (!empty($_POST['birth_date'])) {
                 'kota'       => $sup_kota,       // ✅ simpan id kabupaten/kota
                    'kecamatan'       => $sup_kecamatan,       // ✅ simpan id kabupaten/kota
                 'is_active'     => 1,
-                'npwp' => $sup_npwp
+                'npwp' => $sup_npwp,
+                'create_at' => date('Y-m-d H:i:s')
             ];
 
             $suppliar_id = $obj->create('suppliar', $sup_data);

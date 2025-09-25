@@ -23,7 +23,7 @@ $redeem_end_dt   = DateTime::createFromFormat('d-m-Y', $redeem_end);
                 INSERT INTO rewards 
                 (event_name, nama_reward, periode_hadiah_dari, periode_hadiah_sampai, redeem_start, redeem_end, role_id, jumlah_point, max_redeem, created_at, is_active)
                 VALUES 
-                (:event_name, :nama_reward, :periode_hadiah_dari, :periode_hadiah_sampai, :redeem_start, :redeem_end, :role_id, :jumlah_point, :max_redeem, NOW(), 1)
+                (:event_name, :nama_reward, :periode_hadiah_dari, :periode_hadiah_sampai, :redeem_start, :redeem_end, :role_id, :jumlah_point, :max_redeem, :now, 1)
             ");
 
             foreach ($rewards as $reward) {
@@ -38,6 +38,7 @@ $redeem_end_dt   = DateTime::createFromFormat('d-m-Y', $redeem_end);
                         ':role_id'             => $role_id,
                         ':jumlah_point'        => (int)$reward['jumlah_point'],
                         ':max_redeem'          => (int)($reward['max_redeem'] ?? 0),
+                        ':now' =>date('Y-m-d H:i:s')   
                     ]);
                 }
             }

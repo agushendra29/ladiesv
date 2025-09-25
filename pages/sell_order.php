@@ -147,6 +147,7 @@ $(document).ready(function () {
       { data: "order_date" },
       { data: "items_summary" }
     ],
+     order: [[0, "desc"]],
     drawCallback: function (settings) {
       const api = this.api();
       const data = api.rows({ page: "current" }).data();

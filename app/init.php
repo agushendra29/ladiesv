@@ -10,6 +10,7 @@ require_once 'classes/User.php';
 
 //include the function
 require_once 'functions.php';
+date_default_timezone_set('Asia/Jakarta');
 
 
 
