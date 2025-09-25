@@ -208,7 +208,7 @@
         </div>
 
         <!-- Filter (hanya tampil jika bukan role 4 & 5) -->
-        <?php if ($_SESSION['role_id'] != 4 && $_SESSION['role_id'] != 5): ?>
+        <?php if ($_SESSION['role_id'] != 4 && $_SESSION['role_id'] != 5 && $_SESSION['role_id'] != 10): ?>
         <div class="filter-wrapper">
           <label for="roleFilter" style="margin-bottom: 0px;">Filter Role:</label>
           <select id="roleFilter">

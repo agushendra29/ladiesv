@@ -11,13 +11,13 @@
         </div>
 
         <!-- 🔎 Filter Periode -->
-        <div class="filter-box" style="margin:20px 0; display:flex; flex-wrap:wrap; gap:10px; align-items:center;font-size:14px;">
-          <label for="start_date" class="mb-0 fw-bold">Periode:</label>
-          <input type="date" id="start_date" class="form-control" style="max-width:200px;font-size:12px;">
-          <span>s/d</span>
-          <input type="date" id="end_date" class="form-control" style="max-width:200px;font-size:12px;">
-          <button id="filterBtn" class="btn-custom">Filter</button>
-        </div>
+        <div class="filter-box">
+  <label for="start_date" class="mb-0 fw-bold">Periode:</label>
+  <input type="date" id="start_date" class="form-control">
+  <span class="range-label">s/d</span>
+  <input type="date" id="end_date" class="form-control">
+  <button id="filterBtn" class="btn-custom">Filter</button>
+</div>
 
         <!-- Table -->
         <div class="table-responsive">
@@ -44,6 +44,38 @@
 </div>
 
 <style>
+
+  .filter-box {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;           /* elemen akan turun ke baris berikutnya */
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.filter-box .form-control {
+  max-width: 200px;
+  font-size: 12px;
+}
+
+/* Mobile view */
+@media (max-width: 576px) {
+  .filter-box {
+    flex-direction: column;  /* stack vertical */
+    align-items: stretch;    /* isi lebar penuh */
+  }
+  .filter-box label,
+  .filter-box .form-control,
+  .filter-box .range-label,
+  .filter-box button {
+    width: 100%;
+    max-width: 100%;
+  }
+  .filter-box .range-label {
+    text-align: center;      /* tengah untuk teks "s/d" */
+  }
+}
 #sellOrderTable tbody tr {
   background-color: #fff;
   border-radius: 10px;

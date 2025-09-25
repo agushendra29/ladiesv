@@ -32,10 +32,10 @@ foreach ($products as $p) {
       <form id="combinedForm" method="post" action="your_submit_action.php">
         <div class="section-card-body mt-2">
           <div style="font-size:18px;font-weight:500;">Data Produk</div>
-          <a id="addProductBtn">+ Tambah Produk</a>
+          <a id="addProductBtn" style="display: none;">+ Tambah Produk</a>
 
-          <div id="productRows">
-            <table>
+          <div id="productRows" class="table-responsive">
+            <table class="display dataTable text-center custom-table">
               <thead>
                 <tr>
                   <th>Produk</th><th>Qty</th><th>Harga</th><th>Subtotal</th><th>Aksi</th>
@@ -59,13 +59,14 @@ foreach ($products as $p) {
 
           <div class="form-row">
             <div class="form-col">
-              <label for="sup_name">Nama Lengkap *</label>
-              <input type="text" id="sup_name" name="sup_name" required>
-            </div>
-            <div class="form-col">
               <label for="sup_nik">NIK *</label>
               <input type="number" id="sup_nik" name="sup_nik" required pattern="\d{16}" maxlength="16">
             </div>
+            <div class="form-col">
+              <label for="sup_name">Nama Lengkap *</label>
+              <input type="text" id="sup_name" name="sup_name" required>
+            </div>
+
           </div>
 
           <div class="form-row">
@@ -153,6 +154,10 @@ foreach ($products as $p) {
                 <option value="">-- Pilih Kecamatan --</option>
               </select>
             </div>
+              <div class="form-col">
+              <label for="sup_npwp">NPWP</label>
+              <input type="number" id="sup_npwp" name="sup_npwp" pattern="\d{15}" maxlength="15">
+            </div>
           </div>
         </div>
 
@@ -172,7 +177,6 @@ input,select,textarea{width:100%;padding:14px 16px;border:1px solid #d1d5db;bord
 textarea{resize:vertical}
 a#addProductBtn{background:#EB4F7D;color:#fff;border-radius:10px;padding:10px 18px;display:inline-block;margin:12px 0;cursor:pointer;text-decoration:none;font-weight:500}
 #productRows table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
-#productRows thead{background:#EEA0A0;color:#fff;font-size:13px}
 #productRows th,#productRows td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:center}
 .form-actions{text-align:center;margin-top:36px}
 .btn-reset{background:#ef4444;color:#fff;padding:14px 28px;border:none;border-radius:12px;margin-right:14px;cursor:pointer;font-weight:500}
@@ -201,13 +205,13 @@ const productRowsBody  = document.getElementById('productRowsBody');
 
 function createProductRow(){
   const row=document.createElement('tr');row.classList.add('product-row');
-  let options='<option disabled selected>Pilih produk</option>';
+  let options='';
   productsData.forEach(p=>{
      options+=`<option value="${p.id}" data-price="${p.sell_price_r}">${p.product_name} - Stok: ${p.pStock}</option>`;
   });
   row.innerHTML=`
     <td data-label="Produk"><select name="product_id[]" class="product-select" required>${options}</select></td>
-    <td data-label="Qty"><input type="number" name="quantity[]" class="quantity-input" min="1" value="1" required></td>
+    <td data-label="Qty"><input type="number" name="quantity[]" class="quantity-input" min="1" value="0" required></td>
     <td data-label="Harga" style="text-align:right;"><span class="price-label" data-raw="0">0</span></td>
     <td data-label="Subtotal" style="text-align:right;"><span class="subtotal-label" data-raw="0">0</span></td>
     <td data-label="Aksi" style="text-align:center;"><button type="button" class="remove-row" style="background:#ef4444;color:white;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;">Hapus</button></td>`;

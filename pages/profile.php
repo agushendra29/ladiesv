@@ -74,7 +74,7 @@
 
       <!-- Judul -->
       <h2 style="font-size: 24px; font-weight: 700; color: #1e293b; margin-bottom: 24px; user-select:none;">
-        👤 Profil Anggota: <?=htmlspecialchars($data->suppliar_code)?>
+        Profil Anggota: <?=htmlspecialchars($data->suppliar_code)?>
       </h2>
 
       <!-- Informasi User Readonly -->
@@ -98,7 +98,7 @@
         <div><label style="font-weight: bold;">Provinsi:</label><br><?= htmlspecialchars($provinsiName) ?></div>
         <div><label style="font-weight: bold;">Kota:</label><br><?= htmlspecialchars($kotaName) ?></div>
         <div><label style="font-weight: bold;">Kecamatan:</label><br><?= htmlspecialchars($kecamatanName) ?></div>
-        <div><label style="font-weight: bold;">Referal:</label><br><?= htmlspecialchars(getReferralCode($pdo, $data->parent_id ? $data->parent_id : 0)) ?></div>
+        <?php if($_SESSION['role_id'] == 5): ?><div><label style="font-weight: bold;">ID Pengundang:</label><br><?= htmlspecialchars(getReferralCode($pdo, $data->parent_id ? $data->parent_id : 0)) ?></div><?php endif ?>
       </div>
 
       <!-- Form Ganti Password -->

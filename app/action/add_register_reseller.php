@@ -14,6 +14,7 @@ try {
 
     $sup_name      = trim($payload['sup_name']);
     $sup_nik       = trim($payload['sup_nik']);
+    $sup_npwp       = trim($payload['sup_npwp']);
     $sup_rekening  = trim($payload['sup_rekening']);
     $sup_bank      = trim($payload['sup_bank']);
     $sup_contact   = trim($payload['sup_contact']);
@@ -42,9 +43,18 @@ try {
 
     // ----------------- Validasi data wajib -----------------
     if(!preg_match('/^[0-9]{16}$/', $sup_nik)) throw new Exception('NIK harus 16 digit angka.');
+
+    if (!empty($sup_npwp)) {            // cek hanya jika diisi
+        if (!preg_match('/^[0-9]{15}$/', $sup_npwp)) {
+            echo "NPWP harus berupa 15 digit angka.";
+            exit;
+        }
+    }
+
     if(!$sup_name || !$sup_rekening || !$sup_bank || !$birth_date || !$sup_akun || !$sup_contact || !$sup_email || !$sup_role || !$sup_address){
         throw new Exception('Semua field user harus diisi.');
     }
+    
 
     // ----------------- Cek kode referal -----------------
     $parent_id = null;
@@ -82,7 +92,8 @@ try {
         'kota' => $kota,
         'kecamatan' => $kecamatan,
         'parent_id' => $parent_id,
-        'parent_id_code' => $parent_code_db   
+        'parent_id_code' => $parent_code_db,
+        'npwp' => $sup_npwp   
     ];
     $suppliar_id = $obj->create('suppliar', $sup_data);
     if(!$suppliar_id) throw new Exception('Gagal menambahkan suppliar.');

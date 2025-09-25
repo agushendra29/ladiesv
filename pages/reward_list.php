@@ -5,7 +5,7 @@
 
       <!-- ===== Header ===== -->
       <div class="page-header-custom">
-        <div class="section-title">Daftar Hadiah</div>
+        <div class="section-title">Daftar Hadiah </div>
         <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
           <a href="index.php?page=add_reward" class="btn-custom">
             <i class="fas fa-plus"></i> Tambah Reward
@@ -15,6 +15,9 @@
 
       <!-- ===== Tab Menu ===== -->
       <div class="reward-tab-wrapper">
+         <button id="promoTermsBtn" class="btn-custom mr-3" style="background:#4B91F1;">
+      <i class="fas fa-info-circle"></i> Syarat & Ketentuan Promo
+    </button>
         <?php
         $loginRole = $_SESSION['role_id'];
         if ($loginRole == 10 || $loginRole == 1): ?>
@@ -46,7 +49,9 @@
             </tr>
           </tbody>
         </table>
+        
       </div>
+      
           </div>
 
       <!-- ===== Riwayat Penukaran ===== -->
@@ -322,5 +327,24 @@ $(function () {
   var defaultRole = $('.reward-tab.active').data('role') || 'all';
   loadRewardList(defaultRole);
   loadRedeemHistory();
+});
+
+
+$(document).on('click', '#promoTermsBtn', function () {
+  Swal.fire({
+    title: 'Syarat & Ketentuan Promo Rewards',
+    html: `
+      <ul style="text-align:left; padding-left:20px; line-height:1.6;">
+        <li>Periode Promo berlangsung sesuai tanggal yang ditentukan tanpa adanya perpanjangan waktu.</li>
+        <li>Penukaran Promo Reward diberikan kepada pencapai sesuai dengan KTP yang terdaftar.</li>
+        <li>Promo Tour tidak bisa dijual atau dihibahkan.</li>
+        <li>Promo hanya diberikan kepada Penjual yang masih aktif, tidak melanggar Kode Etik & Peraturan Perusahaan.</li>
+        <li>Apabila terjadi Force Majeur ataupun keadaan apapun yang menyebabkan terjadinya perubahan harga yang signifikan maka perusahaan berhak melakukan penyesuaian terhadap Program Promo Reward.</li>
+      </ul>
+    `,
+    icon: 'info',
+    confirmButtonText: 'Tutup',
+    width: 600
+  });
 });
 </script>
