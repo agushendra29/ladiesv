@@ -23,25 +23,21 @@ class User extends Objects {
 
 
 	// user login method to dashboard
-	public function login($username, $pass)
+public function login($username, $pass)
 {
-    // --- Ambil data user sesuai username atau suppliar_code ---
+    // --- Ambil user terakhir sesuai username / suppliar_code ---
     $stmt = $this->pdo->prepare("
-    SELECT *
-    FROM user
-    WHERE 
-        (
-            login_name IS NOT NULL 
-            AND login_name <> '' 
-            AND login_name = :username
-        )
-        OR
-        (
-            (login_name IS NULL OR login_name = '')
-            AND suppliar_code = :username
-        )
-    LIMIT 1
-");
+        SELECT *
+        FROM user
+        WHERE
+            (
+                (login_name IS NOT NULL AND login_name <> '' AND login_name = :username)
+                OR
+                ((login_name IS NULL OR login_name = '') AND suppliar_code = :username)
+            )
+        ORDER BY id DESC       -- ambil paling akhir
+        LIMIT 1
+    ");
     $stmt->bindValue(":username", $username, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_OBJ);
@@ -52,45 +48,36 @@ class User extends Objects {
         return;
     }
 
-    // --- Ambil general password dari tabel common_setting ---
-    $stmt2 = $this->pdo->prepare("
-        SELECT general_password
-        FROM common_setting
-        LIMIT 1
-    ");
-    $stmt2->execute();
-    $generalPass = $stmt2->fetchColumn();   // ambil kolom tunggal
-
-    // --- Cek kecocokan password user atau general password ---
-    // Jika Anda sudah menggunakan password_hash() untuk user/general, 
-    // ganti dengan password_verify().
-    $validPassword = false;
-
-    // Jika password user disimpan plaintext (tidak disarankan):
-    if ($user->password === $pass) {
-        $validPassword = true;
-    }
-
-    // Cek general password
-     if (!$validPassword && $generalPass && $generalPass === $pass) {
-        if (!in_array((int)$user->role_id, [1, 10], true)) {
-            $validPassword = true;
-        }
-    }
-    if (!$validPassword) {
-        $_SESSION['login_error'] = "Invalid Username or Password";
-        redirect("login.php");
-        return;
-    }
-
-    // --- Cek status aktif ---
+    // --- Cek status aktif (suspended) ---
     if ((int)$user->is_active === 0) {
         $_SESSION['login_error'] = "Your account has been suspended. Please contact admin.";
         redirect("login.php");
         return;
     }
 
-    // --- Set session dan redirect ---
+    // --- Ambil general password ---
+    $stmt2 = $this->pdo->prepare("SELECT general_password FROM common_setting LIMIT 1");
+    $stmt2->execute();
+    $generalPass = $stmt2->fetchColumn();
+
+    // --- Cek password user atau general password ---
+    $validPassword = false;
+    if ($user->password === $pass) {
+        $validPassword = true;
+    }
+    if (!$validPassword && $generalPass && $generalPass === $pass) {
+        if (!in_array((int)$user->role_id, [1, 10], true)) {
+            $validPassword = true;
+        }
+    }
+
+    if (!$validPassword) {
+        $_SESSION['login_error'] = "Invalid Username or Password";
+        redirect("login.php");
+        return;
+    }
+
+    // --- Set session ---
     $_SESSION['user_id']        = $user->id;
     $_SESSION['user_role']      = $user->username;
     $_SESSION['name']           = $this->getName($user->suppliar_code);
@@ -99,6 +86,7 @@ class User extends Objects {
 
     redirect("index.php");
 }
+
 
 
 	public function is_admin(){

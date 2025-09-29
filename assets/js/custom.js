@@ -15,214 +15,214 @@ function editAddNewRow() {
     })
 }
 $("#empTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/member_data.php"
-    },
-    columns: [{
-        data: "name"
-    }, {
-        data: "address"
-    }, {
-        data: "con_num"
-    }, {
-        data: "action"
-    }]
-}), $("#staffTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/staff_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "name"
-    }, {
-        data: "designation"
-    }, {
-        data: "con_no"
-    }, {
-        data: "email"
-    }, {
-        data: "address"
-    }, {
-        data: "action"
-    }]
-}), $("#addCatForm").submit((function (a) {
-    a.preventDefault();
-    var t = $("#addCatForm").serialize();
-    $.ajax({
-        type: "POST",
-        url: "app/action/add_catagory.php",
-        data: t,
-        success: function (a) {
-            "yes" == $.trim(a) && (alert("Catagory added successfull"), location.reload())
-        }
-    })
-})), $("#catagoryTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/catagory_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "name"
-    }, {
-        data: "description"
-    }, {
-        data: "action"
-    }]
-}), $("#ex_catagoryTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/ex_catagory_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "name"
-    }, {
-        data: "description"
-    }, {
-        data: "action"
-    }]
-}), $("#addProduct").submit(function (e) {
-    e.preventDefault();
-
-    var productName = $("#product_name").val().trim(),
-        sell_price_hd = $("#sell_price_hd").val().trim(),
-        sell_price_d = $("#sell_price_d").val().trim();
-    sell_price_a = $("#sell_price_d").val().trim();
-    sell_price_r = $("#sell_price_d").val().trim();
-
-    if (productName && sell_price_hd && sell_price_d && sell_price_a && sell_price_r) {
-        var formData = $(this).serialize();
-
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/member_data.php"
+        },
+        columns: [{
+            data: "name"
+        }, {
+            data: "address"
+        }, {
+            data: "con_num"
+        }, {
+            data: "action"
+        }]
+    }), $("#staffTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/staff_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "name"
+        }, {
+            data: "designation"
+        }, {
+            data: "con_no"
+        }, {
+            data: "email"
+        }, {
+            data: "address"
+        }, {
+            data: "action"
+        }]
+    }), $("#addCatForm").submit((function (a) {
+        a.preventDefault();
+        var t = $("#addCatForm").serialize();
         $.ajax({
             type: "POST",
-            url: "app/action/add_product.php",
-            data: formData,
-            success: function (response) {
-                $(".addProductError-area").show();
-
-                if ($.trim(response).toLowerCase() === "yes") {
-                    $("#addProductError").html("✅ Product added successfully");
-                    $("#addProductError").css({
-                        "background": "#d4edda",
-                        "color": "#155724"
-                    });
-                    $("#addProduct")[0].reset();
-                } else {
-                    $("#addProductError").html("❌ " + response);
-                    $("#addProductError").css({
-                        "background": "#f8d7da",
-                        "color": "#721c24"
-                    });
-                }
-            },
-            error: function () {
-                $(".addProductError-area").show();
-                $("#addProductError").html("⚠️ Server error, please try again");
-                $("#addProductError").css({
-                    "background": "#fff3cd",
-                    "color": "#856404"
-                });
-            }
-        });
-    } else {
-        $(".addProductError-area").show();
-        $("#addProductError").html("⚠️ Please fill out all required fields");
-        $("#addProductError").css({
-            "background": "#fff3cd",
-            "color": "#856404"
-        });
-    }
-}), $("#addStockManagement").submit((function (a) {
-    a.preventDefault();
-    var t = $("#p_product").val(),
-        e = $("#p_suppliar").val(),
-        d = $("#stock_quantity").val();
-    if ("" != t && "" != e && null != d) {
-        if (!confirm("Are you sure you want to add/update this stock?")) {
-            return; // jika user cancel, hentikan submit
-        }
-        var r = $("#addStockManagement").serialize();
-        $.ajax({
-            type: "POST",
-            url: "app/action/add_stock_management.php",
-            data: r,
+            url: "app/action/add_catagory.php",
+            data: t,
             success: function (a) {
-                "yes" == $.trim(a) ? ($(".addStockManagementError-area").show(), $("#addStockManagementError").html("Product added successfull"), $("#addStockManagement")[0].reset()) : ($(".addStockManagementError-area").show(), $("#addStockManagementError").html(a))
+                "yes" == $.trim(a) && (alert("Catagory added successfull"), location.reload())
             }
         })
-    } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
-})),
-$(document).on('submit', '#upgradeForm', function (e) {
-    e.preventDefault();
-
-    let form = $(this);
-
-    $.ajax({
-        url: 'app/action/upgrade_reseller.php',
-        type: 'POST',
-        data: form.serialize(),
-        dataType: 'json',
-        beforeSend: function () {
-            // Bisa tambahkan loader di sini
+    })), $("#catagoryTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/catagory_data.php"
         },
-        success: function (data) {
-            Swal.fire({
-                icon: data.status === 'success' ? 'success' : 'error',
-                title: data.message,
-                timer: 2000,
-                showConfirmButton: false
-            }).then(() => {
-                if (data.status === 'success') {
-                    location.reload();
-                }
-            });
+        columns: [{
+            data: "id"
+        }, {
+            data: "name"
+        }, {
+            data: "description"
+        }, {
+            data: "action"
+        }]
+    }), $("#ex_catagoryTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/ex_catagory_data.php"
         },
-        error: function (xhr, status, error) {
-            console.error("AJAX Error:", status, error, xhr.responseText);
-            Swal.fire('Error', 'Terjadi kesalahan koneksi atau respon tidak valid', 'error');
-        }
-    });
-}),
-$(document).ready(function () {
-    $("#purchaseOrderForm").on("submit", function (e) {
+        columns: [{
+            data: "id"
+        }, {
+            data: "name"
+        }, {
+            data: "description"
+        }, {
+            data: "action"
+        }]
+    }), $("#addProduct").submit(function (e) {
         e.preventDefault();
 
-        let products = $("select[name='product_id[]']").map(function () {
-            return $(this).val();
-        }).get();
-        let quantities = $("input[name='quantity[]']").map(function () {
-            return $(this).val();
-        }).get();
+        var productName = $("#product_name").val().trim(),
+            sell_price_hd = $("#sell_price_hd").val().trim(),
+            sell_price_d = $("#sell_price_d").val().trim();
+        sell_price_a = $("#sell_price_d").val().trim();
+        sell_price_r = $("#sell_price_d").val().trim();
 
-        let confirmHtml = "";
-        let subtotal = 0;
+        if (productName && sell_price_hd && sell_price_d && sell_price_a && sell_price_r) {
+            var formData = $(this).serialize();
 
-        for (let i = 0; i < products.length; i++) {
-            let productId = products[i];
-            let qty = parseInt(quantities[i] || 0);
+            $.ajax({
+                type: "POST",
+                url: "app/action/add_product.php",
+                data: formData,
+                success: function (response) {
+                    $(".addProductError-area").show();
 
-            // ambil <option> terpilih
-            let productOption = $("select[name='product_id[]']").eq(i).find("option:selected");
-            let productName = productOption.text();
-            let price = parseFloat(productOption.data("price") || 0);
+                    if ($.trim(response).toLowerCase() === "yes") {
+                        $("#addProductError").html("✅ Product added successfully");
+                        $("#addProductError").css({
+                            "background": "#d4edda",
+                            "color": "#155724"
+                        });
+                        $("#addProduct")[0].reset();
+                    } else {
+                        $("#addProductError").html("❌ " + response);
+                        $("#addProductError").css({
+                            "background": "#f8d7da",
+                            "color": "#721c24"
+                        });
+                    }
+                },
+                error: function () {
+                    $(".addProductError-area").show();
+                    $("#addProductError").html("⚠️ Server error, please try again");
+                    $("#addProductError").css({
+                        "background": "#fff3cd",
+                        "color": "#856404"
+                    });
+                }
+            });
+        } else {
+            $(".addProductError-area").show();
+            $("#addProductError").html("⚠️ Please fill out all required fields");
+            $("#addProductError").css({
+                "background": "#fff3cd",
+                "color": "#856404"
+            });
+        }
+    }), $("#addStockManagement").submit((function (a) {
+        a.preventDefault();
+        var t = $("#p_product").val(),
+            e = $("#p_suppliar").val(),
+            d = $("#stock_quantity").val();
+        if ("" != t && "" != e && null != d) {
+            if (!confirm("Are you sure you want to add/update this stock?")) {
+                return; // jika user cancel, hentikan submit
+            }
+            var r = $("#addStockManagement").serialize();
+            $.ajax({
+                type: "POST",
+                url: "app/action/add_stock_management.php",
+                data: r,
+                success: function (a) {
+                    "yes" == $.trim(a) ? ($(".addStockManagementError-area").show(), $("#addStockManagementError").html("Product added successfull"), $("#addStockManagement")[0].reset()) : ($(".addStockManagementError-area").show(), $("#addStockManagementError").html(a))
+                }
+            })
+        } else $(".addStockManagementError-area").show(), $("#addStockManagementError").html("pleasse filled out all required filled")
+    })),
+    $(document).on('submit', '#upgradeForm', function (e) {
+        e.preventDefault();
 
-            subtotal += price * qty;
+        let form = $(this);
 
-            confirmHtml += `
+        $.ajax({
+            url: 'app/action/upgrade_reseller.php',
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+            beforeSend: function () {
+                // Bisa tambahkan loader di sini
+            },
+            success: function (data) {
+                Swal.fire({
+                    icon: data.status === 'success' ? 'success' : 'error',
+                    title: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error, xhr.responseText);
+                Swal.fire('Error', 'Terjadi kesalahan koneksi atau respon tidak valid', 'error');
+            }
+        });
+    }),
+    $(document).ready(function () {
+        $("#purchaseOrderForm").on("submit", function (e) {
+            e.preventDefault();
+
+            let products = $("select[name='product_id[]']").map(function () {
+                return $(this).val();
+            }).get();
+            let quantities = $("input[name='quantity[]']").map(function () {
+                return $(this).val();
+            }).get();
+
+            let confirmHtml = "";
+            let subtotal = 0;
+
+            for (let i = 0; i < products.length; i++) {
+                let productId = products[i];
+                let qty = parseInt(quantities[i] || 0);
+
+                // ambil <option> terpilih
+                let productOption = $("select[name='product_id[]']").eq(i).find("option:selected");
+                let productName = productOption.text();
+                let price = parseFloat(productOption.data("price") || 0);
+
+                subtotal += price * qty;
+
+                confirmHtml += `
         <p>
           <b>Produk:</b> ${productName} <br>
           <b>Qty:</b> ${qty} <br>
@@ -231,96 +231,96 @@ $(document).ready(function () {
         </p>
         <hr>
       `;
-        }
-
-        confirmHtml += `<h4>Total: Rp ${subtotal.toLocaleString()}</h4>`;
-
-        Swal.fire({
-            title: "Konfirmasi Purchase Order",
-            html: confirmHtml,
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Ya, Kirim",
-            cancelButtonText: "Batal",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // submit form via ajax
-                $.ajax({
-                    url: "app/action/add_purchase_order.php",
-                    type: "POST",
-                    data: $("#purchaseOrderForm").serialize(),
-                    success: function (res) {
-                         Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'Purchase order berhasil ditambahkan.',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
-                        
-
-                    },
-                    error: function () {
-                        Swal.fire("Error!", "Terjadi kesalahan saat menyimpan.", "error");
-                    }
-                });
             }
-        });
-    });
-}), $("#refundForm").submit(function (e) {
-    e.preventDefault();
 
-    var invoiceNumber = $("#invoice_number").val();
+            confirmHtml += `<h4>Total: Rp ${subtotal.toLocaleString()}</h4>`;
 
-    if (invoiceNumber && invoiceNumber.trim() !== "") {
-        var formData = $("#refundForm").serialize();
-        $.ajax({
-            type: "POST",
-            url: "app/action/process_refund.php",
-            data: formData,
-            success: function (res) {
-                try {
-                    var response = JSON.parse(res);
-                    if (response.status === "success") {
-                        $(".refundError-area").show().css("color", "green");
-                        $("#refundError").html(response.message);
-                        $("#refundForm")[0].reset();
-                    } else {
-                        $(".refundError-area").show().css("color", "white");
-                        $("#refundError").html(response.message);
-                    }
-                } catch (err) {
-                    $(".refundError-area").show().css("color", "white");
-                    $("#refundError").html("Response tidak valid: " + res);
+            Swal.fire({
+                title: "Konfirmasi Purchase Order",
+                html: confirmHtml,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Kirim",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // submit form via ajax
+                    $.ajax({
+                        url: "app/action/add_purchase_order.php",
+                        type: "POST",
+                        data: $("#purchaseOrderForm").serialize(),
+                        success: function (res) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'Purchase order berhasil ditambahkan.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+
+
+                        },
+                        error: function () {
+                            Swal.fire("Error!", "Terjadi kesalahan saat menyimpan.", "error");
+                        }
+                    });
                 }
-            },
-            error: function () {
-                $(".refundError-area").show().css("color", "red");
-                $("#refundError").html("Terjadi kesalahan saat proses refund.");
-            }
+            });
         });
-    } else {
-        $(".refundError-area").show().css("color", "red");
-        $("#refundError").html("Invoice number harus diisi.");
-    }
-}), $("#adsuppliarForm").submit(function (e) {
-    e.preventDefault();
+    }), $("#refundForm").submit(function (e) {
+        e.preventDefault();
 
-    // Ambil data form dalam bentuk object
-    var formData = $("#adsuppliarForm").serializeArray();
-    var payload = {};
-    formData.forEach(function (item) {
-        payload[item.name] = item.value;
-    });
+        var invoiceNumber = $("#invoice_number").val();
 
-    let provName = $("#sup_provinsi option:selected").text();
-    let kotaName = $("#sup_kota option:selected").text();
-    let camatName = $("#sup_kecamatan option:selected").text();
+        if (invoiceNumber && invoiceNumber.trim() !== "") {
+            var formData = $("#refundForm").serialize();
+            $.ajax({
+                type: "POST",
+                url: "app/action/process_refund.php",
+                data: formData,
+                success: function (res) {
+                    try {
+                        var response = JSON.parse(res);
+                        if (response.status === "success") {
+                            $(".refundError-area").show().css("color", "green");
+                            $("#refundError").html(response.message);
+                            $("#refundForm")[0].reset();
+                        } else {
+                            $(".refundError-area").show().css("color", "white");
+                            $("#refundError").html(response.message);
+                        }
+                    } catch (err) {
+                        $(".refundError-area").show().css("color", "white");
+                        $("#refundError").html("Response tidak valid: " + res);
+                    }
+                },
+                error: function () {
+                    $(".refundError-area").show().css("color", "red");
+                    $("#refundError").html("Terjadi kesalahan saat proses refund.");
+                }
+            });
+        } else {
+            $(".refundError-area").show().css("color", "red");
+            $("#refundError").html("Invoice number harus diisi.");
+        }
+    }), $("#adsuppliarForm").submit(function (e) {
+        e.preventDefault();
 
-    // Buat HTML konfirmasi
-    let confirmHtml = `
+        // Ambil data form dalam bentuk object
+        var formData = $("#adsuppliarForm").serializeArray();
+        var payload = {};
+        formData.forEach(function (item) {
+            payload[item.name] = item.value;
+        });
+
+        let provName = $("#sup_provinsi option:selected").text();
+        let kotaName = $("#sup_kota option:selected").text();
+        let camatName = $("#sup_kecamatan option:selected").text();
+
+        // Buat HTML konfirmasi
+        let confirmHtml = `
     <div style="text-align:left">
       <p><b>Nama:</b> ${payload.sup_name || '-'}</p>
       <p><b>NIK:</b> ${payload.sup_nik || '-'}</p>
@@ -342,386 +342,404 @@ $(document).ready(function () {
     </div>
   `;
 
-    Swal.fire({
-        title: 'Konfirmasi Data',
-        html: confirmHtml,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Lanjutkan',
-        cancelButtonText: 'Batal',
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        width: 600
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Kirim ke server jika user klik "Ya, Lanjutkan"
-            $.ajax({
-                type: "POST",
-                url: "app/action/add_suppliar.php",
-                data: $("#adsuppliarForm").serialize(),
-                success: function (e) {
-                    if ($.trim(e) == "yes") {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'Suppliar berhasil ditambahkan.',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
+        Swal.fire({
+            title: 'Konfirmasi Data',
+            html: confirmHtml,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Lanjutkan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            width: 600
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim ke server jika user klik "Ya, Lanjutkan"
+                $.ajax({
+                    type: "POST",
+                    url: "app/action/add_suppliar.php",
+                    data: $("#adsuppliarForm").serialize(),
+                    success: function (e) {
+                        if ($.trim(e) == "yes") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'Suppliar berhasil ditambahkan.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: e
+                            });
+                        }
+                    },
+                    error: function () {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Gagal!',
-                            text: e
+                            title: 'Oops...',
+                            text: 'Terjadi kesalahan saat menyimpan data suppliar.'
                         });
                     }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan saat menyimpan data suppliar.'
-                    });
-                }
-            });
-        }
-    });
-}), $("#addNews").submit(function (e) {
-    e.preventDefault();
-
-    var title = $("#title").val(),
-        category = $("#category").val(),
-        publishDate = $("#publish_date").val(),
-        content = $("#content").val();
-
-    if (title !== "" && category !== "" && publishDate !== "" && content !== "") {
-        var formData = $("#addNews").serialize();
-        $.ajax({
-            type: "POST",
-            url: "app/action/add_news.php",
-            data: formData,
-            success: function (res) {
-                if ($.trim(res) === "Berita berhasil disimpan.") {
-                    $("#newsErrorArea").css("border-color", "green").show();
-                    $("#newsErrorMessage").html(res).css("color", "green");
-                    $("#addNews")[0].reset();
-                } else {
-                    $("#newsErrorArea").css("border-color", "red").show();
-                    $("#newsErrorMessage").html(res).css("color", "red");
-                }
-            },
-            error: function () {
-                $("#newsErrorArea").css("border-color", "red").show();
-                $("#newsErrorMessage").html("Terjadi kesalahan pada server.").css("color", "red");
+                });
             }
         });
-    } else {
-        $("#newsErrorArea").css("border-color", "red").show();
-        $("#newsErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
-    }
-}),
-$("#editRewardForm").submit(function (e) {
-    e.preventDefault();
+    }), $("#addNews").submit(function (e) {
+        e.preventDefault();
 
-    let event_name   = $("#event_name").val().trim(),
-        reward_start = $("#reward_start").val().trim(),
-        reward_end   = $("#reward_end").val().trim(),
-        redeem_start = $("#redeem_start").val().trim(),
-        redeem_end   = $("#redeem_end").val().trim(),
-        role_id      = $("#role_id").val().trim();
+        var title = $("#title").val(),
+            category = $("#category").val(),
+            publishDate = $("#publish_date").val(),
+            content = $("#content").val();
 
-    // Validasi input utama
-    if (!event_name || !reward_start || !reward_end || !redeem_start || !redeem_end || !role_id) {
-        Swal.fire({
-            icon: "warning",
-            title: "Peringatan",
-            text: "Silakan isi semua field utama (Event, Periode, Role).",
-            confirmButtonText: "OK"
-        });
-        return;
-    }
+        if (title !== "" && category !== "" && publishDate !== "" && content !== "") {
+            var formData = $("#addNews").serialize();
+            $.ajax({
+                type: "POST",
+                url: "app/action/add_news.php",
+                data: formData,
+                success: function (res) {
+                    if ($.trim(res) === "Berita berhasil disimpan.") {
+                        $("#newsErrorArea").css("border-color", "green").show();
+                        $("#newsErrorMessage").html(res).css("color", "green");
+                        $("#addNews")[0].reset();
+                    } else {
+                        $("#newsErrorArea").css("border-color", "red").show();
+                        $("#newsErrorMessage").html(res).css("color", "red");
+                    }
+                },
+                error: function () {
+                    $("#newsErrorArea").css("border-color", "red").show();
+                    $("#newsErrorMessage").html("Terjadi kesalahan pada server.").css("color", "red");
+                }
+            });
+        } else {
+            $("#newsErrorArea").css("border-color", "red").show();
+            $("#newsErrorMessage").html("Silakan isi semua field yang diperlukan").css("color", "red");
+        }
+    }),
+    $("#editRewardForm").submit(function (e) {
+        e.preventDefault();
 
-    // Validasi format tanggal dd-mm-yyyy
-    const pattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
-    for (let t of [reward_start, reward_end, redeem_start, redeem_end]) {
-        if (!pattern.test(t)) {
+        let event_name = $("#event_name").val().trim(),
+            reward_start = $("#reward_start").val().trim(),
+            reward_end = $("#reward_end").val().trim(),
+            redeem_start = $("#redeem_start").val().trim(),
+            redeem_end = $("#redeem_end").val().trim(),
+            role_id = $("#role_id").val().trim();
+
+        // Validasi input utama
+        if (!event_name || !reward_start || !reward_end || !redeem_start || !redeem_end || !role_id) {
             Swal.fire({
-                icon: "error",
-                title: "Format Salah",
-                text: "Gunakan format tanggal dd-mm-yyyy.",
+                icon: "warning",
+                title: "Peringatan",
+                text: "Silakan isi semua field utama (Event, Periode, Role).",
                 confirmButtonText: "OK"
             });
             return;
         }
-    }
 
-    // Validasi reward item
-    let validItems = true;
-    let rows = $("#rewardTable tbody tr");
-    if (rows.length === 0) {
-        Swal.fire({
-            icon: "warning",
-            title: "Peringatan",
-            text: "Minimal harus ada 1 reward item.",
-            confirmButtonText: "OK"
-        });
-        return;
-    }
-
-    rows.each(function () {
-        let nama_reward = $(this).find("input[name*='nama_reward']").val().trim(),
-            jumlah_point = $(this).find("input[name*='jumlah_point']").val().trim(),
-            max_redeem   = $(this).find("input[name*='max_redeem']").val().trim();
-
-        if (!nama_reward || jumlah_point === "" || max_redeem === "") {
-            validItems = false;
+        // Validasi format tanggal dd-mm-yyyy
+        const pattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+        for (let t of [reward_start, reward_end, redeem_start, redeem_end]) {
+            if (!pattern.test(t)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Format Salah",
+                    text: "Gunakan format tanggal dd-mm-yyyy.",
+                    confirmButtonText: "OK"
+                });
+                return;
+            }
         }
-    });
 
-    if (!validItems) {
-        Swal.fire({
-            icon: "warning",
-            title: "Peringatan",
-            text: "Semua kolom di daftar reward harus diisi.",
-            confirmButtonText: "OK"
+        // Validasi reward item
+        let validItems = true;
+        let rows = $("#rewardTable tbody tr");
+        if (rows.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Peringatan",
+                text: "Minimal harus ada 1 reward item.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        rows.each(function () {
+            let nama_reward = $(this).find("input[name*='nama_reward']").val().trim(),
+                jumlah_point = $(this).find("input[name*='jumlah_point']").val().trim(),
+                max_redeem = $(this).find("input[name*='max_redeem']").val().trim();
+
+            if (!nama_reward || jumlah_point === "" || max_redeem === "") {
+                validItems = false;
+            }
         });
-        return;
-    }
 
-    // Konfirmasi sebelum update
-    Swal.fire({
-        title: "Apakah Anda yakin?",
-        text: "Perubahan data reward akan disimpan.",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, simpan!",
-        cancelButtonText: "Batal"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let formData = $("#editRewardForm").serialize();
-            $.ajax({
-                type: "POST",
-                url: "app/action/edit_reward.php",   // action edit
-                data: formData,
-                success: function (res) {
-                    try {
-                        let data = JSON.parse(res);
-                        Swal.fire({
-                            icon: data.status === "success" ? "success" : "error",
-                            title: data.status === "success" ? "Berhasil!" : "Gagal!",
-                            text: data.message,
-                            timer: 2000,
-                            showConfirmButton: data.status !== "success"
-                        });
-                        if (data.status === "success") {
-                            // misal redirect ke list reward
-                            setTimeout(() => {
-                                window.location.href = "pages/reward_list.php";
-                            }, 1500);
+        if (!validItems) {
+            Swal.fire({
+                icon: "warning",
+                title: "Peringatan",
+                text: "Semua kolom di daftar reward harus diisi.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        // Konfirmasi sebelum update
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Perubahan data reward akan disimpan.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, simpan!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let formData = $("#editRewardForm").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "app/action/edit_reward.php", // action edit
+                    data: formData,
+                    success: function (res) {
+                        try {
+                            let data = JSON.parse(res);
+                            Swal.fire({
+                                icon: data.status === "success" ? "success" : "error",
+                                title: data.status === "success" ? "Berhasil!" : "Gagal!",
+                                text: data.message,
+                                timer: 2000,
+                                showConfirmButton: data.status !== "success"
+                            });
+                            if (data.status === "success") {
+                                // misal redirect ke list reward
+                                setTimeout(() => {
+                                    window.location.href = "pages/reward_list.php";
+                                }, 1500);
+                            }
+                        } catch (err) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Respon server tidak valid.",
+                                confirmButtonText: "OK"
+                            });
                         }
-                    } catch (err) {
+                    },
+                    error: function () {
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: "Respon server tidak valid.",
-                            confirmButtonText: "OK"
+                            text: "Terjadi kesalahan pada server.",
+                            confirmButtonText: "Coba Lagi"
                         });
                     }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Terjadi kesalahan pada server.",
-                        confirmButtonText: "Coba Lagi"
-                    });
-                }
-            });
-        }
-    });
-}),$("#addRewardForm").submit(function (e) {
-    e.preventDefault();
-
-    let event_name   = $("#event_name").val().trim(),
-        reward_start = $("#reward_start").val().trim(),
-        reward_end   = $("#reward_end").val().trim(),
-        redeem_start = $("#redeem_start").val().trim(),
-        redeem_end   = $("#redeem_end").val().trim(),
-        role_id      = $("#role_id").val().trim();
-
-    // Validasi input utama
-    if (!event_name || !reward_start || !reward_end || !redeem_start || !redeem_end || !role_id) {
-        Swal.fire({
-            icon: "warning",
-            title: "Peringatan",
-            text: "Silakan isi semua field utama (Event, Periode, Role).",
-            confirmButtonText: "OK"
+                });
+            }
         });
-        return;
-    }
+    }), $("#addRewardForm").submit(function (e) {
+        e.preventDefault();
 
-    // Validasi format tanggal
-    const pattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
-    let tanggalInputs = [reward_start, reward_end, redeem_start, redeem_end];
-    for (let t of tanggalInputs) {
-        if (!pattern.test(t)) {
+        let event_name = $("#event_name").val().trim(),
+            reward_start = $("#reward_start").val().trim(),
+            reward_end = $("#reward_end").val().trim(),
+            redeem_start = $("#redeem_start").val().trim(),
+            redeem_end = $("#redeem_end").val().trim(),
+            role_id = $("#role_id").val().trim();
+
+        // Validasi input utama
+        if (!event_name || !reward_start || !reward_end || !redeem_start || !redeem_end || !role_id) {
             Swal.fire({
-                icon: "error",
-                title: "Format Salah",
-                text: "Gunakan format tanggal dd-mm-yyyy.",
+                icon: "warning",
+                title: "Peringatan",
+                text: "Silakan isi semua field utama (Event, Periode, Role).",
                 confirmButtonText: "OK"
             });
             return;
         }
-    }
 
-    // Fungsi bantu konversi dd-mm-yyyy ke Date object
-    function parseDate(str) {
-        let parts = str.split("-");
-        return new Date(parts[2], parts[1] - 1, parts[0]);
-    }
-
-    let rs = parseDate(reward_start),
-        re = parseDate(reward_end),
-        rds = parseDate(redeem_start),
-        rde = parseDate(redeem_end);
-
-    // Validasi logika tanggal
-    if (re < rs) {
-        Swal.fire({ icon: "error", title: "Error", text: "Periode Reward Sampai tidak boleh lebih kecil dari Periode Reward Dari.", confirmButtonText: "OK" });
-        return;
-    }
-
-    if (rds < rs) {
-        Swal.fire({ icon: "error", title: "Error", text: "Periode Penukaran Dari tidak boleh lebih kecil dari Periode Reward Dari.", confirmButtonText: "OK" });
-        return;
-    }
-
-    if (rde < rds) {
-        Swal.fire({ icon: "error", title: "Error", text: "Periode Penukaran Sampai tidak boleh lebih kecil dari Periode Penukaran Dari.", confirmButtonText: "OK" });
-        return;
-    }
-
-    // Validasi reward items
-    let validItems = true;
-    let rows = $("#rewardTable tbody tr");
-    if (rows.length === 0) {
-        Swal.fire({
-            icon: "warning",
-            title: "Peringatan",
-            text: "Minimal harus ada 1 reward item.",
-            confirmButtonText: "OK"
-        });
-        return;
-    }
-
-    rows.each(function () {
-        let nama_reward = $(this).find("input[name*='nama_reward']").val().trim(),
-            jumlah_point = $(this).find("input[name*='jumlah_point']").val().trim(),
-            max_redeem   = $(this).find("input[name*='max_redeem']").val().trim();
-
-        if (!nama_reward || jumlah_point === "" || max_redeem === "") {
-            validItems = false;
+        // Validasi format tanggal
+        const pattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+        let tanggalInputs = [reward_start, reward_end, redeem_start, redeem_end];
+        for (let t of tanggalInputs) {
+            if (!pattern.test(t)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Format Salah",
+                    text: "Gunakan format tanggal dd-mm-yyyy.",
+                    confirmButtonText: "OK"
+                });
+                return;
+            }
         }
-    });
 
-    if (!validItems) {
-        Swal.fire({
-            icon: "warning",
-            title: "Peringatan",
-            text: "Semua kolom di daftar reward harus diisi.",
-            confirmButtonText: "OK"
+        // Fungsi bantu konversi dd-mm-yyyy ke Date object
+        function parseDate(str) {
+            let parts = str.split("-");
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        }
+
+        let rs = parseDate(reward_start),
+            re = parseDate(reward_end),
+            rds = parseDate(redeem_start),
+            rde = parseDate(redeem_end);
+
+        // Validasi logika tanggal
+        if (re < rs) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Periode Reward Sampai tidak boleh lebih kecil dari Periode Reward Dari.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        if (rds < rs) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Periode Penukaran Dari tidak boleh lebih kecil dari Periode Reward Dari.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        if (rde < rds) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Periode Penukaran Sampai tidak boleh lebih kecil dari Periode Penukaran Dari.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        // Validasi reward items
+        let validItems = true;
+        let rows = $("#rewardTable tbody tr");
+        if (rows.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Peringatan",
+                text: "Minimal harus ada 1 reward item.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        rows.each(function () {
+            let nama_reward = $(this).find("input[name*='nama_reward']").val().trim(),
+                jumlah_point = $(this).find("input[name*='jumlah_point']").val().trim(),
+                max_redeem = $(this).find("input[name*='max_redeem']").val().trim();
+
+            if (!nama_reward || jumlah_point === "" || max_redeem === "") {
+                validItems = false;
+            }
         });
-        return;
-    }
 
-    // Konfirmasi sebelum submit
-    Swal.fire({
-        title: "Apakah Anda yakin?",
-        text: "Data reward akan disimpan.",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, simpan!",
-        cancelButtonText: "Batal"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let formData = $("#addRewardForm").serialize();
-            $.ajax({
-                type: "POST",
-                url: "app/action/add_reward.php",
-                data: formData,
-                success: function (res) {
-                    try {
-                        let data = JSON.parse(res);
-                        Swal.fire({
-                            icon: data.status === "success" ? "success" : "error",
-                            title: data.status === "success" ? "Berhasil!" : "Gagal!",
-                            text: data.message,
-                            timer: 2000,
-                            showConfirmButton: data.status !== "success"
-                        });
-                    } catch (e) {
+        if (!validItems) {
+            Swal.fire({
+                icon: "warning",
+                title: "Peringatan",
+                text: "Semua kolom di daftar reward harus diisi.",
+                confirmButtonText: "OK"
+            });
+            return;
+        }
+
+        // Konfirmasi sebelum submit
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data reward akan disimpan.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, simpan!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let formData = $("#addRewardForm").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "app/action/add_reward.php",
+                    data: formData,
+                    success: function (res) {
+                        try {
+                            let data = JSON.parse(res);
+                            Swal.fire({
+                                icon: data.status === "success" ? "success" : "error",
+                                title: data.status === "success" ? "Berhasil!" : "Gagal!",
+                                text: data.message,
+                                timer: 2000,
+                                showConfirmButton: data.status !== "success"
+                            });
+                        } catch (e) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Respon server tidak valid.",
+                                confirmButtonText: "OK"
+                            });
+                        }
+                    },
+                    error: function () {
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: "Respon server tidak valid.",
-                            confirmButtonText: "OK"
+                            text: "Terjadi kesalahan pada server.",
+                            confirmButtonText: "Coba Lagi"
                         });
                     }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Terjadi kesalahan pada server.",
-                        confirmButtonText: "Coba Lagi"
-                    });
-                }
-            });
-        }
-    });
-}), $("#purchaseOrderTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/purchase_order_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "suppliar_id"
-    }, {
-        data: "total_amount"
-    }, {
-        data: "status"
-    }, {
-        data: "items_summary"
-    }, {
-        data: "created_at"
-    }, {
-        data: "approved_at"
-    }, {
-        data: "action"
-    }],drawCallback: function (settings) {
-        let api = this.api();
-        let rows = api.rows({ page: 'current' }).data();
-        let container = $("#mobilePurchaseOrders");
-        container.empty();
+                });
+            }
+        });
+    }), $("#purchaseOrderTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/purchase_order_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "suppliar_id"
+        }, {
+            data: "total_amount"
+        }, {
+            data: "status"
+        }, {
+            data: "items_summary"
+        }, {
+            data: "created_at"
+        }, {
+            data: "approved_at"
+        }, {
+            data: "action"
+        }],
+        drawCallback: function (settings) {
+            let api = this.api();
+            let rows = api.rows({
+                page: 'current'
+            }).data();
+            let container = $("#mobilePurchaseOrders");
+            container.empty();
 
-        rows.each(function (row) {
-            let statusClass = "";
-            if (row.status.toLowerCase() === "pending") statusClass = "status-pending";
-            else if (row.status.toLowerCase() === "approved") statusClass = "status-approved";
-            else if (row.status.toLowerCase() === "rejected") statusClass = "status-rejected";
+            rows.each(function (row) {
+                let statusClass = "";
+                if (row.status.toLowerCase() === "pending") statusClass = "status-pending";
+                else if (row.status.toLowerCase() === "approved") statusClass = "status-approved";
+                else if (row.status.toLowerCase() === "rejected") statusClass = "status-rejected";
 
-            let card = `
+                let card = `
               <div class="po-card">
                 <h4>${row.id}</h4>
                 <p><strong>Pemesan:</strong> ${row.suppliar_id}</p>
@@ -733,66 +751,66 @@ $("#editRewardForm").submit(function (e) {
                 <div style="margin-top:8px;">${row.action}</div>
               </div>
             `;
-            container.append(card);
-        });
-    }
-}), $("#refundOrderTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/refund_order_data.php"
-    },
-    columns: [{
-        data: "invoice_number"
-    }, {
-        data: "distributor_name"
-    }, {
-        data: "customer_name"
-    }, {
-        data: "net_total"
-    }, {
-        data: "order_date"
-    }, {
-        data: "items_summary"
-    }]
-}), $("#productTable").DataTable({
-processing: true,
-serverSide: true,
-serverMethod: "post",
-ajax: {
-    url: "app/ajax/product_data.php"
-},
-columns: [{
-        data: "product_id"
-    },
-    {
-        data: "product_name"
-    },
-    {
-        data: "sell_price"
-    },
-    {
-        data: "action"
-    }
-],
-responsive: true,
-paging: true,
-searching: true,
-info: false,
+                container.append(card);
+            });
+        }
+    }), $("#refundOrderTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/refund_order_data.php"
+        },
+        columns: [{
+            data: "invoice_number"
+        }, {
+            data: "distributor_name"
+        }, {
+            data: "customer_name"
+        }, {
+            data: "net_total"
+        }, {
+            data: "order_date"
+        }, {
+            data: "items_summary"
+        }]
+    }), $("#productTable").DataTable({
+        processing: true,
+        serverSide: true,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/product_data.php"
+        },
+        columns: [{
+                data: "product_id"
+            },
+            {
+                data: "product_name"
+            },
+            {
+                data: "sell_price"
+            },
+            {
+                data: "action"
+            }
+        ],
+        responsive: true,
+        paging: true,
+        searching: true,
+        info: false,
 
-drawCallback: function (settings) {
-    // ambil data yang lagi ditampilkan
-    const api = this.api();
-    const data = api.rows({
-        page: 'current'
-    }).data();
-    const $mobileCards = $("#mobileProductCards");
+        drawCallback: function (settings) {
+            // ambil data yang lagi ditampilkan
+            const api = this.api();
+            const data = api.rows({
+                page: 'current'
+            }).data();
+            const $mobileCards = $("#mobileProductCards");
 
-    $mobileCards.empty(); // clear biar nggak dobel
+            $mobileCards.empty(); // clear biar nggak dobel
 
-    data.each(function (row) {
-        const card = `
+            data.each(function (row) {
+                const card = `
             <div class="card-item">
             <div class="row pl-3">
             <div style="flex:1;">
@@ -805,51 +823,51 @@ drawCallback: function (settings) {
             </div>
             </div>
         `;
-        $mobileCards.append(card);
-    });
-}
-}), $("#stockManagementTable").DataTable({
-processing: !0,
-serverSide: !0,
-serverMethod: "post",
-ajax: {
-    url: "app/ajax/stock_management_data.php"
-},
-columns: [{
-    data: "id"
-}, {
-    data: "product_name"
-}, {
-    data: "suppliar_name"
-}, {
-    data: "stock"
-}, {
-    data: "action"
-}],
+                $mobileCards.append(card);
+            });
+        }
+    }), $("#stockManagementTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/stock_management_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "product_name"
+        }, {
+            data: "suppliar_name"
+        }, {
+            data: "stock"
+        }, {
+            data: "action"
+        }],
 
-drawCallback: function (settings) {
-    
-    const api = this.api();
-    const data = api.rows({
-        page: 'current'
-    }).data();
-    const $mobileCards = $("#mobileStockCards");
+        drawCallback: function (settings) {
 
-    $mobileCards.empty(); // clear biar nggak dobel
+            const api = this.api();
+            const data = api.rows({
+                page: 'current'
+            }).data();
+            const $mobileCards = $("#mobileStockCards");
 
-    // render card view untuk mobile
-    data.each(function (row) {
-        let actions = "";
-        if (row.role_id == 10) {
-            actions = `
+            $mobileCards.empty(); // clear biar nggak dobel
+
+            // render card view untuk mobile
+            data.each(function (row) {
+                let actions = "";
+                if (row.role_id == 10) {
+                    actions = `
                 <div class="actions d-flex" style="gap:6px;">
                   <input type="number" min="0" value="0" class="form-control form-control-sm text-center stock-input" style="width:60px;" data-id="${row.stock_id}">
                   <button type="button" class="btn btn-success btn-sm stock-apply-add" data-id="${row.stock_id}"><i class="fas fa-plus"></i></button>
                   <button type="button" class="btn btn-danger btn-sm stock-apply-reduce" data-id="${row.stock_id}"><i class="fas fa-minus"></i></button>
                 </div>
             `;
-        }
-        const card = `
+                }
+                const card = `
                 <div class="card-item">
                 <h4>${row.product_name}</h4>
                 <div class="meta">Suppliar: ${row.suppliar_name}</div>
@@ -857,59 +875,59 @@ drawCallback: function (settings) {
                 ${actions}
                 </div>
             `;
-        $mobileCards.append(card);
-    });
-}
-}), $("#stockLogsTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/stock_log_data.php"
-    },
-    columns: [{
-            "data": "suppliar_name"
+                $mobileCards.append(card);
+            });
+        }
+    }), $("#stockLogsTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/stock_log_data.php"
         },
-        {
-            "data": "product_name"
-        },
-        {
-            "data": "action_type"
-        },
-        {
-            "data": "old_quantity"
-        },
-        {
-            "data": "new_quantity"
-        },
-        {
-            data: "difference",
-            render: function (data, type, row) {
-                if (row.difference_raw > 0) {
-                    return '<span style="color:green; font-weight:bold;">' + data + '</span>';
-                } else if (row.difference_raw < 0) {
-                    return '<span style="color:red; font-weight:bold;">' + data + '</span>';
+        columns: [{
+                "data": "suppliar_name"
+            },
+            {
+                "data": "product_name"
+            },
+            {
+                "data": "action_type"
+            },
+            {
+                "data": "old_quantity"
+            },
+            {
+                data: "difference",
+                render: function (data, type, row) {
+                    if (row.difference_raw > 0) {
+                        return '<span style="color:green; font-weight:bold;">' + data + '</span>';
+                    } else if (row.difference_raw < 0) {
+                        return '<span style="color:red; font-weight:bold;">' + data + '</span>';
+                    }
+                    return '<span style="color:gray;">' + data + '</span>';
                 }
-                return '<span style="color:gray;">' + data + '</span>';
-            }
-        },
-        {
-            "data": "changed_by"
-        },
-        {
-            "data": "created_at"
-        },
-    ],drawCallback: function (settings) {
-        const api = this.api();
-        const data = api.rows({ page: 'current' }).data();
-        const $mobileCards = $("#mobileLogCards"); // container card mobile
+            },
+            {
+                "data": "changed_by"
+            },
+            {
+                "data": "created_at"
+            },
+        ],
+        drawCallback: function (settings) {
+            const api = this.api();
+            const data = api.rows({
+                page: 'current'
+            }).data();
+            const $mobileCards = $("#mobileLogCards"); // container card mobile
 
-        $mobileCards.empty();
+            $mobileCards.empty();
 
-        data.each(function (row) {
-            const diffColor = row.difference_raw > 0 ? "green" : (row.difference_raw < 0 ? "red" : "gray");
+            data.each(function (row) {
+                const diffColor = row.difference_raw > 0 ? "green" : (row.difference_raw < 0 ? "red" : "gray");
 
-            const card = `
+                const card = `
                 <div class="card-item">
                     <h4>${row.product_name}</h4>
                     <div class="meta">Distributor: ${row.suppliar_name}</div>
@@ -921,39 +939,42 @@ drawCallback: function (settings) {
                     <div class="meta">Tanggal: ${row.created_at}</div>
                 </div>
             `;
-            $mobileCards.append(card);
-        });
-    }
-}), $("#newsTable").DataTable({
-        stripeClasses: [],
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/news_data.php" // adjust the path to your PHP backend
-    },
-    columns: [{
-            data: "title"
-        }, // news title
-        {
-            data: "content"
-        },
-        {
-            data: "publish_date"
-        }, // formatted publish date
-        {
-            data: "created_at"
-        }, // created datetime
-        {
-            data: "action"
+                $mobileCards.append(card);
+            });
         }
-    ], drawCallback: function(settings) {
-        const api = this.api();
-        const data = api.rows({ page: 'current' }).data();
-        const $mobileCards = $("#mobileNewsCards");
-        $mobileCards.empty();
-        data.each(function(row) {
-            const card = `
+    }), $("#newsTable").DataTable({
+        stripeClasses: [],
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/news_data.php" // adjust the path to your PHP backend
+        },
+        columns: [{
+                data: "title"
+            }, // news title
+            {
+                data: "content"
+            },
+            {
+                data: "publish_date"
+            }, // formatted publish date
+            {
+                data: "created_at"
+            }, // created datetime
+            {
+                data: "action"
+            }
+        ],
+        drawCallback: function (settings) {
+            const api = this.api();
+            const data = api.rows({
+                page: 'current'
+            }).data();
+            const $mobileCards = $("#mobileNewsCards");
+            $mobileCards.empty();
+            data.each(function (row) {
+                const card = `
               <div class="card-item">
                 <h4>${row.title}</h4>
                 <div class="meta">${row.publish_date} | ${row.created_at}</div>
@@ -961,362 +982,362 @@ drawCallback: function (settings) {
                 <div class="actions">${row.action}</div>
               </div>
             `;
-            $mobileCards.append(card);
-        });
-    }
-}), $("#rewardListTable").DataTable({
-    processing: false,
-    serverSide: false,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/reward_list_data.php" // adjust the path to your PHP backend
-    },
-    columns: [{
-            data: "no"
-        }, // news id
-        {
-            data: "nama_reward"
-        }, // news title
-        {
-            data: "periode_hadiah"
+                $mobileCards.append(card);
+            });
+        }
+    }), $("#rewardListTable").DataTable({
+        processing: false,
+        serverSide: false,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/reward_list_data.php" // adjust the path to your PHP backend
         },
-        {
-            data: "role_id"
-        }, // formatted publish date
-        {
-            data: "jumlah_point"
-        },
-    ]
-}), $("#otherProductTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/factoryProduct_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "product_id"
-    }, {
-        data: "product_name"
-    }, {
-        data: "brand_name"
-    }, {
-        data: "catagory_name"
-    }, {
-        data: "quantity"
-    }, {
-        data: "product_expense"
-    }, {
-        data: "sell_price"
-    }, {
-        data: "action"
-    }]
-}), $("#purchaseTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/purchase_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "product_name"
-    }, {
-        data: "purchase_date"
-    }, {
-        data: "purchase_quantity"
-    }, {
-        data: "purchase_price"
-    }, {
-        data: "purchase_sell_price"
-    }, {
-        data: "purchase_net_total"
-    }, {
-        data: "purchase_due_bill"
-    }, {
-        data: "return_status"
-    }, {
-        data: "action"
-    }]
-}), $("#purchasereturnTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/purchase_return_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "sell_id"
-    }, {
-        data: "suppliar_name"
-    }, {
-        data: "return_date"
-    }, {
-        data: "product_name"
-    }, {
-        data: "return_quantity"
-    }, {
-        data: "subtotal"
-    }, {
-        data: "discount"
-    }, {
-        data: "netTotal"
-    }]
-}), $("#sellTable").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/sell_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "customer_name"
-    }, {
-        data: "order_date"
-    }, {
-        data: "sub_total"
-    }, {
-        data: "prev_due"
-    }, {
-        data: "net_total"
-    }, {
-        data: "paid_amount"
-    }, {
-        data: "due_amount"
-    }, {
-        data: "return_status"
-    }, {
-        data: "payment_type"
-    }, {
-        data: "action"
-    }]
-}), $("#sell_returnList").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/sell_return_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "customer_name"
-    }, {
-        data: "invoice_id"
-    }, {
-        data: "return_date"
-    }, {
-        data: "amount"
-    }]
-}), $("#expenseList").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/expense_data.php"
-    },
-    columns: [{
-        data: "id"
-    }, {
-        data: "ex_date"
-    }, {
-        data: "expense_for"
-    }, {
-        data: "amount"
-    }, {
-        data: "expense_cat"
-    }, {
-        data: "ex_description"
-    }, {
-        data: "action"
-    }]
-}), $(document).ready((function () {
-    function a() {
-        $.ajax({
-            url: "app/ajax/addNewRow.php",
-            method: "POST",
-            data: {
-                getOrderItem: 1
+        columns: [{
+                data: "no"
+            }, // news id
+            {
+                data: "nama_reward"
+            }, // news title
+            {
+                data: "periode_hadiah"
             },
-            success: function (a) {
-                $("#invoiceItem").append(a), $(".select2").select2();
-                var t = 0;
-                $(".si_number").each((function () {
-                    $(this).html(++t)
-                }))
-            }
-        })
-    }
+            {
+                data: "role_id"
+            }, // formatted publish date
+            {
+                data: "jumlah_point"
+            },
+        ]
+    }), $("#otherProductTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/factoryProduct_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "product_id"
+        }, {
+            data: "product_name"
+        }, {
+            data: "brand_name"
+        }, {
+            data: "catagory_name"
+        }, {
+            data: "quantity"
+        }, {
+            data: "product_expense"
+        }, {
+            data: "sell_price"
+        }, {
+            data: "action"
+        }]
+    }), $("#purchaseTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/purchase_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "product_name"
+        }, {
+            data: "purchase_date"
+        }, {
+            data: "purchase_quantity"
+        }, {
+            data: "purchase_price"
+        }, {
+            data: "purchase_sell_price"
+        }, {
+            data: "purchase_net_total"
+        }, {
+            data: "purchase_due_bill"
+        }, {
+            data: "return_status"
+        }, {
+            data: "action"
+        }]
+    }), $("#purchasereturnTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/purchase_return_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "sell_id"
+        }, {
+            data: "suppliar_name"
+        }, {
+            data: "return_date"
+        }, {
+            data: "product_name"
+        }, {
+            data: "return_quantity"
+        }, {
+            data: "subtotal"
+        }, {
+            data: "discount"
+        }, {
+            data: "netTotal"
+        }]
+    }), $("#sellTable").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/sell_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "customer_name"
+        }, {
+            data: "order_date"
+        }, {
+            data: "sub_total"
+        }, {
+            data: "prev_due"
+        }, {
+            data: "net_total"
+        }, {
+            data: "paid_amount"
+        }, {
+            data: "due_amount"
+        }, {
+            data: "return_status"
+        }, {
+            data: "payment_type"
+        }, {
+            data: "action"
+        }]
+    }), $("#sell_returnList").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/sell_return_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "customer_name"
+        }, {
+            data: "invoice_id"
+        }, {
+            data: "return_date"
+        }, {
+            data: "amount"
+        }]
+    }), $("#expenseList").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/expense_data.php"
+        },
+        columns: [{
+            data: "id"
+        }, {
+            data: "ex_date"
+        }, {
+            data: "expense_for"
+        }, {
+            data: "amount"
+        }, {
+            data: "expense_cat"
+        }, {
+            data: "ex_description"
+        }, {
+            data: "action"
+        }]
+    }), $(document).ready((function () {
+        function a() {
+            $.ajax({
+                url: "app/ajax/addNewRow.php",
+                method: "POST",
+                data: {
+                    getOrderItem: 1
+                },
+                success: function (a) {
+                    $("#invoiceItem").append(a), $(".select2").select2();
+                    var t = 0;
+                    $(".si_number").each((function () {
+                        $(this).html(++t)
+                    }))
+                }
+            })
+        }
 
-    function t(a) {
-        var t = 0,
-            e = 0,
-            d = parseInt($("#prev_due").val()),
-            r = a;
-        $(".tprice").each((function () {
-            t += 1 * $(this).val(), $("#netTotal").val(e)
-        }));
-        var n = t / 100 * r;
-        $("#s_discount_amount").val(n), e = t - n, e += d, $("#subtotal").val(t), $("#netTotal").val(e)
-    }
-    a(), $("#addNewRowBtn").on("click", (function (t) {
-        t.preventDefault(), a()
-    })), $(document).on("click", ".cancelThisItem", (function (a) {
-        a.preventDefault(), $(this).parent().parent().remove(), t(0)
-    })), $(document).on("change", ".pid", (function (a) {
+        function t(a) {
+            var t = 0,
+                e = 0,
+                d = parseInt($("#prev_due").val()),
+                r = a;
+            $(".tprice").each((function () {
+                t += 1 * $(this).val(), $("#netTotal").val(e)
+            }));
+            var n = t / 100 * r;
+            $("#s_discount_amount").val(n), e = t - n, e += d, $("#subtotal").val(t), $("#netTotal").val(e)
+        }
+        a(), $("#addNewRowBtn").on("click", (function (t) {
+            t.preventDefault(), a()
+        })), $(document).on("click", ".cancelThisItem", (function (a) {
+            a.preventDefault(), $(this).parent().parent().remove(), t(0)
+        })), $(document).on("change", ".pid", (function (a) {
+            a.preventDefault();
+            var e = $(this).val(),
+                d = $(this).parent().parent();
+            $.ajax({
+                url: "app/ajax/single_sell_item.php",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    getSellSingleInfo: 1,
+                    id: e
+                },
+                success: function (a) {
+                    d.find(".qaty").val(a.quantity), d.find(".oqty").val(1), d.find(".price").val(a.sell_price), d.find(".pro_name").val(a.product_name), d.find(".tprice").val(d.find(".oqty").val() * d.find(".price").val()), t(0)
+                }
+            })
+        })), $(document).on("keyup", ".oqty", (function (a) {
+            var e = $(this),
+                d = $(this).parent().parent();
+            e.val() - 0 > d.find(".qaty").val() - 0 ? alert("please enter a valid quantity") : (d.find(".tprice").val(d.find(".oqty").val() * d.find(".price").val()), t(0))
+        })), $(document).on("change", "#customer_name", (function (a) {
+            a.preventDefault();
+            var t = $("#customer_name").val();
+            $.ajax({
+                url: "app/ajax/find_customer_due.php",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    getcusTotalDue: 1,
+                    id: t
+                },
+                success: function (a) {
+                    $("#prev_due").val(a.total_due)
+                }
+            })
+        })), $("#discount").on("keyup", (function (a) {
+            a.preventDefault(), t($(this).val())
+        })), $(document).on("keyup", ".price", (function (a) {
+            a.preventDefault();
+            var e = $(this).parent().parent(),
+                d = $(this).val();
+            e.find(".tprice").val(d);
+            t(0)
+        })), $(document).on("keyup", "#s_discount_amount", (function (a) {
+            a.preventDefault();
+            var t = $("#s_discount_amount").val(),
+                e = $("#subtotal").val() - t;
+            $("#netTotal").val(e)
+        })), $("#paidBill").on("keyup", (function (a) {
+            a.preventDefault();
+            var t = $(this).val(),
+                e = $("#netTotal").val() - t;
+            $("#dueBill").val(e)
+        })), $("#sellBtn").on("click", (function (a) {
+            a.preventDefault();
+            $("#sellForm").serialize();
+            var t = $("#customer_name").val(),
+                e = $("#payMethode").val();
+            null != t && null != e ? $.ajax({
+                url: "app/action/sell.php",
+                method: "POST",
+                data: $("#sellForm").serialize(),
+                success: function (a) {
+                    var t = a;
+                    1 != isNaN(t) ? window.location.href = "index.php?page=view_sell&&view_id=" + t : alert("Failed to make sell. please try again.")
+                }
+            }) : alert("You missed some required field")
+        }))
+    })), $(document).on("click", "#editSellBtn", (function (a) {
         a.preventDefault();
-        var e = $(this).val(),
-            d = $(this).parent().parent();
-        $.ajax({
-            url: "app/ajax/single_sell_item.php",
-            method: "POST",
-            dataType: "json",
-            data: {
-                getSellSingleInfo: 1,
-                id: e
-            },
-            success: function (a) {
-                d.find(".qaty").val(a.quantity), d.find(".oqty").val(1), d.find(".price").val(a.sell_price), d.find(".pro_name").val(a.product_name), d.find(".tprice").val(d.find(".oqty").val() * d.find(".price").val()), t(0)
-            }
-        })
-    })), $(document).on("keyup", ".oqty", (function (a) {
-        var e = $(this),
-            d = $(this).parent().parent();
-        e.val() - 0 > d.find(".qaty").val() - 0 ? alert("please enter a valid quantity") : (d.find(".tprice").val(d.find(".oqty").val() * d.find(".price").val()), t(0))
-    })), $(document).on("change", "#customer_name", (function (a) {
-        a.preventDefault();
-        var t = $("#customer_name").val();
-        $.ajax({
-            url: "app/ajax/find_customer_due.php",
-            method: "POST",
-            dataType: "json",
-            data: {
-                getcusTotalDue: 1,
-                id: t
-            },
-            success: function (a) {
-                $("#prev_due").val(a.total_due)
-            }
-        })
-    })), $("#discount").on("keyup", (function (a) {
-        a.preventDefault(), t($(this).val())
-    })), $(document).on("keyup", ".price", (function (a) {
-        a.preventDefault();
-        var e = $(this).parent().parent(),
-            d = $(this).val();
-        e.find(".tprice").val(d);
-        t(0)
-    })), $(document).on("keyup", "#s_discount_amount", (function (a) {
-        a.preventDefault();
-        var t = $("#s_discount_amount").val(),
-            e = $("#subtotal").val() - t;
-        $("#netTotal").val(e)
-    })), $("#paidBill").on("keyup", (function (a) {
-        a.preventDefault();
-        var t = $(this).val(),
-            e = $("#netTotal").val() - t;
-        $("#dueBill").val(e)
-    })), $("#sellBtn").on("click", (function (a) {
-        a.preventDefault();
-        $("#sellForm").serialize();
-        var t = $("#customer_name").val(),
+        var t = confirm("Are You sure want to edit this sell"),
             e = $("#payMethode").val();
-        null != t && null != e ? $.ajax({
-            url: "app/action/sell.php",
+        t ? null != e ? $.ajax({
+            url: "app/action/edit_sell.php",
             method: "POST",
-            data: $("#sellForm").serialize(),
+            data: $("#editSellForm").serialize(),
             success: function (a) {
                 var t = a;
-                1 != isNaN(t) ? window.location.href = "index.php?page=view_sell&&view_id=" + t : alert("Failed to make sell. please try again.")
+                1 != isNaN(t) ? window.location.href = "index.php?page=view_sell&&view_id=" + t : alert(a)
             }
-        }) : alert("You missed some required field")
-    }))
-})), $(document).on("click", "#editSellBtn", (function (a) {
-    a.preventDefault();
-    var t = confirm("Are You sure want to edit this sell"),
-        e = $("#payMethode").val();
-    t ? null != e ? $.ajax({
-        url: "app/action/edit_sell.php",
-        method: "POST",
-        data: $("#editSellForm").serialize(),
-        success: function (a) {
-            var t = a;
-            1 != isNaN(t) ? window.location.href = "index.php?page=view_sell&&view_id=" + t : alert(a)
-        }
-    }) : alert("please select a payment methode") : alert("Your data are save")
-})), $("#customer_blance_report_data").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/customer_blance_report_data.php"
-    },
-    columns: [{
-        data: "member_id"
-    }, {
-        data: "member_name"
-    }, {
-        data: "company"
-    }, {
-        data: "phone_number"
-    }, {
-        data: "cus_total_transaction"
-    }, {
-        data: "cus_paid_total"
-    }, {
-        data: "cus_due_toal"
-    }]
-}), $("#suppliar_blance_report_data").DataTable({
-    processing: !0,
-    serverSide: !0,
-    serverMethod: "post",
-    ajax: {
-        url: "app/ajax/suppliar_blance_report_data.php"
-    },
-    columns: [{
-        data: "supplier_id"
-    }, {
-        data: "supplier_name"
-    }, {
-        data: "company"
-    }, {
-        data: "phone_number"
-    }, {
-        data: "net_total"
-    }, {
-        data: "paid_bill"
-    }, {
-        data: "due_bill"
-    }]
-}), $(document).on("keyup", ".returnQty", (function (a) {
-    var t = $(this),
-        e = $(this).parent().parent();
-    t.val() - 0 > e.find(".orderQty").val() - 0 && alert("Return quantity must not getter than order quantity")
-})), $("#returnSellBtn").on("click", (function (a) {
-    a.preventDefault();
-    $(".orderQty").val(), $(".returnQty").val();
-    confirm("Are You sure want to edit this sell") ? $.ajax({
-        url: "app/action/sell_return.php",
-        method: "POST",
-        data: $("#returnSell").serialize(),
-        success: function (a) {
-            "yes" == $.trim(a) ? alert("Product return successfull") : alet(a)
-        }
-    }) : alert("Your data are save")
-})), $("#EditaddNewRowBtn").on("click", (function (a) {
-    a.preventDefault(), editAddNewRow()
-})), $('#combinedForm').on('submit', function (e) {
+        }) : alert("please select a payment methode") : alert("Your data are save")
+    })), $("#customer_blance_report_data").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/customer_blance_report_data.php"
+        },
+        columns: [{
+            data: "member_id"
+        }, {
+            data: "member_name"
+        }, {
+            data: "company"
+        }, {
+            data: "phone_number"
+        }, {
+            data: "cus_total_transaction"
+        }, {
+            data: "cus_paid_total"
+        }, {
+            data: "cus_due_toal"
+        }]
+    }), $("#suppliar_blance_report_data").DataTable({
+        processing: !0,
+        serverSide: !0,
+        serverMethod: "post",
+        ajax: {
+            url: "app/ajax/suppliar_blance_report_data.php"
+        },
+        columns: [{
+            data: "supplier_id"
+        }, {
+            data: "supplier_name"
+        }, {
+            data: "company"
+        }, {
+            data: "phone_number"
+        }, {
+            data: "net_total"
+        }, {
+            data: "paid_bill"
+        }, {
+            data: "due_bill"
+        }]
+    }), $(document).on("keyup", ".returnQty", (function (a) {
+        var t = $(this),
+            e = $(this).parent().parent();
+        t.val() - 0 > e.find(".orderQty").val() - 0 && alert("Return quantity must not getter than order quantity")
+    })), $("#returnSellBtn").on("click", (function (a) {
+        a.preventDefault();
+        $(".orderQty").val(), $(".returnQty").val();
+        confirm("Are You sure want to edit this sell") ? $.ajax({
+            url: "app/action/sell_return.php",
+            method: "POST",
+            data: $("#returnSell").serialize(),
+            success: function (a) {
+                "yes" == $.trim(a) ? alert("Product return successfull") : alet(a)
+            }
+        }) : alert("Your data are save")
+    })), $("#EditaddNewRowBtn").on("click", (function (a) {
+        a.preventDefault(), editAddNewRow()
+    })),$('#combinedForm').on('submit', function (e) {
     e.preventDefault();
 
-    let provName = $("#provinsi option:selected").text();
-    let kotaName = $("#kota option:selected").text();
+    const provName = $("#provinsi option:selected").text();
+    const kotaName = $("#kota option:selected").text();
 
     const payload = {};
     $('#combinedForm').find('input, select, textarea').each(function () {
@@ -1326,47 +1347,47 @@ drawCallback: function (settings) {
         }
     });
 
+    // Kumpulkan produk
     payload.products = [];
     $('.product-row').each(function () {
         const pid = $(this).find('.product-select').val();
-        const qty = $(this).find('.quantity-input').val();
+        const qty = parseInt($(this).find('.quantity-input').val(), 10);
         if (pid && qty) {
-            payload.products.push({
-                product_id: pid,
-                quantity: parseInt(qty)
-            });
+            payload.products.push({ product_id: pid, quantity: qty });
         }
     });
 
     // Validasi minimal 2 produk
-    let totalQty = payload.products.reduce((sum, p) => sum + p.quantity, 0);
+    const totalQty = payload.products.reduce((sum, p) => sum + p.quantity, 0);
     if (totalQty < 2) {
-         Swal.fire('Error', "pendaftaran reseller harus membeli minimal 2 produk" || 'Terjadi kesalahan server.', 'error');
+        Swal.fire('Error',
+            'Pendaftaran reseller harus membeli minimal 2 produk.',
+            'error'
+        );
         return;
     }
-    $('#formErrorArea').hide();
 
-    // Pesan konfirmasi
-    let confirmHtml = `
-        <div style="text-align:left">
-          <p><b>Nama:</b> ${payload.sup_name}</p>
-          <p><b>NIK:</b> ${payload.sup_nik}</p>
-          <p><b>Tanggal Lahir:</b> ${payload.dob}</p>
-          <p><b>No HP:</b> ${payload.sup_contact}</p>
-          <p><b>Alamat KTP:</b> ${payload.supaddressktp}</p>
-          <p><b>Alamat Domisili:</b> ${payload.supaddress}</p>
-          <p><b>Provinsi:</b> ${provName}</p>
-          <p><b>Kota:</b> ${kotaName}</p>
-          <p><b>Bank:</b> ${payload.sup_bank}</p>
-          <p><b>Nama pada Bank:</b> ${payload.sup_name_bank}</p>
-          <p><b>No. Rekening:</b> ${payload.sup_rekening}</p>
-          <hr>
-          <p style="color:red; font-weight:bold;">
-            PENDAFTARAN YANG SUDAH DIPROSES TIDAK DAPAT DIBATALKAN.
-          </p>
-          <p>Jika data ini sudah benar, silahkan dilanjutkan.</p>
-        </div>
-      `;
+    // Konfirmasi isi form
+    const confirmHtml = `
+      <div style="text-align:left">
+        <p><b>Nama:</b> ${payload.sup_name}</p>
+        <p><b>NIK:</b> ${payload.sup_nik}</p>
+        <p><b>Tanggal Lahir:</b> ${payload.dob}</p>
+        <p><b>No HP:</b> ${payload.sup_contact}</p>
+        <p><b>Alamat KTP:</b> ${payload.supaddressktp}</p>
+        <p><b>Alamat Domisili:</b> ${payload.supaddress}</p>
+        <p><b>Provinsi:</b> ${provName}</p>
+        <p><b>Kota:</b> ${kotaName}</p>
+        <p><b>Bank:</b> ${payload.sup_bank}</p>
+        <p><b>Nama pada Bank:</b> ${payload.sup_name_bank}</p>
+        <p><b>No. Rekening:</b> ${payload.sup_rekening}</p>
+        <hr>
+        <p style="color:red; font-weight:bold;">
+          PENDAFTARAN YANG SUDAH DIPROSES TIDAK DAPAT DIBATALKAN.
+        </p>
+        <p>Jika data ini sudah benar, silakan dilanjutkan.</p>
+      </div>
+    `;
 
     Swal.fire({
         title: 'Konfirmasi Data',
@@ -1379,43 +1400,50 @@ drawCallback: function (settings) {
         cancelButtonColor: '#d33',
         width: 600
     }).then((result) => {
-        if (result.isConfirmed) {
-            // Submit via AJAX
-            $.ajax({
-                url: 'app/action/add_register_reseller.php',
-                type: 'POST',
-                data: {
-                    data: JSON.stringify(payload)
-                },
-                dataType: 'json',
-                success: function (res) {
-                    if (res.ok) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Reseller berhasil didaftarkan dan penjualan berhasil.',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = 'index.php?page=sell_order';
-                        });
+        if (!result.isConfirmed) return;
 
-                    } else {
-                        Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                    $('#formErrorArea').text('Terjadi error server.').show();
+        $.ajax({
+            url: 'app/action/add_register_reseller.php',
+            type: 'POST',
+            data: { data: JSON.stringify(payload) },
+            dataType: 'json',
+
+            success: function (res) {
+                if (res.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Reseller berhasil didaftarkan dan penjualan berhasil.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'index.php?page=sell_order';
+                    });
+                } else {
+                    Swal.fire('Error', res.message || 'Terjadi kesalahan server.', 'error');
                 }
-            });
-        }
-    });
+            },
 
+            error: function (xhr) {
+                let msg = 'Terjadi error pada server.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    // coba ambil text jika bukan JSON
+                    msg = xhr.responseText;
+                }
+                Swal.fire('Error', msg, 'error');
+            }
+        });
+    });
 });
+
 let suppliarTable = $("#suppliarTable").DataTable({
     processing: true,
     serverSide: true,
+    order: [
+        [0, 'desc']
+    ],
     serverMethod: "post",
     ajax: {
         url: "app/ajax/suppliar_data.php",
@@ -1453,25 +1481,116 @@ let suppliarTable = $("#suppliarTable").DataTable({
 
         // kosongkan cards
         $("#mobileCards").empty();
+        $("#mobileDistributorCards").empty();
 
         // render ulang card untuk tiap baris
         data.each(function (row) {
+            let parts = row.name.trim().split(/\s+/);
+            let displayName = parts[0]; // "Agus"
             let card = `
-<div class="card-item" style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px; margin-bottom:8px; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
-    <div class="card-content" style="width:90%">
-        <h4 style="margin:0 0 4px 0; font-size:14px;">${row.name}</h4>
-        <div class="meta"><b>Member ID:</b> ${row.id}</div>
-        <div class="meta"><b>Alamat:</b> ${row.address}</div>
-        <div class="meta"><b>Kontak:</b> ${row.con_num}</div>
-        <div class="meta"><b>Level:</b> ${row.role_id}</div>
-        <div class="meta"><b>Tgl Daftar:</b> ${row.created_at}</div>
+<div class="card-item" style="
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    text-align:center;
+    padding:0px !important;
+">
+    <!-- Header hitam dengan nama -->
+    <div style="
+        background:#ff73a4;
+        color:#fff;
+        padding:12px;
+        font-weight:600;
+        font-size:16px;
+        margin-bottom: 10px;
+    ">
+        ${row.name}
     </div>
-    <div class="actions">
-        ${row.action}
+    <!-- Detail informasi -->
+    <div style="text-align:left; font-size:14px; color:#333; padding-left:10px; padding-right:10px;">
+        <div style="margin-bottom:6px;">
+            <span style="font-weight:600;">Member ID:</span> ${row.id}
+        </div>
+        <div style="margin-bottom:6px;">
+            <span style="font-weight:600;">Alamat:</span> ${row.address}
+        </div>
+        <div style="margin-bottom:6px;">
+            <span style="font-weight:600;">Kontak:</span> ${row.con_num}
+        </div>
+        <div style="margin-bottom:6px;">
+            <span style="font-weight:600;">Level:</span> ${row.role_id}
+        </div>
+        <div style="margin-bottom:6px;">
+            <span style="font-weight:600;">Tgl Daftar:</span> ${row.created_at}
+        </div>
+    </div>
+
+    <!-- Tombol aksi -->
+    <div style="
+        background:#f8f8f8;
+        padding:12px;
+        border-top:1px solid #eee;
+    ">
+        
+            ${row.action}
     </div>
 </div>
+
         `;
+
+            let cards2 = `<div class="card-item" style="
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    text-align:left;
+    padding:16px;
+    max-width:280px;
+    border:1px solid #d5c8f0;
+">
+  <!-- Header: huruf H, nama tebal + centang -->
+  <div style="display:flex;align-items:center;margin-bottom:6px;">
+      <span style="font-weight:700;font-size:18px;">${displayName}</span>
+      <i class="fa-solid fa-circle-check" style="color:#6b46c1;margin-left:6px;"></i>
+  </div>
+
+  <!-- Alamat -->
+  <div style="color:#666;margin-bottom:6px;font-size:14px;">
+      <i class="fa-solid fa-location-dot" style="color:#6b46c1;margin-right:6px;"></i>
+      ${row.address}
+  </div>
+
+  <!-- Kontak telp -->
+  <div style="color:#666;margin-bottom:6px;font-size:14px;">
+      <i class="fa-solid fa-phone" style="color:#6b46c1;margin-right:6px;"></i>
+      ${row.con_num}
+  </div>
+
+  <!-- Tombol WhatsApp -->
+  <a href="https://wa.me/${row.con_num}" target="_blank" style="
+      display:inline-block;
+      background:#25D366;
+      color:#fff;
+      padding:10px 24px;
+      border-radius:40px;
+      text-align:center;
+      font-weight:600;
+      text-decoration:none;
+      font-size:15px;
+      margin-top:8px;
+  ">
+      <i class="fa-brands fa-whatsapp" style="margin-right:6px;"></i>
+      Klik Untuk Pesan Disini
+  </a>
+</div>
+`;
             $("#mobileCards").append(card);
+            $("#mobileDistributorCards").append(cards2);
         });
     }
 });

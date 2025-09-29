@@ -52,19 +52,30 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
 <script>
-  // date range picker (boleh pilih kapan saja, tapi default kosong)
+  // ambil tanggal hari ini
+  const todayStart = moment();
+  const todayEnd   = moment();
+  const todayText  = todayStart.format('DD/MM/YYYY') + ' - ' + todayEnd.format('DD/MM/YYYY');
+
+  // set default value langsung saat halaman dimuat
+  $('#issuedate').val(todayText);
+  $('#periodeText').text(todayText);
+
+  // date range picker
   $('#issuedate').daterangepicker({
-    autoUpdateInput: false,
+    autoUpdateInput: true, // biar input langsung terisi
     locale: { format: 'DD/MM/YYYY' },
     opens: 'left',
+    startDate: todayStart,
+    endDate: todayEnd,
     ranges: {
       'Hari Ini': [moment(), moment()],
       '7 Hari Terakhir': [moment().subtract(6,'days'), moment()],
       '30 Hari Terakhir': [moment().subtract(29,'days'), moment()],
       'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
-      'Bulan Lalu': [moment().subtract(1,'month').startOf('month'), moment().subtract(1,'month').endOf('month')]
+      'Bulan Lalu': [moment().subtract(1,'month').startOf('month'),
+                     moment().subtract(1,'month').endOf('month')]
     }
   }, function(start, end){
       const periodeText = start.format('DD/MM/YYYY')+' - '+end.format('DD/MM/YYYY');
@@ -91,16 +102,16 @@
     });
   }
 
+  // render awal: periode hari ini
+  $(document).ready(function(){
+    loadStockMonitoring(todayText, '');
+  });
+
   // tombol cari
   $('#btnSearchStock').on('click', function(){
     var issuedate = $('#issuedate').val();
     var item_id   = $('#filterItem').val();
     $('#periodeText').text(issuedate || '-');
     loadStockMonitoring(issuedate, item_id);
-  });
-
-  // 🔹 render awal: tanpa periode, semua anak distributor total 0
-  $(document).ready(function(){
-    loadStockMonitoring('', '');
   });
 </script>

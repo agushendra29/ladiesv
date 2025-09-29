@@ -49,9 +49,8 @@
                 <th>Distributor</th>
                 <th>Produk</th>
                 <th>Aksi</th>
+                 <th>Stock</th>
                 <th>+/-</th>
-                <th>Jumlah Sebelumnya</th>
-                <th>Jumlah Baru</th>
                 <th>Diubah Oleh</th>
                 <th>Tanggal</th>
               </tr>

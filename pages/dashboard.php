@@ -39,7 +39,6 @@ $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
 <style>
   body {
     background: #f5f7fb;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
     line-height: 1.6;
   }
@@ -207,10 +206,13 @@ $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
                     AND COALESCE(t.is_refund,0) = 0
                 ";
                 $params = ['start'=>$start,'end'=>$end];
-                if(!in_array($role_id,[1,10])){
-                  $sqlDetail .= " AND t.suppliar_id = :sid";
-                  $params['sid'] = $suppliar_id;
-                }
+               if (in_array($role_id, [1, 10])) {
+    // Role admin/superadmin -> paksa suppliar_id = 1
+   $sqlDetail .= " AND t.suppliar_id IN (1,2,3,4)";
+} else {
+    $sqlDetail .= " AND t.suppliar_id = :sid";
+    $params['sid'] = $suppliar_id;
+}
                 $sqlDetail .= " GROUP BY p.product_name ORDER BY p.product_name ASC";
                 $stmt2 = $pdo->prepare($sqlDetail);
                 $stmt2->execute($params);
@@ -244,10 +246,13 @@ $newsList = $stmt->fetchAll(PDO::FETCH_OBJ);
                     AND COALESCE(t.is_refund,0) = 0
                 ";
                 $params = ['start'=>$start,'end'=>$end];
-                if(!in_array($role_id,[1,10])){
-                  $sqlDetail .= " AND t.suppliar_id = :sid";
-                  $params['sid'] = $suppliar_id;
-                }
+               if (in_array($role_id, [1, 10])) {
+    // Role admin/superadmin -> paksa suppliar_id = 1
+    $sqlDetail .= " AND t.suppliar_id IN (1,2,3,4)";
+} else {
+    $sqlDetail .= " AND t.suppliar_id = :sid";
+    $params['sid'] = $suppliar_id;
+}
                 $sqlDetail .= " GROUP BY p.product_name ORDER BY p.product_name ASC";
                 $stmt2 = $pdo->prepare($sqlDetail);
                 $stmt2->execute($params);

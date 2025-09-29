@@ -48,7 +48,7 @@ $roleNames = [
     1 => 'Head Office',
     2 => 'Head Distributor',
     3 => 'Distributor',
-    4 => 'Agent',
+    4 => 'Agen',
     5 => 'Reseller',
    10 => 'Super Admin'
 ];
@@ -394,13 +394,6 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
           </a>
 
           <div id="profileDropdownMenu" class="dropdown-menu-custom" aria-labelledby="profileDropdown" role="menu">
-            <?php if($_SESSION['role_id'] == 5): ?>
-            <span class="dropdown-item-custom" role="menuitem" tabindex="-1">
-              <div class="user-role" style="color:black;">
-                Referal: <br><b><?php echo htmlspecialchars($parentCode); ?> - <?php echo htmlspecialchars($parentName); ?></br></b>
-              </div>
-            </span>
-           <?php endif; ?>
             <a href="index.php?page=profile" class="dropdown-item-custom" role="menuitem" tabindex="-1">
               <i class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px;">person</i> Profile
             </a>

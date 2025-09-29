@@ -105,11 +105,10 @@
   }
 
   /* Mobile Cards */
-  #mobileCards {
-    display: none;
+  #mobileDistributorCards {
   }
 
-  #mobileCards .card-item {
+  #mobileDistributorCards .card-item {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
@@ -147,7 +146,7 @@
       display: none;
     }
 
-    #mobileCards {
+    #mobileDistributorCards {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -155,9 +154,9 @@
       margin-top: 12px;
     }
 
-    #mobileCards .card-item {
+    #mobileDistributorCards .card-item {
       width: 100%;
-      max-width: 400px;
+      max-width: 325px;
     }
 
     /* Search, pagination, length menu tetap rapi */
@@ -185,7 +184,7 @@
   }
 </style>
 </head>
-<div style="padding-top:56px;">
+<div style="padding-top:56px;padding-bottom:56px;">
   <section class="content">
     <div class="container-fluid">
       <div class="section-card-body">
@@ -193,14 +192,8 @@
         <!-- Header -->
         <div class="page-header-custom">
           <div class="section-title">
-            Daftar Anggota
+            Daftar Distributor
           </div>
-
-          <?php if ($_SESSION['role_id'] == 1 || $_SESSION['role_id'] == 10): ?>
-          <a href="index.php?page=add_suppliar" class="btn-custom">
-            <i class="fas fa-plus"></i> Tambah Anggota
-          </a>
-          <?php endif; ?>
         </div>
 
         <!-- Filter (hanya tampil jika bukan role 4 & 5) -->
@@ -221,7 +214,7 @@
 
         <!-- Table desktop -->
         <div class="table-responsive">
-          <table id="suppliarTable" class="display dataTable text-center custom-table">
+          <table id="suppliarTable" style="display:none;" class="display dataTable text-center custom-table">
             <thead>
               <tr>
                 <th>Member ID</th>
@@ -238,7 +231,7 @@
         </div>
 
         <!-- Card view mobile -->
-        <div id="mobileCards"></div>
+        <div id="mobileDistributorCards" style="display:flex;gap:12px;margin-top:15px;flex-wrap: wrap;"></div>
       </div>
     </div>
     <div class="modal fade" id="upgradeModal" tabindex="-1" aria-hidden="true">

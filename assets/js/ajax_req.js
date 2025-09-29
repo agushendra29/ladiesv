@@ -99,7 +99,7 @@ $("#editCatForm").submit(function (e) {
       <p><b>Nama:</b> ${payload.name || '-'}</p>
       <p><b>NIK:</b> ${payload.nik || '-'}</p>
       <p><b>Tgl Lahir:</b> ${payload.date_of_birth || '-'}</p>
-      <p><b>No HP:</b> ${payload.contact || '-'}</p>
+      <p><b>No HP:</b> ${payload.contact || '-'}</p>s
       <p><b>Alamat KTP:</b> ${payload.address_ktp || '-'}</p>
       <p><b>Alamat Domisili:</b> ${payload.address || '-'}</p>
       <p><b>Bank:</b> ${payload.bank || '-'}</p>
@@ -127,7 +127,13 @@ $("#editCatForm").submit(function (e) {
           url: "app/action/edit_suppliar.php",
           data: t,
           success: function (e) {
+            console.log(e);
+            if(e == "Supplier updated successfully.") {
+
             Swal.fire("Sukses", e, "success");
+            } else {
+              Swal.fire("Error", e, "error")
+            }
           },
           error: function () {
             Swal.fire("Error", "Terjadi kesalahan saat menyimpan", "error");

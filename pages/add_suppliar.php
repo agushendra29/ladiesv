@@ -1,237 +1,196 @@
-<div>
-  <!-- Form Tambah Anggota -->
+<div style="margin-bottom:75px;margin-top:52px;">
   <section class="content">
-    <div class="member-form-container">
-      <h2>➕ Tambah Anggota Baru</h2>
-
-      <div class="memberFormError-area" style="display:none;">
-        <span id="memberFormError"></span>
+    <div class="container-fluid section-card-body">
+      <div class="section-title mb-4">
+        Form Tambah Anggota
       </div>
 
-      <form id="adsuppliarForm">
-        <div class="form-group">
-          <label for="sup_name">Nama Lengkap <span class="required">*</span></label>
-          <input type="text" id="sup_name" name="sup_name" placeholder="Nama lengkap" required>
+      <!-- Pesan error/sukses -->
+      <div id="suppliarErrorArea"
+           style="display:none;padding:10px 15px;border-radius:8px;margin-bottom:20px;
+                  font-weight:500;border:1px solid transparent;">
+        <span id="suppliarErrorMessage"></span>
+      </div>
+
+      <form id="adsuppliarForm" method="POST" action="add_suppliar.php">
+
+        <!-- === Data Pribadi === -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0" style="font-weight:600;">🧍‍♂️ Data Pribadi</h5>
+          </div>
+          <div class="card-body row">
+            <div class="col-md-6 mb-3">
+              <label for="sup_name" class="form-label fw-bold">Nama Lengkap *</label>
+              <input type="text" class="form-control" id="sup_name" name="sup_name" placeholder="Nama Lengkap" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sup_nik" class="form-label fw-bold">NIK *</label>
+              <input type="number" class="form-control" id="sup_nik" name="sup_nik"
+                     placeholder="16 digit NIK" required pattern="\d{16}" maxlength="16">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="birth_date" class="form-label fw-bold">Tanggal Lahir</label>
+              <input type="text" class="form-control" id="birth_date" name="birth_date"
+                     placeholder="dd-mm-yyyy" maxlength="10">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sup_npwp" class="form-label fw-bold">NPWP</label>
+              <input type="number" class="form-control" id="sup_npwp" name="sup_npwp"
+                     placeholder="15 digit NPWP" pattern="\d{15}" maxlength="15">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sup_contact" class="form-label fw-bold">No. HP / WA</label>
+              <input type="number" class="form-control" id="sup_contact" name="sup_contact" placeholder="No. Kontak">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sup_email" class="form-label fw-bold">Email</label>
+              <input type="email" class="form-control" id="sup_email" name="sup_email" placeholder="Alamat Email">
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="sup_nik">NIK (ID Number)</label>
-          <input type="text" id="sup_nik" name="sup_nik" placeholder="Nomor Kependudukan">
+        <!-- === Alamat === -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0" style="font-weight:600;">🏠 Alamat</h5>
+          </div>
+          <div class="card-body row">
+            <div class="col-md-12 mb-3">
+              <label for="supaddressktp" class="form-label fw-bold">Alamat KTP</label>
+              <textarea id="supaddressktp" name="supaddressktp" class="form-control"
+                        placeholder="Alamat sesuai KTP" style="min-height:100px;"></textarea>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="supaddress" class="form-label fw-bold">Alamat Domisili / Pengiriman</label>
+              <textarea id="supaddress" name="supaddress" class="form-control"
+                        placeholder="Alamat pengiriman" style="min-height:100px;"></textarea>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="sup_provinsi" class="form-label fw-bold">Provinsi *</label>
+              <select id="sup_provinsi" name="sup_provinsi" class="form-control" required>
+                <option value="" disabled selected>-- Pilih Provinsi --</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="sup_kota" class="form-label fw-bold">Kota/Kabupaten *</label>
+              <select id="sup_kota" name="sup_kota" class="form-control" required>
+                <option value="" disabled selected>-- Pilih Kota/Kabupaten --</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="sup_kecamatan" class="form-label fw-bold">Kecamatan *</label>
+              <select id="sup_kecamatan" name="sup_kecamatan" class="form-control" required>
+                <option value="" disabled selected>-- Pilih Kecamatan --</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="sup_rekening">No Rekening</label>
-          <input type="number" id="sup_rekening" name="sup_rekening" placeholder="No Rekening">
+        <!-- === Pendaftaran === -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0" style="font-weight:600;">📝 Pendaftaran</h5>
+          </div>
+          <div class="card-body">
+            <div class="col-md-6 mb-3">
+              <label for="sup_role" class="form-label fw-bold">Pendaftaran *</label>
+              <select class="form-control" id="sup_role" name="sup_role" required>
+                <option value="">-- Pilih Pendaftaran --</option>
+                <?php if ($_SESSION['role_id'] == 10): ?>
+                <option value="10">Super Admin</option>
+                <option value="1">Head Office</option>
+                <?php endif; ?>
+                <option value="2">Head Distributor</option>
+                <option value="3">Distributor</option>
+                <option value="4">Agen</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="sup_bank">Nama Bank</label>
-          <input type="text" id="sup_bank" name="sup_bank" placeholder="Nama Bank">
+        <!-- === Informasi Bank === -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0" style="font-weight:600;">🏦 Informasi Bank</h5>
+          </div>
+          <div class="card-body row">
+            <div class="col-md-6 mb-3">
+              <label for="sup_bank" class="form-label fw-bold">Nama Bank *</label>
+              <input type="text" class="form-control" id="sup_bank" name="sup_bank"
+                     placeholder="Nama Bank" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sup_name_bank" class="form-label fw-bold">Nama pada Rek Bank *</label>
+              <input type="text" class="form-control" id="sup_name_bank" name="sup_name_bank"
+                     placeholder="Nama Pemilik Rekening" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="sup_rekening" class="form-label fw-bold">No. Rekening *</label>
+              <input type="number" class="form-control" id="sup_rekening" name="sup_rekening"
+                     placeholder="Nomor Rekening" required>
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="sup_contact">No Kontak</label>
-          <input type="text" id="sup_contact" name="sup_contact" placeholder="Nomor kontak">
-        </div>
-
-        <div class="form-group">
-          <label for="birth_date">Tanggal Lahir</label>
-          <input type="text" id="birth_date" name="birth_date">
-        </div>
-
-        <div class="form-group">
-          <label for="sup_email">Email</label>
-          <input type="email" id="sup_email" name="sup_email" placeholder="Email (optional)">
-        </div>
-
-        <div class="form-group">
-          <label for="sup_role">Level Anggota <span class="required">*</span></label>
-          <select id="sup_role" name="sup_role" required>
-            <option value="" disabled selected>-- Pilih Level Anggota --</option>
-            <option value="2">Head Distributor</option>
-            <option value="3">Distributor</option>
-            <option value="4">Agen</option>
-            <option value="5">Reseller</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="sup_provinsi">Provinsi <span class="required">*</span></label>
-          <select id="sup_provinsi" name="sup_provinsi" required>
-            <option value="" disabled selected>-- Pilih Provinsi --</option>
-            <option value="Aceh">Aceh</option>
-            <option value="Sumatera Utara">Sumatera Utara</option>
-            <option value="Sumatera Barat">Sumatera Barat</option>
-            <option value="Riau">Riau</option>
-            <option value="DKI Jakarta">DKI Jakarta</option>
-            <option value="Jawa Barat">Jawa Barat</option>
-            <option value="Banten">Banten</option>
-            <option value="Jawa Tengah">Jawa Tengah</option>
-            <option value="DI Yogyakarta">DI Yogyakarta</option>
-            <option value="Jawa Timur">Jawa Timur</option>
-            <option value="Bali">Bali</option>
-            <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
-            <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
-            <option value="Kalimantan Barat">Kalimantan Barat</option>
-            <option value="Kalimantan Tengah">Kalimantan Tengah</option>
-            <option value="Kalimantan Selatan">Kalimantan Selatan</option>
-            <option value="Kalimantan Timur">Kalimantan Timur</option>
-            <option value="Kalimantan Utara">Kalimantan Utara</option>
-            <option value="Sulawesi Utara">Sulawesi Utara</option>
-            <option value="Sulawesi Tengah">Sulawesi Tengah</option>
-            <option value="Sulawesi Selatan">Sulawesi Selatan</option>
-            <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
-            <option value="Gorontalo">Gorontalo</option>
-            <option value="Sulawesi Barat">Sulawesi Barat</option>
-            <option value="Maluku">Maluku</option>
-            <option value="Maluku Utara">Maluku Utara</option>
-            <option value="Papua">Papua</option>
-            <option value="Papua Barat">Papua Barat</option>
-          </select>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="supaddressktp">Alamat (Diisi Sesuai KTP)</label>
-          <textarea id="supaddressktp" name="supaddressktp" rows="3" placeholder="Alamat sesuai KTP"></textarea>
-        </div>
-
-        <div class="form-group full-width">
-          <label for="supaddress">Alamat Pengiriman</label>
-          <textarea id="supaddress" name="supaddress" rows="3" placeholder="Alamat sesuai tempat domisili"></textarea>
-        </div>
-
-        <div class="form-actions full-width">
-          <button type="reset" class="btn-reset">Reset</button>
-          <button type="submit" class="btn-submit">Submit Anggota</button>
+        <!-- Tombol -->
+        <div class="text-center mt-4">
+          <button type="reset" class="btn btn-danger px-4 me-2"
+                  style="border-radius:8px;font-weight:600;">Reset</button>
+          <button type="submit" class="btn btn-primary px-4"
+                  style="border-radius:8px;font-weight:600;background-color:#EB4F7D;border:none;">
+            Tambah Anggota
+          </button>
         </div>
       </form>
     </div>
   </section>
-
-  <style>
-    .member-form-container {
-      padding: 40px 24px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .member-form-container h2 {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 32px;
-      user-select: none;
-    }
-
-    .memberFormError-area {
-      display: none;
-      margin-bottom: 20px;
-      font-weight: 600;
-      color: #b91c1c;
-      background-color: #fee2e2;
-      border-radius: 8px;
-      padding: 12px 16px;
-    }
-
-    form#adsuppliarForm {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-group label {
-      font-weight: 600;
-      color: #334155;
-      margin-bottom: 6px;
-    }
-
-    .form-group .required {
-      color: #ef4444;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.8px solid #cbd5e1;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-      outline: none;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: #EEA0A0;
-    }
-
-    .form-group.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 30px;
-      grid-column: 1 / -1;
-      flex-wrap: wrap;
-    }
-
-    .btn-reset {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 32px;
-      font-weight: 700;
-      font-size: 16px;
-      box-shadow: 0 4px 12px rgb(239 68 68 / 0.4);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-reset:hover {
-      background-color: #b91c1c;
-    }
-
-    .btn-submit {
-      background-color: #EEA0A0;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 32px;
-      font-weight: 700;
-      font-size: 16px;
-      box-shadow: 0 4px 12px rgb(37 99 235 / 0.5);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-submit:hover {
-      background-color: #1d4ed8;
-    }
-
-    /* Responsif */
-    @media (max-width: 768px) {
-      .member-form-container {
-        padding: 24px 16px;
-      }
-      form#adsuppliarForm {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      .form-actions {
-        flex-direction: column;
-        gap: 12px;
-      }
-    }
-  </style>
 </div>
+
+<!-- Validasi & load data wilayah -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+const birthInput=document.getElementById('birth_date');
+birthInput.addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'');
+  if(v.length>2&&v.length<=4){v=v.slice(0,2)+'-'+v.slice(2);}
+  else if(v.length>4){v=v.slice(0,2)+'-'+v.slice(2,4)+'-'+v.slice(4,8);}
+  this.value=v;
+});
+document.getElementById('adsuppliarForm').addEventListener('submit',function(e){
+  const d=birthInput.value.trim();
+  const p=/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
+  if(d && !p.test(d)){e.preventDefault();Swal.fire('Error','Format tanggal salah! (dd-mm-yyyy)','error');}
+});
+fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
+  .then(r=>r.json()).then(prov=>{
+    const s=document.getElementById("sup_provinsi");
+    prov.forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p.id;o.textContent=p.name;s.appendChild(o);
+    });
+});
+document.getElementById("sup_provinsi").addEventListener("change",function(){
+  const id=this.value,k=document.getElementById("sup_kota"),c=document.getElementById("sup_kecamatan");
+  k.innerHTML="<option value='' disabled selected>-- Pilih Kota/Kabupaten --</option>";k.disabled=true;
+  c.innerHTML="<option value='' disabled selected>-- Pilih Kecamatan --</option>";c.disabled=true;
+  if(id){
+    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`)
+      .then(r=>r.json()).then(rg=>{
+        rg.forEach(a=>{const o=document.createElement("option");o.value=a.id;o.textContent=a.name;k.appendChild(o);});
+        k.disabled=false;
+    });
+  }
+});
+document.getElementById("sup_kota").addEventListener("change",function(){
+  const id=this.value,c=document.getElementById("sup_kecamatan");
+  c.innerHTML="<option value='' disabled selected>-- Pilih Kecamatan --</option>";c.disabled=true;
+  if(id){
+    fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`)
+      .then(r=>r.json()).then(dc=>{
+        dc.forEach(d=>{const o=document.createElement("option");o.value=d.id;o.textContent=d.name;c.appendChild(o);});
+        c.disabled=false;
+    });
+  }
+});
+</script>

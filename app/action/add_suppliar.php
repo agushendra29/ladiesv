@@ -47,8 +47,8 @@ if (!empty($_POST['birth_date'])) {
     }
 
    if (!empty($sup_npwp)) {            // cek hanya jika diisi
-        if (!preg_match('/^[0-9]{15}$/', $sup_npwp)) {
-            echo "NPWP harus berupa 15 digit angka.";
+        if (!preg_match('/^[0-9]{15,16}$/', $sup_npwp)) {
+            echo "NPWP harus berupa 15 atau 16 digit angka.";
             exit;
         }
     }
@@ -74,7 +74,7 @@ if (!empty($_POST['birth_date'])) {
                 'nama_rekening' => $sup_akun,
                 'provinsi'   => $sup_provinsi,   // ✅ simpan id provinsi
                 'kota'       => $sup_kota,       // ✅ simpan id kabupaten/kota
-                   'kecamatan'       => $sup_kecamatan,       // ✅ simpan id kabupaten/kota
+                'kecamatan'       => $sup_kecamatan,       // ✅ simpan id kabupaten/kota
                 'is_active'     => 1,
                 'npwp' => $sup_npwp,
                 'create_at' => date('Y-m-d H:i:s')

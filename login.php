@@ -8,6 +8,8 @@ if ($Ouser->is_login() != false) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
@@ -15,9 +17,20 @@ if ($Ouser->is_login() != false) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./assets/images/logo.png" type="image/png">
   <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Epunda+Slab:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
-<body style="background-image:url(assets/images/background-login.jpg); background-size:cover; font-family: 'Plus Jakarta Sans', sans-serif;">
+<body style="background-image:url(assets/images/background-login.jpg); background-size:cover; font-family: 'Poppins'">
+  <?php if (isset($_GET['timeout'])): ?>
+  <script>
+    Swal.fire({
+      icon: 'warning',
+      title: 'Session Expired',
+      text: 'Session Anda berakhir karena tidak ada aktivitas selama 30 menit.',
+      confirmButtonText: 'OK'
+    });
+  </script>
+<?php endif; ?>
 
 <div class="container">
   <div class="card" style="max-width:420px; margin:100px auto; padding:40px 30px; border:none; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.05);">

@@ -24,7 +24,7 @@
       </div>
 
       <div id="reportHeader" style="margin-top:25px; font-size:16px;">
-        Penjualan tim distributor anda periode: &nbsp;
+        Penjualan tim Reseller anda periode: &nbsp;
         <span class="section-title" id="periodeText" style="font-size:16px;">-</span>
       </div>
 
@@ -54,9 +54,20 @@
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script>
-  // date range picker (boleh pilih kapan saja, tapi default kosong)
+  // === ambil tanggal hari ini ===
+  const todayStart = moment();
+  const todayEnd   = moment();
+  const todayText  = todayStart.format('DD/MM/YYYY') + ' - ' + todayEnd.format('DD/MM/YYYY');
+
+  // set default value ke input dan header
+  $('#issuedate').val(todayText);
+  $('#periodeText').text(todayText);
+
+  // === date range picker dengan default hari ini ===
   $('#issuedate').daterangepicker({
-    autoUpdateInput: false,
+    autoUpdateInput: true,             // otomatis isi input
+    startDate: todayStart,
+    endDate: todayEnd,
     locale: { format: 'DD/MM/YYYY' },
     opens: 'left',
     ranges: {
@@ -64,10 +75,11 @@
       '7 Hari Terakhir': [moment().subtract(6,'days'), moment()],
       '30 Hari Terakhir': [moment().subtract(29,'days'), moment()],
       'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
-      'Bulan Lalu': [moment().subtract(1,'month').startOf('month'), moment().subtract(1,'month').endOf('month')]
+      'Bulan Lalu': [moment().subtract(1,'month').startOf('month'),
+                     moment().subtract(1,'month').endOf('month')]
     }
   }, function(start, end){
-      const periodeText = start.format('DD/MM/YYYY')+' - '+end.format('DD/MM/YYYY');
+      const periodeText = start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY');
       $('#issuedate').val(periodeText);
       $('#periodeText').text(periodeText);
   });
@@ -91,6 +103,11 @@
     });
   }
 
+  // === render awal: langsung gunakan periode hari ini ===
+  $(document).ready(function(){
+    loadStockMonitoring(todayText, '');
+  });
+
   // tombol cari
   $('#btnSearchStock').on('click', function(){
     var issuedate = $('#issuedate').val();
@@ -98,9 +115,5 @@
     $('#periodeText').text(issuedate || '-');
     loadStockMonitoring(issuedate, item_id);
   });
-
-  // 🔹 render awal: tanpa periode, semua anak distributor total 0
-  $(document).ready(function(){
-    loadStockMonitoring('', '');
-  });
 </script>
+

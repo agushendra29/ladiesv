@@ -62,8 +62,8 @@
 
       <?php if ($roleId == 4): ?>
       <li>
-        <a href="index.php?page=suppliar"
-           class="nav-link <?php echo $actual_link=='suppliar'?'active':'';?>">
+        <a href="index.php?page=distributor"
+           class="nav-link <?php echo $actual_link=='distributor'?'active':'';?>">
           <i class="material-symbols-outlined">sell</i>
           <span>Daftar Distributor</span>
         </a>
@@ -293,4 +293,3 @@ document.querySelectorAll('input[type="checkbox"]').forEach(input => {
 
 <?php require_once 'inc/member_add_modal.php'; ?>
 <?php require_once 'inc/catagory_modal.php'; ?>
-<?php require_once 'inc/suppliar_modal.php'; ?>

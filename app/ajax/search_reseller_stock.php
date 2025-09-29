@@ -31,7 +31,7 @@ $childs = $obj->allQuery(
     [$parent_id]
 );
 if (!$childs) {
-    echo '<tr><td colspan="4" class="no-data">Tidak ada anak distributor.</td></tr>';
+    echo '<tr><td colspan="4" class="no-data">Tidak ada anak Reseller.</td></tr>';
     exit;
 }
 $child_ids = array_map(fn($c) => $c->id, $childs);

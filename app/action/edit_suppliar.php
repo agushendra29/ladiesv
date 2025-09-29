@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!empty($npwp)) {
-        if (!preg_match('/^[0-9]{15}$/', $npwp)) {
-            echo "NPWP harus berupa 15 digit angka.";
+        if (!preg_match('/^[0-9]{15,16}$/', $npwp)) {
+            echo "NPWP harus berupa 15 atau 16 digit angka.";
             exit;
         }
     }

@@ -105,7 +105,7 @@ foreach ($logs as $log) {
         "suppliar_name" => $log['suppliar_name'] . " - " . $log['suppliar_code'],
         "product_name" => $log['product_name'],
         "action_type" => $actionType,
-        "old_quantity" => $log['old_quantity'],
+        "old_quantity" => $log['old_quantity'] . " ⮕ " . $log['new_quantity'],
         "new_quantity" => $log['new_quantity'],
         "changed_by" => $changedByName ?? '-',
         "created_at" => $log['created_at'],

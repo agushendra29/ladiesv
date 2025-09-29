@@ -11,6 +11,7 @@ $po_id = $_POST['approve_po_id'] ?? null;
 $fromDistributorId = 1; // distributor/ pusat yang approve
 $payment_type   = $_POST['payment_type'] ?? null;
 $shipping_type  = $_POST['shipping_type'] ?? null;
+$now= date('Y-m-d H:i:s');
 
 if (!$po_id || !$payment_type || !$shipping_type) {
     echo json_encode(['status' => false, 'message' => 'Missing po_id']);
@@ -102,8 +103,8 @@ try {
         }
 
         // Update status order item
-        $stmt = $pdo->prepare("UPDATE purchase_orders SET invoice_number = ?, status = 'approved', approved_at = NOW() WHERE id = ?");
-        $stmt->execute([$invoice_number, $o['id']]);
+        $stmt = $pdo->prepare("UPDATE purchase_orders SET invoice_number = ?, status = 'approved', approved_at = ? WHERE id = ?");
+        $stmt->execute([$invoice_number,$now, $o['id']]);
     }
 
     // ====== 3. Catat histori transaksi ======
@@ -113,24 +114,26 @@ try {
 
     foreach ($orders as $o) {
         $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number,payment_type, jenis_pengiriman) 
-            VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?,?,?)");
+            VALUES (?, 'pembelian', ?, ?, ?, ?, ?, ?,?,?)");
         $stmt->execute([
             $fromDistributorId,
             $o['product_id'],
             $o['quantity'],
             $toDistributorId,
+            $now,
             $user['name'],
             $invoice_number,
             $payment_type,
             $shipping_type
         ]);
           $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number,payment_type, jenis_pengiriman) 
-            VALUES (?, 'penjualan', ?, ?, NOW(), ?, ?, ?,?,?)");
+            VALUES (?, 'penjualan', ?, ?, ?, ?, ?, ?,?,?)");
         $stmt->execute([
             $fromDistributorId,
             $o['product_id'],
             $o['quantity'],
             $toDistributorId,
+            $now,
             $user['name'],
             $invoice_number,
             $payment_type,

@@ -30,8 +30,8 @@ foreach ($products as $p) {
       <div id="formErrorArea" style="display:none;"></div>
 
       <form id="combinedForm" method="post" action="your_submit_action.php">
-        <div class="section-card-body mt-2">
-          <div style="font-size:18px;font-weight:500;">Data Produk</div>
+        <div class="section-card-body mt-2" style="min-height: 100%">
+          <div class="section-title">Data Produk</div>
           <a id="addProductBtn" style="display: none;">+ Tambah Produk</a>
 
           <div id="productRows" class="table-responsive">
@@ -54,47 +54,35 @@ foreach ($products as $p) {
         </div>
 
         <hr>
-        <div class="section-card-body">
-          <div style="font-size:18px;font-weight:500;" class="mb-3">Data Reseller</div>
+      <div class="section-card-body">
+          <div class="section-title mb-3">Data Reseller</div>
 
           <div class="form-row">
+            <div class="form-col">
+              <label for="sup_name">Nama *</label>
+              <input type="text" id="sup_name" name="sup_name" required>
+            </div>
             <div class="form-col">
               <label for="sup_nik">NIK *</label>
               <input type="number" id="sup_nik" name="sup_nik" required pattern="\d{16}" maxlength="16">
             </div>
-            <div class="form-col">
-              <label for="sup_name">Nama Lengkap *</label>
-              <input type="text" id="sup_name" name="sup_name" required>
-            </div>
-
           </div>
 
           <div class="form-row">
             <div class="form-col">
-              <label for="sup_rekening">No Rekening *</label>
-              <input type="number" id="sup_rekening" name="sup_rekening" required>
-            </div>
-            <div class="form-col">
-              <label for="sup_bank">Nama Bank *</label>
-              <input type="text" id="sup_bank" name="sup_bank" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-col">
-              <label for="sup_name_bank">Nama pada Rek Bank *</label>
-              <input type="text" id="sup_name_bank" name="sup_name_bank" required>
-            </div>
-            <div class="form-col">
-              <label for="sup_contact">No Kontak</label>
-              <input type="number" id="sup_contact" name="sup_contact">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-col">
-              <label for="birth_date">Tanggal Lahir *</label>
+              <label for="dob">Tgl Lahir *</label>
               <input type="text" id="dob" name="dob" required placeholder="dd-mm-yyyy">
+            </div>
+            <div class="form-col">
+              <label for="sup_npwp">NPWP</label>
+              <input type="number" id="sup_npwp" name="sup_npwp" pattern="\d{15}" maxlength="15">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="sup_contact">No. HP (WA) *</label>
+              <input type="number" id="sup_contact" name="sup_contact" required>
             </div>
             <div class="form-col">
               <label for="sup_email">Email *</label>
@@ -103,32 +91,16 @@ foreach ($products as $p) {
           </div>
 
           <div class="form-row">
-            <div class="form-col">
-              <label for="role">Level Pendaftaran</label>
-              <input type="text" id="role" name="role" value="Reseller" disabled>
-            </div>
-            <div class="form-col">
-              <label for="kode_referal">User ID Referal</label>
-              <div style="display:flex;gap:8px;align-items:center;">
-                <input type="text" id="kode_referal" name="kode_referal" style="flex:1;">
-                <button type="button" id="btnCheckReferal" class="btn-custom">Cek Referal</button>
-              </div>
-              <!-- pesan validasi di sini -->
-              <small id="kode_referal_msg" style="color:red;display:block;margin-top:4px;"></small>
+            <div class="form-col-full">
+              <label for="supaddressktp">Alamat KTP *</label>
+              <textarea id="supaddressktp" name="supaddressktp" rows="3" required></textarea>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-col-full">
-              <label for="supaddressktp">Alamat KTP</label>
-              <textarea id="supaddressktp" name="supaddressktp" rows="3"></textarea>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-col-full">
-              <label for="supaddress">Alamat Domisili / Pengiriman</label>
-              <textarea id="supaddress" name="supaddress" rows="3"></textarea>
+              <label for="supaddress">Alamat Domisili / Pengiriman *</label>
+              <textarea id="supaddress" name="supaddress" rows="3" required></textarea>
             </div>
           </div>
 
@@ -140,9 +112,9 @@ foreach ($products as $p) {
               </select>
             </div>
             <div class="form-col">
-              <label for="kota">Kota/Kabupaten *</label>
+              <label for="kota">Kota/Kab *</label>
               <select id="kota" name="kota" required>
-                <option value="">-- Pilih Kota/Kabupaten --</option>
+                <option value="">-- Pilih Kota/Kab --</option>
               </select>
             </div>
           </div>
@@ -154,16 +126,45 @@ foreach ($products as $p) {
                 <option value="">-- Pilih Kecamatan --</option>
               </select>
             </div>
-              <div class="form-col">
-              <label for="sup_npwp">NPWP</label>
-              <input type="number" id="sup_npwp" name="sup_npwp" pattern="\d{15}" maxlength="15">
+            <div class="form-col">
+              <label for="role">Pendaftaran</label>
+              <input type="text" id="role" name="role" value="Reseller" disabled>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label for="sup_bank">Nama Bank *</label>
+              <input type="text" id="sup_bank" name="sup_bank" required>
+            </div>
+            <div class="form-col">
+              <label for="sup_name_bank">Nama pada Rek Bank *</label>
+              <input type="text" id="sup_name_bank" name="sup_name_bank" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col-full">
+              <label for="sup_rekening">No. Rekening *</label>
+              <input type="number" id="sup_rekening" name="sup_rekening" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col-full">
+              <label for="kode_referal">Nomor ID Pengundang</label>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="kode_referal" name="kode_referal" style="flex:1;">
+                <button type="button" id="btnCheckReferal" class="btn-custom" style="height:50px;">Cek No.ID</button>
+              </div>
+              <small id="kode_referal_msg" style="color:red;display:block;margin-top:4px;"></small>
             </div>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="reset" class="btn-reset">Reset</button>
-          <button type="submit" class="btn-submit">Submit Penjualan & Register</button>
+          <button type="reset" class="btn-reset mt-3">Reset</button>
+          <button type="submit" class="btn-submit mt-3">Submit Penjualan & Register</button>
         </div>
       </form>
     </div>
@@ -211,7 +212,7 @@ function createProductRow(){
   });
   row.innerHTML=`
     <td data-label="Produk"><select name="product_id[]" class="product-select" required>${options}</select></td>
-    <td data-label="Qty"><input type="number" name="quantity[]" class="quantity-input" min="1" value="0" required></td>
+    <td data-label="Qty"><input type="number" name="quantity[]" class="quantity-input" min="1" value="" required></td>
     <td data-label="Harga" style="text-align:right;"><span class="price-label" data-raw="0">0</span></td>
     <td data-label="Subtotal" style="text-align:right;"><span class="subtotal-label" data-raw="0">0</span></td>
     <td data-label="Aksi" style="text-align:center;"><button type="button" class="remove-row" style="background:#ef4444;color:white;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;">Hapus</button></td>`;

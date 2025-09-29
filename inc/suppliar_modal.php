@@ -1,4 +1,4 @@
-<!-- Modal Tambah Anggota -->
+Modal Tambah Anggota
 <div class="modal fade bd-example-modal-xl suppliarModal" id="suppliarModal">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">

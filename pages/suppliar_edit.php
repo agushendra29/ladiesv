@@ -1,27 +1,24 @@
 <!-- Content Wrapper -->
-<div style="padding-top:52px;padding-bottom:72px;">
+<div style="margin-bottom:75px;margin-top:52px;">
   <section class="content">
     <div class="container-fluid section-card-body">
-  
-      <?php 
-        if (isset($_GET['edit_id'])) {
-          $edit_id = $_GET['edit_id'];
-          $stmt = $pdo->prepare("
-            SELECT s.*
-            FROM suppliar s
-            LEFT JOIN user u ON s.id = u.suppliar_id
-            WHERE s.id = ?
-          ");
-          $stmt->execute([$edit_id]);
-          $data = $stmt->fetch(PDO::FETCH_OBJ);
 
-          if ($data) {
-      ?>
-          <?php
-// setelah $data = $stmt->fetch(PDO::FETCH_OBJ);
-$referralCode = null;
-$parentName   = null;
-if ($data) {
+<?php 
+if (isset($_GET['edit_id'])) {
+  $edit_id = $_GET['edit_id'];
+  $stmt = $pdo->prepare("
+    SELECT s.*
+    FROM suppliar s
+    LEFT JOIN user u ON s.id = u.suppliar_id
+    WHERE s.id = ?
+  ");
+  $stmt->execute([$edit_id]);
+  $data = $stmt->fetch(PDO::FETCH_OBJ);
+
+  if ($data) {
+    // referral code
+    $referralCode = null;
+    $parentName   = null;
     $refStmt = $pdo->prepare("
         SELECT p.suppliar_code AS code, p.name AS name
         FROM suppliar s
@@ -35,225 +32,199 @@ if ($data) {
         $referralCode = $refRow['code'];
         $parentName   = $refRow['name'];
     }
-}
 ?>
 
-      <h2 style="font-size: 24px !important; font-weight: 700; color: #1e293b; margin-bottom: 24px; user-select:none;">
-        ✏️ Edit Anggota: <?=htmlspecialchars($data->suppliar_code)?>
-      </h2>
+    <div class="section-title mb-4">
+      ✏️ Edit Anggota: <?=htmlspecialchars($data->suppliar_code)?>
+    </div>
 
-      <div class="alert alert-danger memberFormError-area"
-        style="display:none; margin-bottom: 20px; font-weight: 600; color: #b91c1c; background-color: #fee2e2; border-radius: 8px; padding: 12px 16px;">
-        <span id="memberFormError"></span>
+    <div class="alert alert-danger memberFormError-area"
+         style="display:none;margin-bottom:20px;font-weight:600;color:#b91c1c;
+                background-color:#fee2e2;border-radius:8px;padding:12px 16px;">
+      <span id="memberFormError"></span>
+    </div>
+
+    <form id="editSuppliarForm" method="POST"
+          style="max-width:1000px;margin:auto;">
+
+      <input type="hidden" name="id" value="<?= htmlspecialchars($edit_id); ?>">
+
+      <!-- === Data Pribadi === -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0 fw-bold">🧍‍♂️ Data Pribadi</h5>
+        </div>
+        <div class="card-body row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Nama Lengkap *</label>
+            <input type="text" name="name" class="form-control"
+                   value="<?= htmlspecialchars($data->name); ?>" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">NIK *</label>
+            <input type="text" name="nik" class="form-control"
+                   value="<?= htmlspecialchars($data->nik); ?>" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Tanggal Lahir</label>
+            <input type="text" name="date_of_birth" id="date_of_birth"
+                   class="form-control"
+                   value="<?= $data->date_of_birth ? date('d-m-Y', strtotime($data->date_of_birth)) : '' ?>"
+                   placeholder="dd-mm-yyyy">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">NPWP</label>
+            <input type="text" name="npwp" class="form-control"
+                   value="<?= htmlspecialchars($data->npwp); ?>">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">No. HP / WA *</label>
+            <input type="text" name="contact" class="form-control"
+                   value="<?= htmlspecialchars($data->con_num); ?>" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input type="email" name="email" class="form-control"
+                   value="<?= htmlspecialchars($data->email); ?>">
+          </div>
+        </div>
       </div>
 
-      <form id="editSuppliarForm"
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-        <input type="hidden" name="id" value="<?= htmlspecialchars($edit_id); ?>">
-
-        <div>
-          <label for="name" style="font-weight: 600; color: #334155;">Nama Lengkap <span style="color:#ef4444;">*</span></label>
-          <input type="text" id="name" name="name" value="<?= htmlspecialchars($data->name); ?>" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+      <!-- === Alamat === -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0 fw-bold">🏠 Alamat</h5>
         </div>
-
-        <div>
-          <label for="nik" style="font-weight: 600; color: #334155;">NIK (ID Number) <span style="color:#ef4444;">*</span></label>
-          <input type="text" id="nik" name="nik" value="<?= htmlspecialchars($data->nik); ?>" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+        <div class="card-body row">
+          <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Alamat KTP *</label>
+            <textarea name="address_ktp" class="form-control" rows="3" required><?= htmlspecialchars($data->address_ktp); ?></textarea>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Alamat Domisili / Pengiriman *</label>
+            <textarea name="address" class="form-control" rows="3" required><?= htmlspecialchars($data->address); ?></textarea>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-bold">Provinsi *</label>
+            <select id="provinsi" name="provinsi" class="form-control" required>
+              <option value="">-- Pilih Provinsi --</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-bold">Kota/Kabupaten *</label>
+            <select id="kota" name="kota" class="form-control" required>
+              <option value="">-- Pilih Kota / Kabupaten --</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label fw-bold">Kecamatan *</label>
+            <select id="kecamatan" name="kecamatan" class="form-control" required>
+              <option value="">-- Pilih Kecamatan --</option>
+            </select>
+          </div>
         </div>
+      </div>
 
-        <div>
-          <label for="npwp" style="font-weight: 600; color: #334155;">NPWP</label>
-          <input type="text" id="npwp" name="npwp" value="<?= htmlspecialchars($data->npwp); ?>"
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+      <!-- === Pendaftaran === -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0 fw-bold">📝 Pendaftaran</h5>
         </div>
-
-        <div>
-          <label for="rekening" style="font-weight: 600; color: #334155;">No Rekening <span style="color:#ef4444;">*</span></label>
-          <input type="number" id="rekening" name="rekening" value="<?= htmlspecialchars($data->rekening); ?>" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+        <div class="card-body row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Pendaftaran *</label>
+            <select id="role" name="role" class="form-control" <?= ($_SESSION['role_id'] != 10) ? 'disabled' : 'required' ?>>
+              <option value="" disabled <?= empty($data->role_id) ? 'selected' : '' ?>>-- Pilih Pendaftaran --</option>
+              <option value="10" <?= $data->role_id == 10 ? 'selected' : '' ?>>Super Admin</option>
+              <option value="1" <?= $data->role_id == 1 ? 'selected' : '' ?>>Head Officer</option>
+              <option value="2" <?= $data->role_id == 2 ? 'selected' : '' ?>>Head Distributor</option>
+              <option value="3" <?= $data->role_id == 3 ? 'selected' : '' ?>>Distributor</option>
+              <option value="4" <?= $data->role_id == 4 ? 'selected' : '' ?>>Agen</option>
+              <option value="5" <?= $data->role_id == 5 ? 'selected' : '' ?>>Reseller</option>
+            </select>
+            <?php if ($_SESSION['role_id'] != 10): ?>
+              <input type="hidden" name="role" value="<?= $data->role_id ?>">
+            <?php endif; ?>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">User ID Referral</label>
+            <input type="text" class="form-control" readonly
+                   value="<?= htmlspecialchars($referralCode ?: 'Tidak ada referral') . ($parentName ? ' - '.htmlspecialchars($parentName) : '') ?>">
+          </div>
         </div>
+      </div>
 
-        <div>
-          <label for="sup_name_bank" style="font-weight: 600; color: #334155;">Nama pada Rek Bank *</label>
-          <input type="text" id="sup_name_bank" name="sup_name_bank" value="<?= htmlspecialchars($data->nama_rekening); ?>" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;" placeholder="Nama Akun Bank">
+      <!-- === Informasi Bank === -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0 fw-bold">🏦 Informasi Bank</h5>
         </div>
-
-        <div>
-          <label for="bank" style="font-weight: 600; color: #334155;">Nama Bank <span style="color:#ef4444;">*</span></label>
-          <input type="text" id="bank" name="bank" placeholder="Nama Bank" value="<?= htmlspecialchars($data->bank); ?>"    style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;" placeholder="Nama Bank">
+        <div class="card-body row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Nama Bank *</label>
+            <input type="text" name="bank" class="form-control"
+                   value="<?= htmlspecialchars($data->bank); ?>" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Nama pada Rek Bank *</label>
+            <input type="text" name="sup_name_bank" class="form-control"
+                   value="<?= htmlspecialchars($data->nama_rekening); ?>" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">No. Rekening *</label>
+            <input type="number" name="rekening" class="form-control"
+                   value="<?= htmlspecialchars($data->rekening); ?>" required>
+          </div>
         </div>
+      </div>
 
-        <div>
-          <label for="contact" style="font-weight: 600; color: #334155;">No Kontak <span style="color:#ef4444;">*</span></label>
-          <input type="text" id="contact" name="contact" value="<?= htmlspecialchars($data->con_num); ?>" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+      <!-- === Password === -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0 fw-bold">🔑 Password Baru</h5>
         </div>
-
-        <div>
-          <label for="date_of_birth" style="font-weight: 600; color: #334155;">Tanggal Lahir</label>
-        <input type="text" id="date_of_birth" name="date_of_birth" 
-       value="<?= $data->date_of_birth ? date('d-m-Y', strtotime($data->date_of_birth)) : '' ?>" 
-       placeholder="dd-mm-yyyy"
-       style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
+        <div class="card-body row">
+          <div class="col-md-6 mb-3 position-relative">
+            <label class="form-label fw-bold">Password Baru</label>
+            <input type="password" id="password" name="password" class="form-control">
+          </div>
+          <div class="col-md-6 mb-3 position-relative">
+            <label class="form-label fw-bold">Konfirmasi Password Baru</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="form-control">
+          </div>
         </div>
+      </div>
 
-        <div>
-          <label for="email" style="font-weight: 600; color: #334155;">Email</label>
-          <input type="email" id="email" name="email" value="<?= htmlspecialchars($data->email); ?>"
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-        </div>
+      <!-- Tombol -->
+      <div class="text-center mt-4">
+        <button type="reset" class="btn btn-danger px-4 me-2" style="border-radius:8px;font-weight:600;">
+          Reset
+        </button>
+        <button type="submit" class="btn btn-primary px-4"
+                style="border-radius:8px;font-weight:600;background-color:#EB4F7D;border:none;">
+          Update Data
+        </button>
+      </div>
 
-        <div>
-          <label for="role" style="font-weight: 600; color: #334155;">Level Anggota <span style="color:#ef4444;">*</span></label>
-          <select id="role" name="role" <?= ($_SESSION['role_id'] != 10) ? 'disabled' : 'required' ?>
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px; background-color: white; cursor: pointer;">
-            <option value="" disabled <?= empty($data->role_id) ? 'selected' : '' ?>>-- Pilih Level Anggota --</option>
-            <option value="10" <?= $data->role_id == 10 ? 'selected' : '' ?>>Super Admin</option>
-            <option value="1" <?= $data->role_id == 1 ? 'selected' : '' ?>>Head Officer</option>
-            <option value="2" <?= $data->role_id == 2 ? 'selected' : '' ?>>Head Distributor</option>
-            <option value="3" <?= $data->role_id == 3 ? 'selected' : '' ?>>Distributor</option>
-            <option value="4" <?= $data->role_id == 4 ? 'selected' : '' ?>>Agen</option>
-            <option value="5" <?= $data->role_id == 5 ? 'selected' : '' ?>>Reseller</option>
-          </select>
-          <?php if ($_SESSION['role_id'] != 10): ?>
-          <input type="hidden" name="role" value="<?= $data->role_id ?>">
-          <?php endif; ?>
-        </div>
+    </form>
 
-        <div style="grid-column: 1 / -1;">
-          <label for="address_ktp" style="font-weight: 600; color: #334155;">Alamat (KTP) <span style="color:#ef4444;">*</span></label>
-          <textarea id="address_ktp" name="address_ktp" rows="3" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address_ktp); ?></textarea>
-        </div>
-
-        <div style="grid-column: 1 / -1;">
-          <label for="address" style="font-weight: 600; color: #334155;">Alamat Pengiriman <span style="color:#ef4444;">*</span></label>
-          <textarea id="address" name="address" rows="3" required
-            style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;"><?= htmlspecialchars($data->address); ?></textarea>
-        </div>
-
-        <!-- Provinsi -->
-        <div>
-          <label for="provinsi" style="font-weight:600; color:#334155;">Provinsi <span style="color:#ef4444;">*</span></label>
-          <select id="provinsi" name="provinsi" required
-            style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
-            <option value="">-- Pilih Provinsi --</option>
-          </select>
-        </div>
-
-        <!-- Kota -->
-        <div>
-          <label for="kota" style="font-weight:600; color:#334155;">Kota / Kabupaten <span style="color:#ef4444;">*</span></label>
-          <select id="kota" name="kota" required
-            style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
-            <option value="">-- Pilih Kota / Kabupaten --</option>
-          </select>
-        </div>
-
-        <!-- Kecamatan -->
-        <div>
-          <label for="kecamatan" style="font-weight:600; color:#334155;">Kecamatan <span style="color:#ef4444;">*</span></label>
-          <select id="kecamatan" name="kecamatan" required
-            style="width:100%; padding:12px 16px; border:1.8px solid #cbd5e1; border-radius:12px; font-size:16px; background:white; cursor:pointer;">
-            <option value="">-- Pilih Kecamatan --</option>
-          </select>
-        </div>
-        <div>
-  <label for="referral_code" style="font-weight:600; color:#334155;">Referral Code</label>
-  <input type="text" id="referral_code" name="referral_code"
-         value="<?= htmlspecialchars($referralCode ?: 'Tidak ada referral') . ($parentName ? ' - '.htmlspecialchars($parentName) : '') ?>"
-         readonly
-         style="width: 100%; padding: 12px 16px; border: 1.8px solid #cbd5e1;
-                border-radius: 12px; font-size: 16px; background-color:#f1f5f9; color:#475569;">
-</div>
-
-        <!-- Password -->
-        <div style="position: relative;">
-          <label for="password" style="font-weight: 600; color: #334155;">Password Baru</label>
-          <input type="password" id="password" name="password"
-            style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-          <span onclick="togglePassword('password', this)" style="position: absolute; right: 12px; top:50%; transform: translateY(-50%); cursor: pointer; font-size: 14px; color: #475569;">
-            👁
-          </span>
-        </div>
-
-        <div style="position: relative;">
-          <label for="confirm_password" style="font-weight: 600; color: #334155;">Konfirmasi Password Baru</label>
-          <input type="password" id="confirm_password" name="confirm_password"
-            style="width: 100%; padding: 12px 45px 12px 16px; border: 1.8px solid #cbd5e1; border-radius: 12px; font-size: 16px;">
-          <span onclick="togglePassword('confirm_password', this)" style="position: absolute; right: 12px; top:50%; transform: translateY(-50%); cursor: pointer; font-size: 14px; color: #475569;">
-            👁
-          </span>
-        </div>
-
-        <!-- Buttons -->
-        <div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
-          <button type="reset" style="
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 14px 32px;
-            font-weight: 700;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgb(239 68 68 / 0.4);
-            cursor: pointer;
-            transition: 0.3s;">Reset</button>
-
-          <button type="submit" style="
-            background-color: #EEA0A0;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 14px 32px;
-            font-weight: 700;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgb(37 99 235 / 0.5);
-            cursor: pointer;
-            transition: 0.3s;">Update Data</button>
-        </div>
-
-      </form>
-
-      <?php
-          } else {
-            header("location:index.php?page=error_page");
-            exit;
-          }
-        } else {
-          header("location:index.php?page=error_page");
-          exit;
-        }
-      ?>
+<?php
+  } else { header("location:index.php?page=error_page"); exit; }
+} else { header("location:index.php?page=error_page"); exit; }
+?>
     </div>
   </section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function togglePassword(fieldId, el) {
-  const input = document.getElementById(fieldId);
-  if(input.type === "password") {
-    input.type = "text"; el.textContent = "🙈";
-  } else {
-    input.type = "password"; el.textContent = "👁";
-  }
-}
 const bi = document.getElementById('date_of_birth');
-  bi.addEventListener('input', function() {
-    let val = this.value.replace(/\D/g, ''); // hapus non-angka
-    if(val.length > 2 && val.length <= 4) {
-        val = val.slice(0,2) + '-' + val.slice(2);
-    } else if(val.length > 4) {
-        val = val.slice(0,2) + '-' + val.slice(2,4) + '-' + val.slice(4,8);
-    }
-    this.value = val;
+bi.addEventListener('input', function() {
+  let v=this.value.replace(/\D/g,'');
+  if(v.length>2&&v.length<=4){v=v.slice(0,2)+'-'+v.slice(2);}
+  else if(v.length>4){v=v.slice(0,2)+'-'+v.slice(2,4)+'-'+v.slice(4,8);}
+  this.value=v;
 });
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
   const provinsiSelect = document.getElementById("provinsi");
@@ -274,7 +245,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (prov.id == selectedProvinsi) option.selected = true;
         provinsiSelect.appendChild(option);
       });
-
       if(selectedProvinsi) loadKota(selectedProvinsi, selectedKota);
     });
 
@@ -290,7 +260,6 @@ document.addEventListener("DOMContentLoaded", function () {
     kotaSelect.innerHTML = '<option value="">-- Pilih Kota / Kabupaten --</option>';
     kecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
     if(!provinsiId) return;
-
     fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinsiId}.json`)
       .then(res => res.json())
       .then(data => {
@@ -308,7 +277,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadKecamatan(kotaId, selected=null){
     kecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
     if(!kotaId) return;
-
     fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaId}.json`)
       .then(res => res.json())
       .then(data => {

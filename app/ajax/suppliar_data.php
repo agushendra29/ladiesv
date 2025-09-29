@@ -3,25 +3,47 @@ require_once '../init.php';
 
 /* ===== Helper ambil nama wilayah dari API EMSIFA ===== */
 function getWilayahNames($prov_id, $kab_id, $kec_id) {
-    $base = "https://www.emsifa.com/api-wilayah-indonesia/api";
+    global $pdo;
     $provName = $kabName = $kecName = '';
-    try {
         if ($prov_id) {
-            $prov = @json_decode(file_get_contents("$base/province/$prov_id.json"), true);
-            $provName = $prov['name'] ?? '';
+        $stmt = $pdo->prepare("SELECT name FROM provinsi WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $prov_id]);
+        $provName = $stmt->fetchColumn() ?: '';
         }
         if ($kab_id) {
-            $kab  = @json_decode(file_get_contents("$base/regency/$kab_id.json"), true);
-            $kabName = $kab['name'] ?? '';
+              $stmt = $pdo->prepare("SELECT name FROM kota WHERE id = :id LIMIT 1");
+              $stmt->execute([':id' => $kab_id]);
+              $kabName = $stmt->fetchColumn() ?: '';
         }
-        if ($kec_id) {
-            $kec  = @json_decode(file_get_contents("$base/district/$kec_id.json"), true);
-            $kecName = $kec['name'] ?? '';
+           if ($kec_id) {
+              $stmt = $pdo->prepare("SELECT name FROM kecamatan WHERE id = :id LIMIT 1");
+              $stmt->execute([':id' => $kec_id]);
+              $kecName = $stmt->fetchColumn() ?: '';
         }
-    } catch (\Exception $e) {
-        // biarkan kosong bila gagal
-    }
+    
     return trim("$provName, $kabName, $kecName", ', ');
+}
+
+function getWilayahForMember($prov_id, $kab_id, $kec_id) {
+    global $pdo;
+    $provName = $kabName = $kecName = '';
+       if ($prov_id) {
+        $stmt = $pdo->prepare("SELECT name FROM provinsi WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $prov_id]);
+        $provName = $stmt->fetchColumn() ?: '';
+        }
+        if ($kab_id) {
+              $stmt = $pdo->prepare("SELECT name FROM kota WHERE id = :id LIMIT 1");
+              $stmt->execute([':id' => $kab_id]);
+              $kabName = $stmt->fetchColumn() ?: '';
+        }
+           if ($kec_id) {
+              $stmt = $pdo->prepare("SELECT name FROM kecamatan WHERE id = :id LIMIT 1");
+              $stmt->execute([':id' => $kec_id]);
+              $kecName = $stmt->fetchColumn() ?: '';
+        }
+
+    return trim("$kecName, $kabName, $provName", ', ');
 }
 
 /* ===== DataTables Request ===== */
@@ -30,7 +52,7 @@ $row             = $_POST['start'];
 $rowperpage      = $_POST['length'];
 $columnIndex     = $_POST['order'][0]['column'];
 $columnName      = $_POST['columns'][$columnIndex]['data'];
-$columnSortOrder = $_POST['order'][0]['dir'];
+$columnSortOrder = $_POST['order'][0]['dir'] ?? 'desc'; // default desc
 $searchValue     = $_POST['search']['value'];
 $roleFilter      = $_POST['roleFilter'] ?? '';
 
@@ -131,25 +153,41 @@ $data = [];
 foreach ($empRecords as $row) {
     // Alamat: provinsi/kab/kec untuk role 4 & 5
     
-    $alamat = $row['address'];
-    if (in_array($_SESSION['role_id'], [4,5])) {
-        $alamat = getWilayahNames(
-            $row['provinsi'] ?? null,
-            $row['kota']  ?? null,
-            $row['kecamatan'] ?? null
-        );
+   $alamat = $row['address'];
+
+if (in_array($_SESSION['role_id'], [4,5])) {
+    // khusus role 4 & 5 hanya wilayah
+    $alamat = getWilayahNames(
+        $row['provinsi'] ?? null,
+        $row['kota'] ?? null,
+        $row['kecamatan'] ?? null
+    );
+} else {
+    // role lain: gabung address + provinsi, kota, kecamatan
+    $wilayah = getWilayahForMember(
+        $row['provinsi'] ?? null,
+        $row['kota'] ?? null,
+        $row['kecamatan'] ?? null
+    );
+
+    // hilangkan duplikasi spasi/koma jika ada data kosong
+    $alamat = trim($row['address']);
+    if (!empty($wilayah)) {
+        $alamat .= ', ' . $wilayah;
     }
+}
+
 
     $data[] = [
         "id"         => $_SESSION['role_id']==4 || $_SESSION['role_id']==5 ? '-' : getRoleName($row['role_id']).'-'.$row['suppliar_code'],
         "name"       => $row['name'].setActive($row['is_active']),
-        "address"    => $alamat,
+        "address"    => ucwords(strtolower($alamat)),
         "con_num"    => $row['con_num'],
         "role_id"    => getRoleName($row['role_id']),
         "created_at" => ($_SESSION['role_id']==1 || $_SESSION['role_id']==10) ? $row['create_at'] : '-',
         // ===== tombol PERSIS seperti semula =====
         "action" => (($_SESSION['role_id']==1 && $row['role_id']>1 && $row['role_id']<10) || $_SESSION['role_id']==10) ? '
-<div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:center;">
+<div style="display:flex; gap:6px; align-items:center; justify-content:center;">
     <a href="index.php?page=suppliar_edit&&edit_id=' . $row['id'] . '" 
        class="btn btn-primary btn-sm"
        style="padding:3px 8px; font-size:11px; border-radius:5px; display:flex; align-items:center; justify-content:center;">

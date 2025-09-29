@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate input
     if (!empty($p_suppliar) && !empty($p_product) && !empty($stock_quantity)) {
+           $now= date('Y-m-d H:i:s');
         
         // Get suppliar data
         $suppliar = $obj->find('suppliar', 'id', $p_suppliar);
@@ -47,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $obj->create('stock_logs', $logData);
 
             // Insert transaction history
-            $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
-            $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $suppliar->name, "-"]);
+            $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $now , $suppliar->name, "-"]);
 
             echo "Stock updated successfully";
         } else {
@@ -77,8 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $obj->create('stock_logs', $logData);
 
                 // Insert transaction history
-                $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, NOW(), ?, ?, ?)");
-                $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $suppliar->name, "-"]);
+                $stmt = $pdo->prepare("INSERT INTO transaction_histories (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number) VALUES (?, 'pembelian', ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$suppliar->id, $product->id, $stock_quantity, $suppliar->id, $now, $suppliar->name, "-"]);
 
                 echo "Product added successfully";
             } else {

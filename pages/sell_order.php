@@ -15,7 +15,19 @@
   <label for="start_date" class="mb-0 fw-bold">Periode:</label>
   <input type="date" id="start_date" class="form-control">
   <span class="range-label">s/d</span>
-  <input type="date" id="end_date" class="form-control">
+  <input type="date" id="end_date" class="form-control mr-3">
+
+     <?php if ($_SESSION['role_id'] == 10 || $_SESSION['role_id'] == 1): ?>
+          <label for="roleFilter" class="mb-0 fw-bold">Filter Role:</label>
+          <select id="roleFilter" class="form-control">
+            <option value="">Semua</option>
+            <option value="1" selected>HO</option>
+            <option value="2">Head Distributor</option>
+            <option value="3">Distributor</option>
+            <option value="4">Agen</option>
+            <option value="5">Reseller</option>
+          </select>
+        <?php endif; ?>
   <button id="filterBtn" class="btn-custom">Filter</button>
 </div>
 
@@ -137,6 +149,7 @@ $(document).ready(function () {
       data: function (d) {
         d.start_date = $("#start_date").val();
         d.end_date   = $("#end_date").val();
+        d.role       = $("#roleFilter").val();
       }
     },
     columns: [
@@ -177,5 +190,9 @@ $(document).ready(function () {
     $("#end_date").val('');
     table.ajax.reload();
   });
+
+    if ($("#roleFilter").length && $("#roleFilter").val()) {
+    $("#filterBtn").trigger("click");
+  }
 });
 </script>
