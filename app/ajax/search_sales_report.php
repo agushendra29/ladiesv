@@ -66,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    OR (th.type='pembelian' AND th.suppliar_id = :current_user) )";
     $params[':current_user'] = $currentUser;
 
+
     $where[] = "th.created_at BETWEEN :start AND :end";
     $params[':start'] = $issu_first_date . ' 00:00:00';
     $params[':end']   = $issu_end_date   . ' 23:59:59';
@@ -143,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <td>".htmlspecialchars(trim($partnerName.($partnerCode ? ' - '.$partnerCode : '')))."</td>
                     <td>{$qty}</td>
                     <td>{$r->product_name}</td>
-                    <td>".htmlspecialchars($r->note)."</td>
+                    <td>{$r->note}</td>
                   </tr>";
         }
     } else {

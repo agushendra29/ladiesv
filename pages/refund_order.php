@@ -198,6 +198,7 @@
                             <tr>
                                 <th>Sales Date</th>
                                 <th>Invoice Number</th>
+                                <th>Dari</th>
                                 <th>Tipe</th>
                                 <th>Kepada</th>
                                 <th>Produk</th>

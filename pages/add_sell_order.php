@@ -122,19 +122,23 @@ foreach ($products as $p) {
           </div>
         </div>
 
-        <div style="text-align: center; margin-top: 32px;">
+        <div style="text-align: center; margin-top: 32px; display:flex; justify-content:center;">
           <button type="reset"
             style="background-color: #ef4444; color: white; padding: 12px 24px; border: none; border-radius: 10px; margin-right: 12px; cursor: pointer; font-weight: 500;">
             Reset
           </button>
-          <button type="submit"
-            style="background-color: #ef4444; color: white; padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 500;">
+          <button type="submit" class="btn-custom">
             Submit Penjualan
           </button>
         </div>
       </form>
     </div>
   </section>
+ <div id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Memproses...</p>
+</div>
+
 </div>
 
 <style>
@@ -450,12 +454,16 @@ $("#salesForm").submit(function (e) {
                 type: "POST",
                 url: "app/action/add_sell_order.php",
                 data: { data: JSON.stringify(formData) },
+                beforeSend: function() {
+                  $("#loadingOverlay").css("display","flex");
+                },
                 success: function(res) {
+                      $("#loadingOverlay").hide(); 
                     if ($.trim(res) === "yes") {
                         Swal.fire({
                             icon: "success",
                             title: "Berhasil",
-                            text: "✅ Penjualan berhasil disubmit!",
+                            text: "✅ Penjualan berhasil disubmit!",  
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => { window.location.href = "index.php?page=sell_order"; });
@@ -463,7 +471,9 @@ $("#salesForm").submit(function (e) {
                         $("#saleErrorArea").show().html(res);
                     }
                 },
-                error: function() { $("#saleErrorArea").show().html("Terjadi kesalahan saat mengirim data."); }
+                error: function() {     
+                  $("#loadingOverlay").hide(); 
+                  $("#saleErrorArea").show().html("Terjadi kesalahan saat mengirim data."); }
             });
         }
     });

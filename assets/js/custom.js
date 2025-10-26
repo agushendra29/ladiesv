@@ -1401,14 +1401,18 @@ $("#empTable").DataTable({
         width: 600
     }).then((result) => {
         if (!result.isConfirmed) return;
-
+        
         $.ajax({
             url: 'app/action/add_register_reseller.php',
             type: 'POST',
             data: { data: JSON.stringify(payload) },
             dataType: 'json',
-
+            beforeSend: function() {
+        // tampilkan overlay loading
+                $("#loadingOverlay").css("display","flex");
+            },
             success: function (res) {
+                  $("#loadingOverlay").hide();
                 if (res.ok) {
                     Swal.fire({
                         icon: 'success',
@@ -1432,6 +1436,7 @@ $("#empTable").DataTable({
                     // coba ambil text jika bukan JSON
                     msg = xhr.responseText;
                 }
+                  $("#loadingOverlay").hide();
                 Swal.fire('Error', msg, 'error');
             }
         });

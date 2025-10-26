@@ -55,7 +55,7 @@
 
 <script>
   // === ambil tanggal hari ini ===
-  const todayStart = moment();
+  const todayStart = moment("2025-09-20", "YYYY-MM-DD");
   const todayEnd   = moment();
   const todayText  = todayStart.format('DD/MM/YYYY') + ' - ' + todayEnd.format('DD/MM/YYYY');
 

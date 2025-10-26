@@ -119,7 +119,7 @@
       <?php endif; ?>
 
       <!-- Refund -->
-      <!-- <?php if ($roleId == 10): ?>
+      <?php if ($roleId == 10): ?>
       <li>
         <a href="index.php?page=refund_order"
            class="nav-link <?php echo $actual_link=='refund_order'?'active':'';?>">
@@ -127,7 +127,7 @@
           <span>Cancel Invoice</span>
         </a>
       </li>
-      <?php endif; ?> -->
+      <?php endif; ?> 
 
       <!-- Rewards -->
       <li>

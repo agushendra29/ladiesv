@@ -3,26 +3,26 @@ require_once '../init.php';
 header('Content-Type: application/json');
 
 try {
-    // === DataTables Request ===
-    $draw            = intval($_POST['draw'] ?? 1);
-    $row             = intval($_POST['start'] ?? 0);
-    $rowperpage      = intval($_POST['length'] ?? 10);
-    $columnIndex     = intval($_POST['order'][0]['column'] ?? 0);
-    $columnNamePost  = $_POST['columns'][$columnIndex]['data'] ?? 'id';
-    $columnSortOrder = strtoupper($_POST['order'][0]['dir'] ?? 'DESC') === 'ASC' ? 'ASC' : 'DESC';
-    $searchValue     = trim($_POST['search']['value'] ?? '');
+    // === DataTables Request & Filter Logic ===
+    $draw              = intval($_POST['draw'] ?? 1);
+    $row               = intval($_POST['start'] ?? 0);
+    $rowperpage        = intval($_POST['length'] ?? 10);
+    $columnIndex       = intval($_POST['order'][0]['column'] ?? 0);
+    $columnNamePost    = $_POST['columns'][$columnIndex]['data'] ?? 'id';
+    $columnSortOrder   = strtoupper($_POST['order'][0]['dir'] ?? 'DESC') === 'ASC' ? 'ASC' : 'DESC';
+    $searchValue       = trim($_POST['search']['value'] ?? '');
 
-    // === Filter tambahan dari user ===
+    // === Filter tambahan ===
     $startDate  = trim($_POST['start_date'] ?? '');
     $endDate    = trim($_POST['end_date']   ?? '');
     $roleFilter = trim($_POST['role']       ?? '');
 
-    // --- Build where parts & params ---
+    // --- Build where parts ---
     $whereBaseParts = [];
     $whereSearchParts = [];
     $params = [];
 
-    // Batasan role (bukan HO & bukan SuperAdmin)
+    // Batasan role
     if (!in_array($_SESSION['role_id'] ?? null, [1,10], true)) {
         $whereBaseParts[] = "i.suppliar_id = :suppliar_id";
         $params[':suppliar_id'] = intval($_SESSION['distributor_id'] ?? 0);
@@ -65,22 +65,32 @@ try {
         }
     }
 
-    // Compose WHERE clauses
+    // === Base WHERE ===
     $whereBase = 'WHERE 1';
     if (count($whereBaseParts) > 0) $whereBase .= ' AND ' . implode(' AND ', $whereBaseParts);
-
     $whereFilter = $whereBase;
-    if (count($whereSearchParts) > 0) $whereFilter .= ' AND ' . implode(' AND ', $whereSearchParts);
+    if (count($whereSearchParts) > 0) $whereFilter .= ' AND (' . implode(' OR ', $whereSearchParts) . ')';
+
+    // === Hanya tampilkan invoice dengan transaksi non-refund ===
+    $existsCondition = "
+        EXISTS (
+            SELECT 1 FROM transaction_histories th
+            WHERE th.invoice_number = i.invoice_number
+            AND th.is_refund = 0
+            AND th.type = 'penjualan'
+        )
+    ";
+
+    $whereBase   .= " AND $existsCondition";
+    $whereFilter .= " AND $existsCondition";
 
     // === Total Records tanpa filter ===
-    $sqlTotal = "SELECT COUNT(*) FROM invoice i LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id $whereBase";
+    $sqlTotal = "SELECT COUNT(*) FROM invoice i 
+                 LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id 
+                 $whereBase";
     $stmt = $pdo->prepare($sqlTotal);
-    // bind params only present in $whereBase
     foreach ($params as $k => $v) {
-        // skip search-only params for total (we included search only in $whereFilter)
-        if (strpos($k, ':invoice_number') === 0 || strpos($k, ':net_total') === 0 || strpos($k, ':distributor_name') === 0 || strpos($k, ':customer_name') === 0) {
-            continue;
-        }
+        if (str_contains($k, ':invoice_number') || str_contains($k, ':net_total') || str_contains($k, ':distributor_name') || str_contains($k, ':customer_name')) continue;
         $type = is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR;
         $stmt->bindValue($k, $v, $type);
     }
@@ -88,7 +98,9 @@ try {
     $totalRecords = (int)$stmt->fetchColumn();
 
     // === Total Records dengan filter & search ===
-    $sqlTotalFilter = "SELECT COUNT(*) FROM invoice i LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id $whereFilter";
+    $sqlTotalFilter = "SELECT COUNT(*) FROM invoice i 
+                       LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id 
+                       $whereFilter";
     $stmt = $pdo->prepare($sqlTotalFilter);
     foreach ($params as $k => $v) {
         $type = is_int($v) ? PDO::PARAM_INT : PDO::PARAM_STR;
@@ -97,16 +109,26 @@ try {
     $stmt->execute();
     $totalRecordwithFilter = (int)$stmt->fetchColumn();
 
-    // === Items subquery to avoid GROUP BY issues ===
+    // === Subquery items (non-refund only) ===
     $itemsSubquery = "
-        SELECT d.invoice_no,
-               GROUP_CONCAT(CONCAT(p.product_name, ' - ', d.quantity) SEPARATOR '||') AS items_summary
-        FROM invoice_details d
-        JOIN products p ON d.pid = p.id
-        GROUP BY d.invoice_no
+        SELECT th.invoice_number AS invoice_num,
+               CAST(
+                   GROUP_CONCAT(
+                       CONCAT(p.product_name, ' - ', th.quantity_total) 
+                       SEPARATOR '||'
+                   ) AS CHAR(10000)
+               ) AS items_summary
+        FROM (
+            SELECT invoice_number, product_id, SUM(ABS(quantity)) AS quantity_total
+            FROM transaction_histories 
+            WHERE type = 'penjualan' AND is_refund = 0
+            GROUP BY invoice_number, product_id
+        ) AS th
+        JOIN products p ON th.product_id = p.id
+        GROUP BY th.invoice_number
     ";
 
-    // === Whitelist untuk ORDER BY (prevent SQL injection) ===
+    // === ORDER BY whitelist ===
     $allowedColumns = [
         'invoice_number'   => 'i.invoice_number',
         'customer_name'    => 'i.customer_name',
@@ -115,11 +137,10 @@ try {
         'order_date'       => 'i.order_date',
         'id'               => 'i.id'
     ];
-    // If DataTables sends nested props like "0" or others, map to default
     $columnName = $allowedColumns[$columnNamePost] ?? 'i.id';
     $orderBy = $columnName . ' ' . $columnSortOrder;
 
-    // === Fetch Data ===
+    // === Fetch data ===
     $sqlFetch = "
         SELECT i.*,
                u2.name AS distributor_name,
@@ -127,7 +148,7 @@ try {
                items.items_summary
         FROM invoice i
         LEFT JOIN suppliar u2 ON i.suppliar_id = u2.id
-        LEFT JOIN ({$itemsSubquery}) items ON i.id = items.invoice_no
+        LEFT JOIN ({$itemsSubquery}) items ON i.invoice_number = items.invoice_num
         $whereFilter
         ORDER BY {$orderBy}
         LIMIT :limit OFFSET :offset
@@ -142,30 +163,32 @@ try {
     $stmt->execute();
     $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // === Helper untuk kode suppliar ===
+    // === Helper kode suppliar ===
     function getSuppliarCode($id) {
         if (!$id) return '';
         global $pdo;
-        $stmt = $pdo->prepare("SELECT suppliar_code FROM suppliar WHERE id = :id LIMIT 1");
+        static $stmt = null;
+        if ($stmt === null) {
+            $stmt = $pdo->prepare("SELECT suppliar_code FROM suppliar WHERE id = :id LIMIT 1");
+        }
         $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchColumn() ?: '';
     }
 
-    // === Format Data untuk DataTables ===
+    // === Format Data ===
     $data = [];
     foreach ($records as $r) {
         $itemsSummary = $r['items_summary'] ? str_replace('||', '<br>', $r['items_summary']) : '';
         $distName = ($r['distributor_role'] == 1 || $r['distributor_role'] == 10)
             ? 'Head Office'
             : ($r['distributor_name'] . ' - ' . getSuppliarCode($r['suppliar_id']));
-
         $customerCode = ($r['customer_id'] > 0) ? getSuppliarCode($r['customer_id']) : '';
-        $netTotalLabel = ($r['customer_name'] === "Penjualan Pribadi") ? '-' : 'Rp '. number_format($r['net_total'],0,',','.');
+        $netTotalLabel = ($r['customer_id'] == 0) ? '-' : 'Rp ' . number_format($r['net_total'], 0, ',', '.');
 
         $data[] = [
             'invoice_number'   => '<a href="app/invoice/po_pdf.php?id=' . htmlspecialchars($r['invoice_number']) . '" class="btn-invoice" download>
-                                      <i class="fas fa-file-pdf"></i> ' . htmlspecialchars($r['invoice_number']) . '</a>',
+                                       <i class="fas fa-file-pdf"></i> ' . htmlspecialchars($r['invoice_number']) . '</a>',
             'customer_name'    => htmlspecialchars($r['customer_name']) . ($customerCode ? ' - ' . htmlspecialchars($customerCode) : ''),
             'distributor_name' => htmlspecialchars($distName),
             'net_total'        => $netTotalLabel,
@@ -184,8 +207,7 @@ try {
     exit;
 
 } catch (Exception $ex) {
-    // Untuk debugging bisa log error di server; untuk client kirim pesan sederhana
     http_response_code(500);
-    echo json_encode(['error' => true, 'message' => $ex->getMessage()]);
+    echo json_encode(['error' => true, 'message' => 'Query error: ' . $ex->getMessage()]);
     exit;
 }

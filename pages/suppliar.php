@@ -241,12 +241,14 @@
         <div id="mobileCards"></div>
       </div>
     </div>
-    <div class="modal fade" id="upgradeModal" tabindex="-1" aria-hidden="true">
+
+  </section>
+  <div class="modal fade" id="upgradeModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius:10px;">
           <div class="modal-header bg-light">
             <h5 class="modal-title">Upgrade Reseller</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
           </div>
           <form id="upgradeForm" action="app/action/upgrade_reseller.php" method="post">
             <div class="modal-body">
@@ -263,19 +265,16 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-success">Upgrade</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-size:12px !important;">Batal</button>
+              <button type="submit" class="btn-custom">Upgrade</button>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-  </section>
-
   <!-- jQuery & DataTables JS -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-
 </div>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

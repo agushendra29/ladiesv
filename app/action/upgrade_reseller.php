@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
 
             // --- Ambil role lama sebelum update ---
-            $stmt = $pdo->prepare("SELECT role_id,parent_id FROM suppliar WHERE id = :id");
+            $stmt = $pdo->prepare("SELECT role_id, parent_id FROM suppliar WHERE id = :id");
             $stmt->execute([':id' => $id]);
             $oldData = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$oldData) {
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("
                 UPDATE user 
                 SET role_id = :role 
-                WHERE id = :id
+                WHERE suppliar_id = :id
             ");
             $stmt->execute([
                 ':role' => $new_role,

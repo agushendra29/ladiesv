@@ -162,13 +162,17 @@ foreach ($products as $p) {
           </div>
         </div>
 
-        <div class="form-actions">
+        <div class="form-actions" style="display:flex;justify-content:center;">
           <button type="reset" class="btn-reset mt-3">Reset</button>
-          <button type="submit" class="btn-submit mt-3">Submit Penjualan & Register</button>
+          <button type="submit" class="btn-custom mt-3">Submit Penjualan & Register</button>
         </div>
       </form>
     </div>
   </section>
+  <div id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Memproses...</p>
+</div>
 </div>
 
 <style>

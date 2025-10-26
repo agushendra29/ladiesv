@@ -21,31 +21,111 @@ function getTotalQty(PDO $pdo, string $startDate, string $endDate, int $distribu
     $start = $startDate . ' 00:00:00';
     $end   = $endDate   . ' 23:59:59';
 
-    // ambil semua id anak secara rekursif
+    // 1. Ambil ID Distributor dan anak-anaknya yang aktif
     $childIds = getAllChildIds($pdo, $distributorId);
-    $allIds   = array_merge([$distributorId], $childIds);
+    $allActiveIds = array_merge([$distributorId], $childIds);
+    $phActive = implode(',', array_fill(0, count($allActiveIds), '?'));
+    
+    // 2. Query untuk mendapatkan Cutoff Join Date untuk setiap suppliar aktif
+    // Kita mencari kapan suppliar mulai menjadi anak dari $distributorId (parent_id_before != $distributorId DAN current_parent_id = $distributorId)
+    // Atau, mencari kapan suppliar berhenti menjadi anak (parent_id_before = $distributorId DAN current_parent_id != $distributorId)
+    
+    // Karena logic 'child' di suppliar hanya menunjukkan parent_id saat ini,
+    // kita perlu join ke distributor_management_history untuk menentukan kapan suppliar tersebut
+    // masuk ke bawah $distributorId (yaitu: th.created_at >= dmc.join_date).
 
-    $ph = implode(',', array_fill(0, count($allIds), '?'));
+    // --- Ambil Mantan Anak (untuk mempertahankan riwayat poin parent lama) ---
+    $formerChildData = []; // Tidak perlu diubah, logic ini sudah benar untuk menjaga poin parent lama
 
- $sql = "
+    $formerChildIdsQuery = "
+        SELECT suppliar_id, created_at AS upgrade_date
+        FROM levelup_history 
+        WHERE role_from = 5 AND role_to <> 5 AND parent_id_before = ?
+    ";
+    
+    $stmt = $pdo->prepare($formerChildIdsQuery);
+    $stmt->execute([$distributorId]);
+    $formerChildren = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $formerChildIds = array_column($formerChildren, 'suppliar_id');
+    $formerChildIds = array_diff($formerChildIds, $allActiveIds);
+    
+    $formerPh = '';
+    $formerParams = [];
+    if (!empty($formerChildIds)) {
+        $formerPh = implode(',', array_fill(0, count($formerChildIds), '?'));
+        $formerParams = array_values($formerChildIds);
+    }
+
+    // Gabungkan parameter waktu dan ID
+    $params = array_merge([$start, $end], $allActiveIds, $formerParams);
+
+    // 4. Query Final
+    
+    $sql = "
     SELECT COALESCE(SUM(th.quantity),0) AS total_point
     FROM transaction_histories th
     LEFT JOIN suppliar c ON c.id = th.customer_id
+    
+    -- Riwayat Perubahan Role Customer (untuk exclusion logic)
+    LEFT JOIN levelup_history lhc ON lhc.suppliar_id = c.id AND lhc.role_from = 5 AND lhc.role_to <> 5
+    
+    -- Riwayat Perubahan Role Seller (untuk cutoff penjualan Mantan Anak)
+    LEFT JOIN levelup_history lhs ON lhs.suppliar_id = th.suppliar_id AND lhs.role_from = 5 AND lhs.role_to <> 5
+    
+    -- Riwayat Manajemen Distribusi (untuk cutoff JOIN anak aktif)
+    LEFT JOIN (
+        SELECT 
+            suppliar_id, 
+            MIN(created_at) AS join_date
+        FROM distributor_management_history
+        WHERE current_parent_id = ? 
+        GROUP BY suppliar_id
+    ) AS dmh ON dmh.suppliar_id = th.suppliar_id
+    
     WHERE th.type = 'penjualan'
       AND th.created_at BETWEEN ? AND ?
-      AND th.suppliar_id IN ($ph)
       AND th.is_refund = 0
-      -- abaikan semua pembelian oleh reseller/anak
+      
+      -- *** FILTER PENJUAL (SELLER ID) ***
+      AND (
+          -- KASUS A: Penjual adalah Distributor atau Anak AKTIF (DIBATASI oleh tanggal JOIN)
+          (
+            th.suppliar_id IN ($phActive) 
+            AND (
+                th.suppliar_id = ? -- Distributor itu sendiri selalu dihitung
+                OR th.created_at >= COALESCE(dmh.join_date, '1900-01-01 00:00:00')
+            )
+          )
+          
+          " . (
+            !empty($formerPh) ? "
+          -- KASUS B: Penjual adalah MANTAN ANAK (hanya dihitung untuk transaksi SEBELUM tanggal upgrade)
+          OR (
+            th.suppliar_id IN ($formerPh)
+            AND th.created_at < lhs.created_at
+          )
+            " : ""
+          ) . "
+      )
+      
+      -- *** FILTER PEMBELI (CUSTOMER C) ***
+      -- 1. EKSKLUSI RIWAYAT: Abaikan transaksi ke customer yang dulunya Reseller (R5)
+      AND NOT (lhc.id IS NOT NULL AND th.created_at < lhc.created_at)
+
+      -- 2. EKSKLUSI CURRENT: Terapkan logika pengecualian awal Anda 
       AND (c.role_id IS NULL OR c.role_id <> 5)
       AND (c.parent_id IS NULL)
 ";
 
-    $params = array_merge([$start, $end], $allIds);
+    // Gabungkan parameter waktu, ID Aktif, ID Mantan, dan ID Distributor untuk DMH
+    $params = array_merge([$distributorId], [$start, $end], $allActiveIds, [$distributorId], $formerParams);
+
+    // Eksekusi Query
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return (int)$stmt->fetchColumn();
 }
-
 
 function getRedeemedPoint($pdo, $userId, $eventName) {
     $stmt = $pdo->prepare("SELECT COALESCE(SUM(total_point),0)

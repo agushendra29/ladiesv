@@ -1,5 +1,5 @@
 <!-- Content Wrapper -->
-<div class="mb-5 mt-5">
+<div class="mb-5 mt-5 pb-5">
 <section class="content">
   <div style="background:white; padding: 20px; margin: auto; border-radius:5px;">
     <?php 
@@ -16,7 +16,7 @@
         $stmt->execute([$edit_id]);
         $data = $stmt->fetch(PDO::FETCH_OBJ);
 
-        if ($data) {
+        if ($data) {  
 
         // -------- fungsi ambil nama wilayah dari API --------
         function getWilayahName($url, $id) {
@@ -137,15 +137,7 @@
           font-size: 15px;
           cursor: pointer;">Reset</button>
 
-        <button type="submit" style="
-          background-color: #EEA0A0;
-          color: white;
-          border: none;
-          border-radius: 12px;
-          padding: 12px 28px;
-          font-weight: 700;
-          font-size: 15px;
-          cursor: pointer;">Update Password</button>
+        <button type="submit" class="btn-custom">Update Password</button>
       </div>
     </form>
 
