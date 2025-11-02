@@ -34,7 +34,7 @@ try {
     $user_id       = $_SESSION['distributor_id'] ?? null;
     $role_id       = $_SESSION['role_id'] ?? null;
 
-    /* ---------- Validasi tanggal lahir ---------- */
+    // ========== Validasi tanggal lahir ==========
     $birth_date = null;
     if (!empty($birth_input)) {
         if (preg_match('/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$/', $birth_input, $m)) {
@@ -45,7 +45,7 @@ try {
         }
     }
 
-    /* ---------- Validasi field wajib ---------- */
+    // ========== Validasi field wajib ==========
     if (!preg_match('/^[0-9]{16}$/', $sup_nik)) {
         echo json_encode(['ok' => false, 'message' => 'NIK harus 16 digit angka.']);
         exit;
@@ -67,7 +67,7 @@ try {
         exit;
     }
 
-    /* ---------- Cek kode referal ---------- */
+    // ========== Cek kode referal ==========
     $parent_id = null;
     $parent_code_db = null;
     if ($referal_code !== '') {
@@ -82,12 +82,12 @@ try {
         $parent_code_db = $ref['suppliar_code'];
     }
 
-    /* ---------- Generate password default ---------- */
+    // ========== Generate password default ==========
     $name_prefix = substr(preg_replace('/[^A-Za-z]/', '', $sup_name), 0, 3);
     $dob_format  = date('dmY', strtotime($birth_date));
     $sup_password_plain = strtolower($name_prefix) . $dob_format;
 
-    /* ---------- Simpan suppliar ---------- */
+    // ========== Simpan suppliar ==========
     $sup_data = [
         'name'          => $sup_name,
         'address'       => $sup_address,
@@ -128,11 +128,12 @@ try {
         'suppliar_code' => $suppliar_code
     ]);
 
-    /* ---------- Proses Penjualan ---------- */
+    // ========== Penjualan Awal ==========
     if (!isset($_SESSION['distributor_id'])) {
         echo json_encode(['ok' => false, 'message' => 'Session distributor tidak ditemukan.']);
         exit;
     }
+
     $current_user_id = (int)$_SESSION['distributor_id'];
     $order_date = date('Y-m-d');
     $items = $payload['products'] ?? [];
@@ -142,6 +143,7 @@ try {
     }
 
     $pdo->beginTransaction();
+
     $invoice_number = 'INV-' . strtoupper(uniqid());
     $invoiceData = [
         'invoice_number' => $invoice_number,
@@ -157,6 +159,16 @@ try {
 
     $grand_total = 0;
     $total_qty_seller_points = 0;
+    $now = date('Y-m-d H:i:s');
+
+    // === ambil data parent & role ===
+    $sellerData = $obj->find('suppliar', 'id', $current_user_id);
+    $seller_parent_id = $sellerData->parent_id ?? 0;
+    $seller_role_id   = $sellerData->role_id ?? 0;
+
+    $customerData = $obj->find('suppliar', 'id', $suppliar_id);
+    $customer_parent_id = $customerData->parent_id ?? 0;
+    $customer_role_id   = $customerData->role_id ?? 0;
 
     foreach ($items as $p) {
         $pid = (int)$p['product_id'];
@@ -173,6 +185,7 @@ try {
 
         $source_suppliar_id = ($role_id == 1 || $role_id == 10) ? 1 : (int)$user_id;
 
+        // kurangi stok sumber
         $stmt = $pdo->prepare("SELECT * FROM distributor_stocks WHERE suppliar_id=? AND product_id=? FOR UPDATE");
         $stmt->execute([$source_suppliar_id, $pid]);
         $fromStock = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -182,7 +195,6 @@ try {
             exit;
         }
 
-        // kurangi stok sumber
         $stmt = $pdo->prepare("UPDATE distributor_stocks SET stock=? WHERE id=?");
         $stmt->execute([(int)$fromStock['stock'] - $qty, (int)$fromStock['id']]);
 
@@ -199,6 +211,7 @@ try {
             $stmt->execute([$suppliar_id, $pid, $qty, $sup_name, $product->product_name]);
         }
 
+        // detail invoice
         $obj->create('invoice_details', [
             'invoice_no'   => $invoice_id,
             'pid'          => $pid,
@@ -210,29 +223,47 @@ try {
         $grand_total += ($price * $qty);
         $total_qty_seller_points += $qty;
 
-        $now = date('Y-m-d H:i:s');
+        // === insert transaction histories (penjualan + pembelian) ===
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories 
+                (suppliar_id, type, product_id, quantity, created_at, 
+                 customer_id, customer_name, invoice_number,
+                 suppliar_parent_id, suppliar_role_id, customer_parent_id, customer_role_id)
+            VALUES (?, 'penjualan', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $current_user_id, $pid, $qty, $now, 
+            $suppliar_id, $sup_name, $invoice_number,
+            $seller_parent_id, $seller_role_id, $customer_parent_id, $customer_role_id
+        ]);
 
-        // histori transaksi
-        $stmt = $pdo->prepare("INSERT INTO transaction_histories 
-            (suppliar_id,type,product_id,quantity,created_at,customer_id,customer_name,invoice_number)
-            VALUES (?,?,?,?,?,?,?,?)");
-        $stmt->execute([$current_user_id, 'penjualan', $pid, $qty, $now, $suppliar_id, $sup_name, $invoice_number]);
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories 
+                (suppliar_id, type, product_id, quantity, created_at, 
+                 customer_id, customer_name, invoice_number,
+                 suppliar_parent_id, suppliar_role_id, customer_parent_id, customer_role_id)
+            VALUES (?, 'pembelian', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $suppliar_id, $pid, $qty, $now, 
+            $current_user_id, $sellerData->name ?? '-', $invoice_number,
+            $customer_parent_id, $customer_role_id, $seller_parent_id, $seller_role_id
+        ]);
 
-        $stmt->execute([$current_user_id, 'pembelian', $pid, $qty, $now, $suppliar_id, $sup_name, $invoice_number]);
-
+        // === auto invoice pribadi reseller ===
         $invoice_number_reseller = 'INV-R' . strtoupper(uniqid());
-        $invoiceData = [
-            'invoice_number' => $invoice_number_reseller,
-            'customer_id'    => 0,
-            'customer_name'  => "penjualan pribadi",
-            'order_date'     => $order_date,
-            'net_total'      => 0,
-            'return_status'  => 0,
-            'last_update'    => $order_date,
-            'suppliar_id'    => $suppliar_id
-        ];
-
-        $stmt->execute([$suppliar_id, 'penjualan', $pid, $qty, $now, 0, "penjualan pribadi", $invoice_number_reseller]);
+        $stmt = $pdo->prepare("
+            INSERT INTO transaction_histories 
+                (suppliar_id, type, product_id, quantity, created_at, 
+                 customer_id, customer_name, invoice_number,
+                 suppliar_parent_id, suppliar_role_id, customer_parent_id, customer_role_id)
+            VALUES (?, 'penjualan', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $suppliar_id, $pid, $qty, $now,
+            0, "penjualan pribadi", $invoice_number_reseller,
+            $customer_parent_id, $customer_role_id, 0, 0
+        ]);
     }
 
     // Update invoice & point

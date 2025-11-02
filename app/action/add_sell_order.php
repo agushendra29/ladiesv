@@ -36,22 +36,38 @@ try {
     if (!isset($_SESSION['distributor_id'])) {
         throw new Exception('Session distributor tidak ditemukan.');
     }
+
     $current_user_id = (int)$_SESSION['distributor_id'];
     $order_date = date('Y-m-d');
 
+    // === Data Suppliar (Penjual) ===
+    $supData = $obj->find('suppliar', 'id', $current_user_id);
+    if (!$supData) {
+        throw new Exception('Data suppliar tidak ditemukan.');
+    }
+    $sup_parent_id  = (int)($supData->parent_id ?? 0);
+    $sup_role_id    = (int)($supData->role_id ?? 0);
+
+    // === Data Customer (Pembeli) ===
     $customer_name = '';
+    $cust_parent_id = 0;
+    $cust_role_id   = 0;
+
     if ($customer_id > 0) {
         $cust = $obj->find('suppliar', 'id', $customer_id);
         if (!$cust) {
             throw new Exception('Data customer tidak ditemukan.');
         }
         $customer_name = $cust->name;
-        $buyer_role_id = (int)$cust->role_id;
+        $cust_parent_id = (int)($cust->parent_id ?? 0);
+        $cust_role_id   = (int)($cust->role_id ?? 0);
+        $buyer_role_id  = $cust_role_id;
     } else {
         $customer_name = $buyer_manual ?: 'Penjualan Pribadi';
         $buyer_role_id = 0;
     }
 
+    // === Persiapan data produk ===
     $items = [];
     foreach ($products as $p) {
         $pid = isset($p['product_id']) ? (int)$p['product_id'] : 0;
@@ -83,10 +99,8 @@ try {
     $grand_total  = 0;
     $total_qty_seller_points = 0;
 
-    // ==== Tambahan untuk reseller ====
     $invoice_id_reseller = null;
     $grand_total_reseller = 0;
-    // =================================
 
     foreach ($items as $it) {
         $pid = $it['pid'];
@@ -146,24 +160,56 @@ try {
         ]);
 
         $grand_total += ($price * $qty);
-        $now= date('Y-m-d H:i:s');
+        $now = date('Y-m-d H:i:s');
 
-        $stmt = $pdo->prepare("
-            INSERT INTO transaction_histories
-                (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)
-            VALUES (?, 'penjualan', ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([$current_user_id, $pid, $qty, $now, $customer_id, $customer_name, $invoice_number]);
+        // ===============================
+        // Insert ke transaction_histories
+        // ===============================
+        $sqlTH = "
+            INSERT INTO transaction_histories 
+                (suppliar_id, suppliar_parent_id, suppliar_role_id, 
+                 customer_id, customer_parent_id, customer_role_id,
+                 type, product_id, quantity, created_at, customer_name, invoice_number)
+            VALUES 
+                (:sid, :spid, :srole, :cid, :cpid, :crole, :type, :pid, :qty, :created, :cname, :inv)
+        ";
 
-        $stmt = $pdo->prepare("
-            INSERT INTO transaction_histories
-                (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)
-            VALUES (?, 'pembelian', ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([$current_user_id, $pid, $qty, $now, $customer_id, $customer_name, $invoice_number]);
+        $insertTH = $pdo->prepare($sqlTH);
+
+        // Penjualan (suppliar → customer)
+        $insertTH->execute([
+            ':sid'    => $current_user_id,
+            ':spid'   => $sup_parent_id,
+            ':srole'  => $sup_role_id,
+            ':cid'    => $customer_id,
+            ':cpid'   => $cust_parent_id,
+            ':crole'  => $cust_role_id,
+            ':type'   => 'penjualan',
+            ':pid'    => $pid,
+            ':qty'    => $qty,
+            ':created'=> $now,
+            ':cname'  => $customer_name,
+            ':inv'    => $invoice_number
+        ]);
+
+        // Pembelian (customer menerima stok)
+        $insertTH->execute([
+            ':sid'    => $current_user_id,
+            ':spid'   => $sup_parent_id,
+            ':srole'  => $sup_role_id,
+            ':cid'    => $customer_id,
+            ':cpid'   => $cust_parent_id,
+            ':crole'  => $cust_role_id,
+            ':type'   => 'pembelian',
+            ':pid'    => $pid,
+            ':qty'    => $qty,
+            ':created'=> $now,
+            ':cname'  => $customer_name,
+            ':inv'    => $invoice_number
+        ]);
 
         // ==== bagian Reseller ====
-        if($buyer_role_id == 5) {
+        if ($buyer_role_id == 5) {
             if (!$invoice_id_reseller) {
                 $invoice_number_reseller = 'INV-R' . strtoupper(uniqid());
                 $invoiceDataReseller = [
@@ -179,31 +225,37 @@ try {
                 $invoice_id_reseller = $obj->create('invoice', $invoiceDataReseller);
             }
 
-            // total untuk reseller (pakai harga reseller)
             $grand_total_reseller += ($price * $qty);
 
-            $stmt = $pdo->prepare("
-                INSERT INTO transaction_histories
-                    (suppliar_id, type, product_id, quantity, created_at, customer_id, customer_name, invoice_number)
-                VALUES (?, 'penjualan', ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([$customer_id, $pid, $qty, $now, 0, "penjualan pribadi", $invoice_number_reseller]);
+            // Reseller → penjualan pribadi
+            $insertTH->execute([
+                ':sid'    => $customer_id,
+                ':spid'   => $cust_parent_id,
+                ':srole'  => $cust_role_id,
+                ':cid'    => 0,
+                ':cpid'   => 0,
+                ':crole'  => 0,
+                ':type'   => 'penjualan',
+                ':pid'    => $pid,
+                ':qty'    => $qty,
+                ':created'=> $now,
+                ':cname'  => "penjualan pribadi",
+                ':inv'    => $invoice_number_reseller
+            ]);
         }
         // =========================
 
         $total_qty_seller_points += $qty;
     }
 
-    // Update net_total invoice utama
+    // Update net_total invoice
     $stmt = $pdo->prepare("UPDATE invoice SET net_total = ?, last_update = ? WHERE id = ?");
     $stmt->execute([$grand_total, $order_date, $invoice_id]);
 
-    // ==== update net_total khusus Reseller ====
     if ($invoice_id_reseller) {
         $stmt = $pdo->prepare("UPDATE invoice SET net_total = ?, last_update = ? WHERE id = ?");
         $stmt->execute([$grand_total_reseller, $order_date, $invoice_id_reseller]);
     }
-    // ==========================================
 
     $stmt = $pdo->prepare("UPDATE suppliar SET total_point = total_point + :qty WHERE id = :sid");
     $stmt->execute([':qty' => $total_qty_seller_points, ':sid' => $current_user_id]);
