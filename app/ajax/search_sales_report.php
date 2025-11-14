@@ -66,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    OR (th.type='pembelian' AND th.suppliar_id = :current_user) )";
     $params[':current_user'] = $currentUser;
 
-
     $where[] = "th.created_at BETWEEN :start AND :end";
     $params[':start'] = $issu_first_date . ' 00:00:00';
     $params[':end']   = $issu_end_date   . ' 23:59:59';
@@ -105,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($type !== 'all' && strtolower($transType) !== strtolower($type)) continue;
 
             // ✅ Tentukan partner dengan cek role_id = 1/10 -> Head Office
-            if ($transType === 'penjualan') {
+            if ($transType === 'penjualan' || $transType === 'pembelian') {
                 if (in_array((int)$r->cust_role, [1,10])) {
                     $partnerName = 'Head Office';
                     $partnerCode = '';
@@ -113,23 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $partnerName = $r->customer_name ?: 'Penjualan Pribadi';
                     $partnerCode = $r->customer_code ?: '';
                 }
-            } elseif ($transType === 'pembelian') {
-                if (in_array((int)$r->sup_role, [1,10])) {
-                    $partnerName = 'Head Office';
-                    $partnerCode = '';
-                } else {
-                    $partnerName = $r->suppliar_name ?: '-';
-                    $partnerCode = $r->suppliar_code ?: '';
-                }
-            } else {
-                if (in_array((int)$r->cust_role, [1,10])) {
-                    $partnerName = 'Head Office';
-                    $partnerCode = '';
-                } else {
-                    $partnerName = $r->customer_name ?: '-';
-                    $partnerCode = $r->customer_code ?: '';
-                }
-            }
+            } 
 
             $qty  = strtolower($r->type) === 'refund'
                 ? "<span style='color:red;'>-{$r->quantity}</span>"
@@ -137,9 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $date = date('d-m', strtotime($r->created_at));
 
+            // 🆕 Tambahkan nama & kode supplier di kolom "Tipe"
+            $supInfo = htmlspecialchars(trim($r->suppliar_name . ($r->suppliar_code ? ' - ' . $r->suppliar_code : '')));
+            $typeDisplay = htmlspecialchars($transType) . " <span style='color:#777;'>( {$supInfo} )</span>";
+
             echo "<tr>
                     <td>{$date}</td>
                     <td>{$r->invoice_number}</td>
+                    <td>{$supInfo}</td>
                     <td>{$transType}</td>
                     <td>".htmlspecialchars(trim($partnerName.($partnerCode ? ' - '.$partnerCode : '')))."</td>
                     <td>{$qty}</td>

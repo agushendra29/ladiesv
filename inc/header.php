@@ -152,7 +152,7 @@ $totalPoint = $distributor_id ? getTotalPoints($distributor_id, $role_id) : 0;
   <style>
     body,
     html {
-      font-family: "Open Sans", serif;
+      font-family: 'DM Sans', serif;
       margin: 0;
       padding: 0;
     }
